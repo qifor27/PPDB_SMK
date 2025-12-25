@@ -10,6 +10,16 @@ git clone https://github.com/qifor27/PPDB_SMK.git
 cd PPDB_SMK
 ```
 
+### 🌿 Buat Branch Masing-masing (Setelah Clone)
+
+| Nama | Command |
+|------|---------|
+| **Rofiq** | `git checkout -b feature/rofiq-admin-crud` |
+| **Sabrina** | `git checkout -b feature/sabrina-jalur-afirmasi` |
+| **Mutia** | `git checkout -b feature/mutia-jalur-prestasi` |
+| **Rafa** | `git checkout -b feature/rafa-jalur-zonasi` |
+| **Veli** | `git checkout -b feature/veli-jalur-kepindahan` |
+
 ---
 
 ## 🚀 Cara Menjalankan Project
@@ -25,7 +35,7 @@ cd PPDB_SMK
    ```bash
    # Jika clone langsung ke htdocs
    cd C:\xampp\htdocs\
-   git clone https://github.com/[USERNAME]/PPDB_SMK.git
+   git clone https://github.com/qifor27/PPDB_SMK.git
    ```
 
 2. **Import Database**
