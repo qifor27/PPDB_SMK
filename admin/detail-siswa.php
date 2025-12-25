@@ -5,7 +5,7 @@
 $pageTitle = 'Detail Pendaftar';
 require_once 'includes/header.php';
 
-$pendaftaranId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+$pendaftaranId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
 // Get pendaftaran with siswa data
 $data = db()->fetch(
@@ -31,7 +31,7 @@ $dokumen = db()->fetchAll("SELECT * FROM tb_dokumen WHERE id_pendaftaran = ?", [
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $newStatus = $_POST['status'];
     $alasan = sanitize($_POST['alasan'] ?? '');
-    
+
     $updateData = ['status' => $newStatus];
     if ($newStatus === 'rejected') {
         $updateData['alasan_penolakan'] = $alasan;
@@ -43,8 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($newStatus === 'accepted') {
         $updateData['tanggal_pengumuman'] = date('Y-m-d H:i:s');
     }
-    
-    db()->update('tb_pendaftaran', $updateData, 'id_pendaftaran = ?', ['id_pendaftaran' => $pendaftaranId]);
+
+    db()->update('tb_pendaftaran', $updateData, 'id_pendaftaran = :where_id_pendaftaran', ['where_id_pendaftaran' => $pendaftaranId]);
     Session::flash('success', 'Status pendaftaran berhasil diperbarui.');
     redirect("detail-siswa.php?id={$pendaftaranId}");
 }
@@ -81,7 +81,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="col-md-6">
                         <label class="text-muted small">Tempat, Tanggal Lahir</label>
-                        <div><?= htmlspecialchars($data['tempat_lahir']) ?>, <?= formatDate($data['tanggal_lahir']) ?></div>
+                        <div><?= htmlspecialchars($data['tempat_lahir']) ?>, <?= formatDate($data['tanggal_lahir']) ?>
+                        </div>
                     </div>
                     <div class="col-md-3">
                         <label class="text-muted small">Agama</label>
@@ -110,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
         </div>
-        
+
         <!-- Data Orang Tua -->
         <div class="card mb-4">
             <div class="card-header">
@@ -141,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
         </div>
-        
+
         <!-- Dokumen -->
         <div class="card">
             <div class="card-header">
@@ -159,16 +160,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </thead>
                         <tbody>
                             <?php foreach ($dokumen as $doc): ?>
-                            <tr>
-                                <td><?= htmlspecialchars($doc['jenis_dokumen']) ?></td>
-                                <td><?= getStatusBadge($doc['status_verifikasi']) ?></td>
-                                <td>
-                                    <a href="<?= UPLOADS_URL ?>/dokumen/<?= $pendaftaranId ?>/<?= $doc['nama_file'] ?>" 
-                                       target="_blank" class="btn btn-sm btn-outline-primary">
-                                        <i class="bi bi-eye"></i> Lihat
-                                    </a>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td><?= htmlspecialchars($doc['jenis_dokumen']) ?></td>
+                                    <td><?= getStatusBadge($doc['status_verifikasi']) ?></td>
+                                    <td>
+                                        <a href="<?= UPLOADS_URL ?>/dokumen/<?= $pendaftaranId ?>/<?= $doc['nama_file'] ?>"
+                                            target="_blank" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-eye"></i> Lihat
+                                        </a>
+                                    </td>
+                                </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
@@ -176,7 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
     </div>
-    
+
     <div class="col-lg-4">
         <!-- Data Pendaftaran -->
         <div class="card mb-4">
@@ -214,7 +215,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
         </div>
-        
+
         <!-- Update Status -->
         <div class="card">
             <div class="card-header">
@@ -225,15 +226,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="mb-3">
                         <label class="form-label">Status</label>
                         <select name="status" class="form-select">
-                            <option value="submitted" <?= $data['status'] === 'submitted' ? 'selected' : '' ?>>Submitted</option>
-                            <option value="verified" <?= $data['status'] === 'verified' ? 'selected' : '' ?>>Verified</option>
-                            <option value="accepted" <?= $data['status'] === 'accepted' ? 'selected' : '' ?>>Accepted</option>
-                            <option value="rejected" <?= $data['status'] === 'rejected' ? 'selected' : '' ?>>Rejected</option>
+                            <option value="submitted" <?= $data['status'] === 'submitted' ? 'selected' : '' ?>>Submitted
+                            </option>
+                            <option value="verified" <?= $data['status'] === 'verified' ? 'selected' : '' ?>>Verified
+                            </option>
+                            <option value="accepted" <?= $data['status'] === 'accepted' ? 'selected' : '' ?>>Accepted
+                            </option>
+                            <option value="rejected" <?= $data['status'] === 'rejected' ? 'selected' : '' ?>>Rejected
+                            </option>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Alasan (jika ditolak)</label>
-                        <textarea name="alasan" class="form-control" rows="2"><?= htmlspecialchars($data['alasan_penolakan'] ?? '') ?></textarea>
+                        <textarea name="alasan" class="form-control"
+                            rows="2"><?= htmlspecialchars($data['alasan_penolakan'] ?? '') ?></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">
                         <i class="bi bi-check-lg me-2"></i>Update Status

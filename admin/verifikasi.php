@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'catatan' => $catatan,
         'verified_by' => $adminId,
         'verified_at' => date('Y-m-d H:i:s')
-    ], 'id_dokumen = ?', ['id_dokumen' => $docId]);
+    ], 'id_dokumen = :where_id_dokumen', ['where_id_dokumen' => $docId]);
     
     Session::flash('success', 'Status dokumen berhasil diupdate.');
     redirect('verifikasi.php' . ($pendaftaranId ? "?id=$pendaftaranId" : ''));
@@ -32,7 +32,7 @@ if (isset($_POST['verify_pendaftaran'])) {
         'status' => 'verified',
         'tanggal_verifikasi' => date('Y-m-d H:i:s'),
         'verified_by' => $adminId
-    ], 'id_pendaftaran = ?', ['id_pendaftaran' => $pId]);
+    ], 'id_pendaftaran = :where_id_pendaftaran', ['where_id_pendaftaran' => $pId]);
     
     Session::flash('success', 'Pendaftaran berhasil diverifikasi.');
     redirect('verifikasi.php');
@@ -81,6 +81,45 @@ if ($pendaftaranId) {
             </div>
         </div>
     </div>
+    
+    <!-- === JALUR AFIRMASI START === -->
+    <?php if ($pendaftaran['kode_jalur'] === 'afirmasi'): 
+        $verificationChecklist = getAfirmasiVerificationChecklist();
+    ?>
+    <div class="card mb-4 border-purple">
+        <div class="card-header bg-purple-soft">
+            <h6 class="mb-0"><i class="bi bi-clipboard-check me-2"></i>Panduan Verifikasi Dokumen Afirmasi</h6>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-info mb-3">
+                <i class="bi bi-info-circle me-2"></i>
+                <strong>Perhatian:</strong> Pastikan dokumen bantuan (KIP/PKH/KIS/SKTM) valid dan sesuai dengan data pendaftar.
+            </div>
+            
+            <div class="row g-3">
+                <?php foreach ($verificationChecklist as $docType => $checkItems): ?>
+                <div class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-header py-2">
+                            <strong><i class="bi bi-file-earmark-check me-1"></i> <?= $docType ?></strong>
+                        </div>
+                        <div class="card-body py-2">
+                            <ul class="list-unstyled mb-0 small">
+                                <?php foreach ($checkItems as $item): ?>
+                                <li class="mb-1">
+                                    <i class="bi bi-check2 text-success me-1"></i> <?= $item ?>
+                                </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+    <!-- === JALUR AFIRMASI END === -->
     
     <div class="row g-4">
         <?php foreach ($dokumen as $doc): ?>

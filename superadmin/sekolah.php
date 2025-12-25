@@ -7,7 +7,7 @@ require_once 'includes/header.php';
 
 // Handle delete
 if (isset($_GET['delete'])) {
-    $id = (int)$_GET['delete'];
+    $id = (int) $_GET['delete'];
     try {
         db()->delete('tb_smk', 'id_smk = ?', [$id]);
         Session::flash('success', 'SMK berhasil dihapus.');
@@ -26,19 +26,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'kelurahan' => sanitize($_POST['kelurahan']),
         'kecamatan' => sanitize($_POST['kecamatan']),
         'kode_pos' => sanitize($_POST['kode_pos']),
-        'latitude' => (float)$_POST['latitude'],
-        'longitude' => (float)$_POST['longitude'],
+        'latitude' => (float) $_POST['latitude'],
+        'longitude' => (float) $_POST['longitude'],
         'telepon' => sanitize($_POST['telepon']),
         'email' => sanitize($_POST['email']),
         'website' => sanitize($_POST['website']),
-        'jumlah_siswa' => (int)$_POST['jumlah_siswa'],
-        'jumlah_guru' => (int)$_POST['jumlah_guru'],
+        'jumlah_siswa' => (int) $_POST['jumlah_siswa'],
+        'jumlah_guru' => (int) $_POST['jumlah_guru'],
         'nama_kepsek' => sanitize($_POST['nama_kepsek']),
         'deskripsi' => sanitize($_POST['deskripsi'])
     ];
-    
+
     if (isset($_POST['id_smk']) && $_POST['id_smk']) {
-        db()->update('tb_smk', $data, 'id_smk = ?', ['id_smk' => (int)$_POST['id_smk']]);
+        db()->update('tb_smk', $data, 'id_smk = :where_id_smk', ['where_id_smk' => (int) $_POST['id_smk']]);
         Session::flash('success', 'SMK berhasil diupdate.');
     } else {
         db()->insert('tb_smk', $data);
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $smkList = getAllSMK();
 $editData = null;
 if (isset($_GET['edit'])) {
-    $editData = getSMKById((int)$_GET['edit']);
+    $editData = getSMKById((int) $_GET['edit']);
 }
 ?>
 
@@ -59,106 +59,123 @@ if (isset($_GET['edit'])) {
     <div class="col-lg-4">
         <div class="card">
             <div class="card-header">
-                <h6 class="mb-0"><i class="bi bi-<?= $editData ? 'pencil' : 'plus' ?> me-2"></i><?= $editData ? 'Edit' : 'Tambah' ?> SMK</h6>
+                <h6 class="mb-0"><i
+                        class="bi bi-<?= $editData ? 'pencil' : 'plus' ?> me-2"></i><?= $editData ? 'Edit' : 'Tambah' ?>
+                    SMK</h6>
             </div>
             <div class="card-body">
                 <form method="POST">
                     <?php if ($editData): ?>
-                    <input type="hidden" name="id_smk" value="<?= $editData['id_smk'] ?>">
+                        <input type="hidden" name="id_smk" value="<?= $editData['id_smk'] ?>">
                     <?php endif; ?>
-                    
+
                     <div class="mb-3">
                         <label class="form-label">NPSN</label>
-                        <input type="text" name="npsn" class="form-control" value="<?= htmlspecialchars($editData['npsn'] ?? '') ?>">
+                        <input type="text" name="npsn" class="form-control"
+                            value="<?= htmlspecialchars($editData['npsn'] ?? '') ?>">
                     </div>
-                    
+
                     <div class="mb-3">
                         <label class="form-label">Nama Sekolah *</label>
-                        <input type="text" name="nama_sekolah" class="form-control" required value="<?= htmlspecialchars($editData['nama_sekolah'] ?? '') ?>">
+                        <input type="text" name="nama_sekolah" class="form-control" required
+                            value="<?= htmlspecialchars($editData['nama_sekolah'] ?? '') ?>">
                     </div>
-                    
+
                     <div class="mb-3">
                         <label class="form-label">Alamat</label>
-                        <textarea name="alamat" class="form-control" rows="2"><?= htmlspecialchars($editData['alamat'] ?? '') ?></textarea>
+                        <textarea name="alamat" class="form-control"
+                            rows="2"><?= htmlspecialchars($editData['alamat'] ?? '') ?></textarea>
                     </div>
-                    
+
                     <div class="row mb-3">
                         <div class="col-6">
                             <label class="form-label">Kelurahan</label>
-                            <input type="text" name="kelurahan" class="form-control" value="<?= htmlspecialchars($editData['kelurahan'] ?? '') ?>">
+                            <input type="text" name="kelurahan" class="form-control"
+                                value="<?= htmlspecialchars($editData['kelurahan'] ?? '') ?>">
                         </div>
                         <div class="col-6">
                             <label class="form-label">Kecamatan</label>
-                            <input type="text" name="kecamatan" class="form-control" value="<?= htmlspecialchars($editData['kecamatan'] ?? '') ?>">
+                            <input type="text" name="kecamatan" class="form-control"
+                                value="<?= htmlspecialchars($editData['kecamatan'] ?? '') ?>">
                         </div>
                     </div>
-                    
+
                     <div class="row mb-3">
                         <div class="col-6">
                             <label class="form-label">Latitude *</label>
-                            <input type="text" name="latitude" class="form-control" required value="<?= $editData['latitude'] ?? '' ?>">
+                            <input type="text" name="latitude" class="form-control" required
+                                value="<?= $editData['latitude'] ?? '' ?>">
                         </div>
                         <div class="col-6">
                             <label class="form-label">Longitude *</label>
-                            <input type="text" name="longitude" class="form-control" required value="<?= $editData['longitude'] ?? '' ?>">
+                            <input type="text" name="longitude" class="form-control" required
+                                value="<?= $editData['longitude'] ?? '' ?>">
                         </div>
                     </div>
-                    
+
                     <div class="row mb-3">
                         <div class="col-6">
                             <label class="form-label">Telepon</label>
-                            <input type="text" name="telepon" class="form-control" value="<?= htmlspecialchars($editData['telepon'] ?? '') ?>">
+                            <input type="text" name="telepon" class="form-control"
+                                value="<?= htmlspecialchars($editData['telepon'] ?? '') ?>">
                         </div>
                         <div class="col-6">
                             <label class="form-label">Kode Pos</label>
-                            <input type="text" name="kode_pos" class="form-control" value="<?= htmlspecialchars($editData['kode_pos'] ?? '') ?>">
+                            <input type="text" name="kode_pos" class="form-control"
+                                value="<?= htmlspecialchars($editData['kode_pos'] ?? '') ?>">
                         </div>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label class="form-label">Email</label>
-                        <input type="email" name="email" class="form-control" value="<?= htmlspecialchars($editData['email'] ?? '') ?>">
+                        <input type="email" name="email" class="form-control"
+                            value="<?= htmlspecialchars($editData['email'] ?? '') ?>">
                     </div>
-                    
+
                     <div class="mb-3">
                         <label class="form-label">Website</label>
-                        <input type="url" name="website" class="form-control" value="<?= htmlspecialchars($editData['website'] ?? '') ?>">
+                        <input type="url" name="website" class="form-control"
+                            value="<?= htmlspecialchars($editData['website'] ?? '') ?>">
                     </div>
-                    
+
                     <div class="row mb-3">
                         <div class="col-6">
                             <label class="form-label">Jml Siswa</label>
-                            <input type="number" name="jumlah_siswa" class="form-control" value="<?= $editData['jumlah_siswa'] ?? 0 ?>">
+                            <input type="number" name="jumlah_siswa" class="form-control"
+                                value="<?= $editData['jumlah_siswa'] ?? 0 ?>">
                         </div>
                         <div class="col-6">
                             <label class="form-label">Jml Guru</label>
-                            <input type="number" name="jumlah_guru" class="form-control" value="<?= $editData['jumlah_guru'] ?? 0 ?>">
+                            <input type="number" name="jumlah_guru" class="form-control"
+                                value="<?= $editData['jumlah_guru'] ?? 0 ?>">
                         </div>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label class="form-label">Nama Kepala Sekolah</label>
-                        <input type="text" name="nama_kepsek" class="form-control" value="<?= htmlspecialchars($editData['nama_kepsek'] ?? '') ?>">
+                        <input type="text" name="nama_kepsek" class="form-control"
+                            value="<?= htmlspecialchars($editData['nama_kepsek'] ?? '') ?>">
                     </div>
-                    
+
                     <div class="mb-3">
                         <label class="form-label">Deskripsi</label>
-                        <textarea name="deskripsi" class="form-control" rows="3"><?= htmlspecialchars($editData['deskripsi'] ?? '') ?></textarea>
+                        <textarea name="deskripsi" class="form-control"
+                            rows="3"><?= htmlspecialchars($editData['deskripsi'] ?? '') ?></textarea>
                     </div>
-                    
+
                     <div class="d-grid gap-2">
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-save me-2"></i><?= $editData ? 'Update' : 'Simpan' ?>
                         </button>
                         <?php if ($editData): ?>
-                        <a href="sekolah.php" class="btn btn-dark">Batal</a>
+                            <a href="sekolah.php" class="btn btn-dark">Batal</a>
                         <?php endif; ?>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    
+
     <!-- Table -->
     <div class="col-lg-8">
         <div class="card">
@@ -181,18 +198,19 @@ if (isset($_GET['edit'])) {
                         </thead>
                         <tbody>
                             <?php foreach ($smkList as $i => $smk): ?>
-                            <tr>
-                                <td><?= $i + 1 ?></td>
-                                <td><?= htmlspecialchars($smk['nama_sekolah']) ?></td>
-                                <td><?= $smk['npsn'] ?: '-' ?></td>
-                                <td><?= htmlspecialchars($smk['kecamatan'] ?? '-') ?></td>
-                                <td><?= $smk['jumlah_siswa'] ?></td>
-                                <td>
-                                    <a href="?edit=<?= $smk['id_smk'] ?>" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
-                                    <a href="?delete=<?= $smk['id_smk'] ?>" class="btn btn-sm btn-outline-danger" 
-                                       onclick="return confirm('Hapus SMK ini?')"><i class="bi bi-trash"></i></a>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td><?= $i + 1 ?></td>
+                                    <td><?= htmlspecialchars($smk['nama_sekolah']) ?></td>
+                                    <td><?= $smk['npsn'] ?: '-' ?></td>
+                                    <td><?= htmlspecialchars($smk['kecamatan'] ?? '-') ?></td>
+                                    <td><?= $smk['jumlah_siswa'] ?></td>
+                                    <td>
+                                        <a href="?edit=<?= $smk['id_smk'] ?>" class="btn btn-sm btn-outline-primary"><i
+                                                class="bi bi-pencil"></i></a>
+                                        <a href="?delete=<?= $smk['id_smk'] ?>" class="btn btn-sm btn-outline-danger"
+                                            onclick="return confirm('Hapus SMK ini?')"><i class="bi bi-trash"></i></a>
+                                    </td>
+                                </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>

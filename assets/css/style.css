@@ -1697,3 +1697,88 @@ body {
     background: var(--primary-dark);
     border-color: var(--primary-dark);
 }
+
+/* === JALUR AFIRMASI STYLES START === */
+/* Purple/Afirmasi Color Utilities */
+.text-purple {
+    color: #8B5CF6 !important;
+}
+
+.bg-purple {
+    background-color: #8B5CF6 !important;
+}
+
+.bg-purple-soft {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(139, 92, 246, 0.06)) !important;
+    color: #6D28D9;
+}
+
+.border-purple {
+    border-color: rgba(139, 92, 246, 0.3) !important;
+}
+
+.btn-purple {
+    background: linear-gradient(135deg, #8B5CF6, #A78BFA);
+    color: white !important;
+    border: none;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+}
+
+.btn-purple:hover {
+    background: linear-gradient(135deg, #7C3AED, #8B5CF6);
+    color: white !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+}
+
+.btn-outline-purple {
+    background: transparent;
+    color: #8B5CF6 !important;
+    border: 2px solid #8B5CF6;
+}
+
+.btn-outline-purple:hover {
+    background: linear-gradient(135deg, #8B5CF6, #A78BFA);
+    color: white !important;
+    border-color: #8B5CF6;
+}
+
+.alert-purple {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05));
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    color: #6D28D9;
+}
+
+.badge.bg-purple-soft {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(139, 92, 246, 0.1)) !important;
+    color: #7C3AED !important;
+    font-weight: 500;
+}
+
+/* Afirmasi Card Accent */
+.card.border-purple {
+    border: 1px solid rgba(139, 92, 246, 0.25) !important;
+    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.08);
+}
+
+.card.border-purple .card-header.bg-purple-soft {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05)) !important;
+    border-bottom: 1px solid rgba(139, 92, 246, 0.15);
+}
+
+.card.border-purple .card-header h6 {
+    color: #6D28D9;
+}
+
+/* Afirmasi Form Styling */
+.card.border-purple .form-check-input:checked {
+    background-color: #8B5CF6;
+    border-color: #8B5CF6;
+}
+
+.card.border-purple .form-select:focus,
+.card.border-purple .form-control:focus {
+    border-color: rgba(139, 92, 246, 0.5);
+    box-shadow: 0 0 0 0.2rem rgba(139, 92, 246, 0.15);
+}
+/* === JALUR AFIRMASI STYLES END === */
