@@ -1697,3 +1697,69 @@ body {
     background: var(--primary-dark);
     border-color: var(--primary-dark);
 }
+
+/* ===== File Upload Component ===== */
+.file-upload {
+    position: relative;
+    border: 2px dashed rgba(139, 92, 246, 0.3);
+    border-radius: var(--radius-md);
+    padding: 2rem 1rem;
+    text-align: center;
+    background: rgba(139, 92, 246, 0.03);
+    transition: var(--transition-normal);
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.file-upload:hover {
+    border-color: var(--primary);
+    background: rgba(139, 92, 246, 0.08);
+}
+
+.file-upload:hover .file-upload-icon {
+    transform: translateY(-5px);
+}
+
+.file-upload input[type="file"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.file-upload-icon {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 0.75rem;
+    transition: var(--transition-normal);
+}
+
+.file-upload-text {
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+
+.file-upload-hint {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.file-upload.dragover {
+    border-color: var(--primary);
+    background: rgba(139, 92, 246, 0.12);
+}
+
+.file-upload.has-file {
+    border-color: var(--accent-green);
+    background: rgba(52, 211, 153, 0.08);
+}
+
+.file-upload.has-file .file-upload-icon {
+    color: var(--accent-green);
+}
