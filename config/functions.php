@@ -456,3 +456,154 @@ function countPendaftarByStatus($status = null) {
 function countPendaftarByJalur($jalurId) {
     return db()->count('tb_pendaftaran', 'id_jalur = ?', [$jalurId]);
 }
+
+// === JALUR PRESTASI START ===
+
+/**
+ * Calculate prestasi points based on tingkat and peringkat
+ * @param string $tingkat Tingkat prestasi
+ * @param string $peringkat Peringkat/juara
+ * @return int Poin
+ */
+function calculatePrestasiPoin($tingkat, $peringkat) {
+    global $PRESTASI_POINTS;
+    
+    // Normalize peringkat
+    $peringkatMap = [
+        'Juara 1' => 'Juara 1',
+        'Juara 2' => 'Juara 2', 
+        'Juara 3' => 'Juara 3',
+        'Juara I' => 'Juara 1',
+        'Juara II' => 'Juara 2',
+        'Juara III' => 'Juara 3',
+        'Peserta' => 'Peserta',
+        'Harapan 1' => 'Peserta',
+        'Harapan 2' => 'Peserta',
+        'Harapan 3' => 'Peserta'
+    ];
+    
+    $normalizedPeringkat = $peringkatMap[$peringkat] ?? 'Peserta';
+    
+    if (isset($PRESTASI_POINTS[$tingkat][$normalizedPeringkat])) {
+        return $PRESTASI_POINTS[$tingkat][$normalizedPeringkat];
+    }
+    
+    return 0;
+}
+
+/**
+ * Get total prestasi points for a pendaftaran
+ * @param int $idPendaftaran ID pendaftaran
+ * @return int Total poin
+ */
+function getTotalPrestasiPoin($idPendaftaran) {
+    $result = db()->fetch(
+        "SELECT COALESCE(SUM(poin), 0) as total_poin 
+         FROM tb_prestasi_siswa 
+         WHERE id_pendaftaran = ? AND status_verifikasi = 'valid'",
+        [$idPendaftaran]
+    );
+    return (int)($result['total_poin'] ?? 0);
+}
+
+/**
+ * Get all prestasi for a pendaftaran (including pending)
+ * @param int $idPendaftaran ID pendaftaran
+ * @return array List of prestasi
+ */
+function getPrestasiByPendaftaran($idPendaftaran) {
+    return db()->fetchAll(
+        "SELECT * FROM tb_prestasi_siswa 
+         WHERE id_pendaftaran = ? 
+         ORDER BY poin DESC, created_at DESC",
+        [$idPendaftaran]
+    );
+}
+
+/**
+ * Get ranking for jalur prestasi
+ * @param int|null $idSmk Filter by SMK ID (optional)
+ * @return array Ranking list with total points
+ */
+function getRankingPrestasi($idSmk = null) {
+    $where = "j.kode_jalur = 'prestasi' AND p.status IN ('verified', 'submitted')";
+    $params = [];
+    
+    if ($idSmk) {
+        $where .= " AND p.id_smk_pilihan1 = ?";
+        $params[] = $idSmk;
+    }
+    
+    return db()->fetchAll(
+        "SELECT p.*, s.nama_lengkap, s.nisn, 
+                COALESCE(SUM(ps.poin), 0) as total_poin,
+                COUNT(ps.id_prestasi_siswa) as jumlah_prestasi
+         FROM tb_pendaftaran p
+         JOIN tb_siswa s ON p.id_siswa = s.id_siswa
+         JOIN tb_jalur j ON p.id_jalur = j.id_jalur
+         LEFT JOIN tb_prestasi_siswa ps ON p.id_pendaftaran = ps.id_pendaftaran 
+              AND ps.status_verifikasi = 'valid'
+         WHERE {$where}
+         GROUP BY p.id_pendaftaran
+         ORDER BY total_poin DESC, p.tanggal_submit ASC",
+        $params
+    );
+}
+
+/**
+ * Save prestasi siswa
+ * @param array $data Prestasi data
+ * @return int|false ID of inserted record or false on failure
+ */
+function savePrestasiSiswa($data) {
+    // Calculate poin
+    $poin = calculatePrestasiPoin($data['tingkat'], $data['peringkat']);
+    
+    $insertData = [
+        'id_pendaftaran' => $data['id_pendaftaran'],
+        'nama_prestasi' => sanitize($data['nama_prestasi']),
+        'jenis_prestasi' => $data['jenis_prestasi'],
+        'tingkat' => $data['tingkat'],
+        'tahun' => (int)$data['tahun'],
+        'penyelenggara' => sanitize($data['penyelenggara'] ?? ''),
+        'peringkat' => $data['peringkat'],
+        'poin' => $poin,
+        'status_verifikasi' => 'pending'
+    ];
+    
+    return db()->insert('tb_prestasi_siswa', $insertData);
+}
+
+/**
+ * Delete prestasi siswa
+ * @param int $idPrestasiSiswa ID prestasi
+ * @param int $idPendaftaran ID pendaftaran (for verification)
+ * @return bool Success status
+ */
+function deletePrestasiSiswa($idPrestasiSiswa, $idPendaftaran) {
+    // Get prestasi to delete file if exists
+    $prestasi = db()->fetch(
+        "SELECT * FROM tb_prestasi_siswa WHERE id_prestasi_siswa = ? AND id_pendaftaran = ?",
+        [$idPrestasiSiswa, $idPendaftaran]
+    );
+    
+    if (!$prestasi) {
+        return false;
+    }
+    
+    // Delete file if exists
+    if (!empty($prestasi['file_sertifikat'])) {
+        $filePath = UPLOADS_PATH . 'prestasi/' . $idPendaftaran . '/' . $prestasi['file_sertifikat'];
+        if (file_exists($filePath)) {
+            unlink($filePath);
+        }
+    }
+    
+    return db()->delete('tb_prestasi_siswa', 
+        'id_prestasi_siswa = ? AND id_pendaftaran = ?', 
+        [$idPrestasiSiswa, $idPendaftaran]
+    );
+}
+
+// === JALUR PRESTASI END ===
+

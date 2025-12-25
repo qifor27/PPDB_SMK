@@ -7,8 +7,8 @@ require_once 'includes/header.php';
 
 $pendaftaranId = $_GET['id'] ?? null;
 
-// Handle verifikasi action
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+// Handle dokumen verifikasi action
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['doc_id']) && isset($_POST['action'])) {
     $docId = (int)$_POST['doc_id'];
     $action = $_POST['action'];
     $catatan = sanitize($_POST['catatan'] ?? '');
@@ -19,11 +19,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'catatan' => $catatan,
         'verified_by' => $adminId,
         'verified_at' => date('Y-m-d H:i:s')
-    ], 'id_dokumen = ?', ['id_dokumen' => $docId]);
+    ], 'id_dokumen = :id_dokumen', ['id_dokumen' => $docId]);
     
     Session::flash('success', 'Status dokumen berhasil diupdate.');
-    redirect('verifikasi.php' . ($pendaftaranId ? "?id=$pendaftaranId" : ''));
+    $redirUrl = 'verifikasi.php' . ($pendaftaranId ? "?id=$pendaftaranId" : '');
+    echo "<script>window.location.href = '$redirUrl';</script>";
+    exit;
 }
+
+// === JALUR PRESTASI VERIFICATION HANDLER START ===
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['verify_prestasi'])) {
+    $prestasiId = (int)$_POST['prestasi_id'];
+    $status = $_POST['verify_prestasi'] === 'valid' ? 'valid' : 'invalid';
+    $refId = (int)$_POST['pendaftaran_id_ref'];
+    
+    db()->update('tb_prestasi_siswa', [
+        'status_verifikasi' => $status
+    ], 'id_prestasi_siswa = :id_prestasi_siswa', ['id_prestasi_siswa' => $prestasiId]);
+    
+    Session::flash('success', 'Status prestasi berhasil diupdate.');
+    echo "<script>window.location.href = 'verifikasi.php?id=$refId';</script>";
+    exit;
+}
+// === JALUR PRESTASI VERIFICATION HANDLER END ===
 
 // Handle pendaftaran verification
 if (isset($_POST['verify_pendaftaran'])) {
@@ -32,10 +50,11 @@ if (isset($_POST['verify_pendaftaran'])) {
         'status' => 'verified',
         'tanggal_verifikasi' => date('Y-m-d H:i:s'),
         'verified_by' => $adminId
-    ], 'id_pendaftaran = ?', ['id_pendaftaran' => $pId]);
+    ], 'id_pendaftaran = :id_pendaftaran', ['id_pendaftaran' => $pId]);
     
     Session::flash('success', 'Pendaftaran berhasil diverifikasi.');
-    redirect('verifikasi.php');
+    echo "<script>window.location.href = 'verifikasi.php';</script>";
+    exit;
 }
 
 if ($pendaftaranId) {
@@ -51,7 +70,8 @@ if ($pendaftaranId) {
     
     if (!$pendaftaran) {
         Session::flash('error', 'Data tidak ditemukan.');
-        redirect('verifikasi.php');
+        echo "<script>window.location.href = 'verifikasi.php';</script>";
+        exit;
     }
     
     $dokumen = db()->fetchAll(
@@ -133,6 +153,93 @@ if ($pendaftaranId) {
         <?php endforeach; ?>
     </div>
     
+    <!-- === JALUR PRESTASI VERIFICATION START === -->
+    <?php if ($pendaftaran['kode_jalur'] === 'prestasi'): ?>
+    <?php 
+    $prestasiList = getPrestasiByPendaftaran($pendaftaranId);
+    $allPrestasiVerified = true;
+    foreach ($prestasiList as $p) {
+        if ($p['status_verifikasi'] !== 'valid') $allPrestasiVerified = false;
+    }
+    ?>
+    <div class="card mt-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h6 class="mb-0"><i class="bi bi-trophy me-2"></i>Verifikasi Data Prestasi</h6>
+            <span class="badge bg-warning"><?= count($prestasiList) ?> prestasi</span>
+        </div>
+        <div class="card-body p-0">
+            <?php if (empty($prestasiList)): ?>
+            <div class="text-center text-muted py-4">Belum ada data prestasi</div>
+            <?php else: ?>
+            <div class="table-responsive">
+                <table class="table table-dark mb-0">
+                    <thead>
+                        <tr>
+                            <th>Nama Prestasi</th>
+                            <th>Jenis</th>
+                            <th>Tingkat</th>
+                            <th>Peringkat</th>
+                            <th>Poin</th>
+                            <th>Sertifikat</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($prestasiList as $p): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($p['nama_prestasi']) ?></td>
+                            <td><span class="badge bg-secondary"><?= $p['jenis_prestasi'] ?></span></td>
+                            <td><?= $p['tingkat'] ?></td>
+                            <td><span class="badge bg-warning text-dark"><?= $p['peringkat'] ?></span></td>
+                            <td><strong class="text-success"><?= $p['poin'] ?></strong></td>
+                            <td>
+                                <?php if (!empty($p['file_sertifikat'])): ?>
+                                <a href="<?= UPLOADS_URL ?>/prestasi/<?= $pendaftaranId ?>/<?= $p['file_sertifikat'] ?>" 
+                                   target="_blank" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-file-earmark-image"></i>
+                                </a>
+                                <?php else: ?>
+                                <span class="text-muted">-</span>
+                                <?php endif; ?>
+                            </td>
+                            <td><?= getStatusBadge($p['status_verifikasi']) ?></td>
+                            <td>
+                                <?php if ($p['status_verifikasi'] === 'pending'): ?>
+                                <form method="POST" class="d-inline">
+                                    <input type="hidden" name="prestasi_id" value="<?= $p['id_prestasi_siswa'] ?>">
+                                    <input type="hidden" name="pendaftaran_id_ref" value="<?= $pendaftaranId ?>">
+                                    <button type="submit" name="verify_prestasi" value="valid" 
+                                            class="btn btn-sm btn-success" title="Valid">
+                                        <i class="bi bi-check"></i>
+                                    </button>
+                                    <button type="submit" name="verify_prestasi" value="invalid" 
+                                            class="btn btn-sm btn-danger" title="Invalid">
+                                        <i class="bi bi-x"></i>
+                                    </button>
+                                </form>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                    <tfoot>
+                        <tr class="table-primary">
+                            <td colspan="4" class="text-end"><strong>Total Poin (Valid):</strong></td>
+                            <td colspan="4">
+                                <strong class="fs-5 text-warning">
+                                    <?= getTotalPrestasiPoin($pendaftaranId) ?>
+                                </strong>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <?php endif; ?>
+        </div>
+    </div>
+    <?php endif; ?>
+    <!-- === JALUR PRESTASI VERIFICATION END === -->
     <?php if ($allVerified && count($dokumen) > 0 && $pendaftaran['status'] === 'submitted'): ?>
     <div class="card mt-4">
         <div class="card-body">

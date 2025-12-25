@@ -6,7 +6,8 @@ $pageTitle = 'Status Pendaftaran';
 require_once 'includes/header.php';
 
 if (!$pendaftaran) {
-    redirect('pilih-jalur.php');
+    echo '<script>window.location.href = "pilih-jalur.php";</script>';
+    exit;
 }
 
 // Get documents count
@@ -19,10 +20,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_pendaftaran'])
         db()->update('tb_pendaftaran', [
             'status' => 'submitted',
             'tanggal_submit' => date('Y-m-d H:i:s')
-        ], 'id_pendaftaran = ?', ['id_pendaftaran' => $pendaftaran['id_pendaftaran']]);
-        
+        ], 'id_pendaftaran = :id_pendaftaran', ['id_pendaftaran' => $pendaftaran['id_pendaftaran']]);
+
         Session::flash('success', 'Pendaftaran berhasil disubmit! Silakan tunggu proses verifikasi.');
-        redirect('status.php');
+        echo '<script>window.location.href = "status.php";</script>';
+        exit;
     }
 }
 
@@ -79,46 +81,49 @@ $pendaftaran = db()->fetch(
                         <div><?= $verifiedDocs ?> dokumen</div>
                     </div>
                 </div>
-                
+
                 <?php if ($pendaftaran['status'] === 'draft'): ?>
-                <div class="alert alert-warning">
-                    <h6><i class="bi bi-exclamation-triangle me-2"></i>Pendaftaran Belum Disubmit</h6>
-                    <p class="mb-2">Pastikan semua data dan dokumen sudah lengkap sebelum submit.</p>
-                    <form method="POST" class="d-inline">
-                        <?= Session::csrfField() ?>
-                        <button type="submit" name="submit_pendaftaran" class="btn btn-primary"
+                    <div class="alert alert-warning">
+                        <h6><i class="bi bi-exclamation-triangle me-2"></i>Pendaftaran Belum Disubmit</h6>
+                        <p class="mb-2">Pastikan semua data dan dokumen sudah lengkap sebelum submit.</p>
+                        <form method="POST" class="d-inline">
+                            <?= Session::csrfField() ?>
+                            <button type="submit" name="submit_pendaftaran" class="btn btn-primary"
                                 onclick="return confirm('Apakah Anda yakin ingin submit pendaftaran? Data tidak dapat diubah setelah submit.')">
-                            <i class="bi bi-send me-2"></i>Submit Pendaftaran
-                        </button>
-                    </form>
-                </div>
+                                <i class="bi bi-send me-2"></i>Submit Pendaftaran
+                            </button>
+                        </form>
+                    </div>
                 <?php elseif ($pendaftaran['status'] === 'submitted'): ?>
-                <div class="alert alert-info">
-                    <h6><i class="bi bi-hourglass-split me-2"></i>Menunggu Verifikasi</h6>
-                    <p class="mb-0">Pendaftaran Anda sedang dalam proses verifikasi oleh admin sekolah.</p>
-                </div>
+                    <div class="alert alert-info">
+                        <h6><i class="bi bi-hourglass-split me-2"></i>Menunggu Verifikasi</h6>
+                        <p class="mb-0">Pendaftaran Anda sedang dalam proses verifikasi oleh admin sekolah.</p>
+                    </div>
                 <?php elseif ($pendaftaran['status'] === 'verified'): ?>
-                <div class="alert alert-primary">
-                    <h6><i class="bi bi-check-circle me-2"></i>Dokumen Terverifikasi</h6>
-                    <p class="mb-0">Dokumen Anda sudah terverifikasi. Tunggu pengumuman hasil seleksi.</p>
-                </div>
+                    <div class="alert alert-primary">
+                        <h6><i class="bi bi-check-circle me-2"></i>Dokumen Terverifikasi</h6>
+                        <p class="mb-0">Dokumen Anda sudah terverifikasi. Tunggu pengumuman hasil seleksi.</p>
+                    </div>
                 <?php elseif ($pendaftaran['status'] === 'accepted'): ?>
-                <div class="alert alert-success">
-                    <h6><i class="bi bi-trophy me-2"></i>Selamat! Anda Diterima</h6>
-                    <p class="mb-2">Anda diterima di <strong><?= htmlspecialchars($pendaftaran['sekolah_pilihan1']) ?></strong></p>
-                    <a href="cetak-bukti.php" class="btn btn-success">
-                        <i class="bi bi-printer me-2"></i>Cetak Bukti Penerimaan
-                    </a>
-                </div>
+                    <div class="alert alert-success">
+                        <h6><i class="bi bi-trophy me-2"></i>Selamat! Anda Diterima</h6>
+                        <p class="mb-2">Anda diterima di
+                            <strong><?= htmlspecialchars($pendaftaran['sekolah_pilihan1']) ?></strong></p>
+                        <a href="cetak-bukti.php" class="btn btn-success">
+                            <i class="bi bi-printer me-2"></i>Cetak Bukti Penerimaan
+                        </a>
+                    </div>
                 <?php elseif ($pendaftaran['status'] === 'rejected'): ?>
-                <div class="alert alert-danger">
-                    <h6><i class="bi bi-x-circle me-2"></i>Maaf, Anda Belum Diterima</h6>
-                    <p class="mb-0"><?= htmlspecialchars($pendaftaran['alasan_penolakan'] ?? 'Tidak memenuhi kriteria seleksi.') ?></p>
-                </div>
+                    <div class="alert alert-danger">
+                        <h6><i class="bi bi-x-circle me-2"></i>Maaf, Anda Belum Diterima</h6>
+                        <p class="mb-0">
+                            <?= htmlspecialchars($pendaftaran['alasan_penolakan'] ?? 'Tidak memenuhi kriteria seleksi.') ?>
+                        </p>
+                    </div>
                 <?php endif; ?>
             </div>
         </div>
-        
+
         <!-- Timeline -->
         <div class="card">
             <div class="card-header">
@@ -131,21 +136,30 @@ $pendaftaran = db()->fetch(
                         <div class="timeline-title">Pendaftaran Dibuat</div>
                         <div class="timeline-desc">Memilih jalur <?= $pendaftaran['nama_jalur'] ?></div>
                     </div>
-                    
-                    <div class="timeline-item <?= in_array($pendaftaran['status'], ['submitted','verified','accepted','rejected']) ? 'completed' : ($pendaftaran['status'] === 'draft' ? 'active' : '') ?>">
-                        <div class="timeline-date"><?= $pendaftaran['tanggal_submit'] ? formatDate($pendaftaran['tanggal_submit']) : 'Belum' ?></div>
+
+                    <div
+                        class="timeline-item <?= in_array($pendaftaran['status'], ['submitted', 'verified', 'accepted', 'rejected']) ? 'completed' : ($pendaftaran['status'] === 'draft' ? 'active' : '') ?>">
+                        <div class="timeline-date">
+                            <?= $pendaftaran['tanggal_submit'] ? formatDate($pendaftaran['tanggal_submit']) : 'Belum' ?>
+                        </div>
                         <div class="timeline-title">Submit Pendaftaran</div>
                         <div class="timeline-desc">Mengirim data dan dokumen</div>
                     </div>
-                    
-                    <div class="timeline-item <?= in_array($pendaftaran['status'], ['verified','accepted','rejected']) ? 'completed' : ($pendaftaran['status'] === 'submitted' ? 'active' : '') ?>">
-                        <div class="timeline-date"><?= $pendaftaran['tanggal_verifikasi'] ? formatDate($pendaftaran['tanggal_verifikasi']) : 'Menunggu' ?></div>
+
+                    <div
+                        class="timeline-item <?= in_array($pendaftaran['status'], ['verified', 'accepted', 'rejected']) ? 'completed' : ($pendaftaran['status'] === 'submitted' ? 'active' : '') ?>">
+                        <div class="timeline-date">
+                            <?= $pendaftaran['tanggal_verifikasi'] ? formatDate($pendaftaran['tanggal_verifikasi']) : 'Menunggu' ?>
+                        </div>
                         <div class="timeline-title">Verifikasi Dokumen</div>
                         <div class="timeline-desc">Pemeriksaan oleh admin</div>
                     </div>
-                    
-                    <div class="timeline-item <?= in_array($pendaftaran['status'], ['accepted','rejected']) ? 'completed' : ($pendaftaran['status'] === 'verified' ? 'active' : '') ?>">
-                        <div class="timeline-date"><?= $pendaftaran['tanggal_pengumuman'] ? formatDate($pendaftaran['tanggal_pengumuman']) : 'Menunggu' ?></div>
+
+                    <div
+                        class="timeline-item <?= in_array($pendaftaran['status'], ['accepted', 'rejected']) ? 'completed' : ($pendaftaran['status'] === 'verified' ? 'active' : '') ?>">
+                        <div class="timeline-date">
+                            <?= $pendaftaran['tanggal_pengumuman'] ? formatDate($pendaftaran['tanggal_pengumuman']) : 'Menunggu' ?>
+                        </div>
                         <div class="timeline-title">Pengumuman Hasil</div>
                         <div class="timeline-desc">Hasil seleksi PPDB</div>
                     </div>
@@ -153,7 +167,7 @@ $pendaftaran = db()->fetch(
             </div>
         </div>
     </div>
-    
+
     <div class="col-lg-4">
         <!-- Quick Actions -->
         <div class="card mb-4">
@@ -162,12 +176,12 @@ $pendaftaran = db()->fetch(
             </div>
             <div class="card-body d-grid gap-2">
                 <?php if ($pendaftaran['status'] === 'draft'): ?>
-                <a href="pendaftaran.php" class="btn btn-outline-primary">
-                    <i class="bi bi-pencil me-2"></i>Edit Data
-                </a>
-                <a href="dokumen.php" class="btn btn-outline-primary">
-                    <i class="bi bi-folder me-2"></i>Upload Dokumen
-                </a>
+                    <a href="pendaftaran.php" class="btn btn-outline-primary">
+                        <i class="bi bi-pencil me-2"></i>Edit Data
+                    </a>
+                    <a href="dokumen.php" class="btn btn-outline-primary">
+                        <i class="bi bi-folder me-2"></i>Upload Dokumen
+                    </a>
                 <?php endif; ?>
                 <a href="cetak-bukti.php" class="btn btn-outline-primary">
                     <i class="bi bi-printer me-2"></i>Cetak Bukti
@@ -177,7 +191,7 @@ $pendaftaran = db()->fetch(
                 </a>
             </div>
         </div>
-        
+
         <!-- Info Card -->
         <div class="card">
             <div class="card-header">
