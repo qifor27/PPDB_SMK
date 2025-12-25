@@ -1,0 +1,50 @@
+# Dependencies
+/node_modules/
+
+# Logs
+*.log
+/logs/*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Uploads (keep folder structure but ignore content)
+/uploads/*
+!/uploads/.gitkeep
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Debug files
+debug_login.php
+fix_password.php
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Compiled files
+*.exe
+*.dll
+
+# Large files
+*.zip
+*.rar
+*.7z
+
+# Cache
+/cache/
+*.cache
