@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $updateData['tanggal_pengumuman'] = date('Y-m-d H:i:s');
     }
 
-    db()->update('tb_pendaftaran', $updateData, 'id_pendaftaran = ?', ['id_pendaftaran' => $pendaftaranId]);
+    db()->update('tb_pendaftaran', $updateData, 'id_pendaftaran = :where_id', ['where_id' => $pendaftaranId]);
     Session::flash('success', 'Status pendaftaran berhasil diperbarui.');
     redirect("detail-siswa.php?id={$pendaftaranId}");
 }

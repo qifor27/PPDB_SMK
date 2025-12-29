@@ -47,14 +47,15 @@ $jalurList = getAllJalur();
     <div class="card-body">
         <form method="GET" class="row g-3">
             <div class="col-md-3">
-                <input type="text" name="search" class="form-control" placeholder="Cari nama/NISN/no pendaftaran" 
-                       value="<?= htmlspecialchars($search) ?>">
+                <input type="text" name="search" class="form-control" placeholder="Cari nama/NISN/no pendaftaran"
+                    value="<?= htmlspecialchars($search) ?>">
             </div>
             <div class="col-md-2">
                 <select name="jalur" class="form-select">
                     <option value="">Semua Jalur</option>
                     <?php foreach ($jalurList as $j): ?>
-                    <option value="<?= $j['id_jalur'] ?>" <?= $filterJalur == $j['id_jalur'] ? 'selected' : '' ?>><?= $j['nama_jalur'] ?></option>
+                        <option value="<?= $j['id_jalur'] ?>" <?= $filterJalur == $j['id_jalur'] ? 'selected' : '' ?>>
+                            <?= $j['nama_jalur'] ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -82,6 +83,41 @@ $jalurList = getAllJalur();
     </div>
 </div>
 
+<!-- === JALUR AFIRMASI START === -->
+<?php
+$afirmasiCount = countAfirmasiPendaftar($smkId);
+$jalurAfirmasi = db()->fetch("SELECT id_jalur FROM tb_jalur WHERE kode_jalur = 'afirmasi'");
+$isFilterAfirmasi = ($filterJalur == ($jalurAfirmasi['id_jalur'] ?? 0));
+?>
+<div class="d-flex gap-2 mb-4 flex-wrap">
+    <span class="text-muted align-self-center me-2">Quick Filter:</span>
+    <a href="pendaftar.php?jalur=<?= $jalurAfirmasi['id_jalur'] ?? '' ?>"
+        class="btn btn-sm <?= $isFilterAfirmasi ? 'btn-purple' : 'btn-outline-purple' ?>">
+        <i class="bi bi-heart-fill me-1"></i> Jalur Afirmasi
+        <span class="badge bg-light text-dark ms-1"><?= $afirmasiCount ?></span>
+    </a>
+    <?php if ($isFilterAfirmasi): ?>
+        <a href="pendaftar.php" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-x-circle me-1"></i> Reset Filter
+        </a>
+    <?php endif; ?>
+</div>
+
+<?php if ($isFilterAfirmasi): ?>
+    <div class="alert alert-purple mb-4"
+        style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05)); border: 1px solid rgba(139, 92, 246, 0.3);">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-heart-fill text-purple me-3 fs-4"></i>
+            <div>
+                <h6 class="mb-1 text-purple">Menampilkan Pendaftar Jalur Afirmasi</h6>
+                <p class="mb-0 small">Total <?= $afirmasiCount ?> pendaftar melalui jalur afirmasi (untuk keluarga kurang
+                    mampu)</p>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+<!-- === JALUR AFIRMASI END === -->
+
 <!-- Table -->
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
@@ -106,29 +142,33 @@ $jalurList = getAllJalur();
                 </thead>
                 <tbody>
                     <?php foreach ($pendaftarList as $i => $p): ?>
-                    <tr>
-                        <td><?= $i + 1 ?></td>
-                        <td><code><?= $p['nomor_pendaftaran'] ?></code></td>
-                        <td><?= htmlspecialchars($p['nama_lengkap']) ?></td>
-                        <td><?= $p['nisn'] ?></td>
-                        <td><?= $p['jenis_kelamin'] ?></td>
-                        <td><?= getJalurBadge($p['kode_jalur']) ?></td>
-                        <td><?= getStatusBadge($p['status']) ?></td>
-                        <td><?= formatDate($p['tanggal_daftar'], 'd M Y') ?></td>
-                        <td>
-                            <a href="detail-siswa.php?id=<?= $p['id_pendaftaran'] ?>" class="btn btn-sm btn-outline-primary" title="Detail">
-                                <i class="bi bi-eye"></i>
-                            </a>
-                            <?php if ($p['status'] === 'submitted'): ?>
-                            <a href="verifikasi.php?id=<?= $p['id_pendaftaran'] ?>" class="btn btn-sm btn-primary" title="Verifikasi">
-                                <i class="bi bi-check2"></i>
-                            </a>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td><?= $i + 1 ?></td>
+                            <td><code><?= $p['nomor_pendaftaran'] ?></code></td>
+                            <td><?= htmlspecialchars($p['nama_lengkap']) ?></td>
+                            <td><?= $p['nisn'] ?></td>
+                            <td><?= $p['jenis_kelamin'] ?></td>
+                            <td><?= getJalurBadge($p['kode_jalur']) ?></td>
+                            <td><?= getStatusBadge($p['status']) ?></td>
+                            <td><?= formatDate($p['tanggal_daftar'], 'd M Y') ?></td>
+                            <td>
+                                <a href="detail-siswa.php?id=<?= $p['id_pendaftaran'] ?>"
+                                    class="btn btn-sm btn-outline-primary" title="Detail">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <?php if ($p['status'] === 'submitted'): ?>
+                                    <a href="verifikasi.php?id=<?= $p['id_pendaftaran'] ?>" class="btn btn-sm btn-primary"
+                                        title="Verifikasi">
+                                        <i class="bi bi-check2"></i>
+                                    </a>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
                     <?php endforeach; ?>
                     <?php if (empty($pendaftarList)): ?>
-                    <tr><td colspan="9" class="text-center text-muted py-4">Tidak ada data</td></tr>
+                        <tr>
+                            <td colspan="9" class="text-center text-muted py-4">Tidak ada data</td>
+                        </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
