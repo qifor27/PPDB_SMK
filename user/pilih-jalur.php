@@ -39,12 +39,59 @@ $jalurList = getAllJalur();
             </div>
             <?php endif; ?>
             
-            <a href="pendaftaran.php?jalur=<?= $jalur['id_jalur'] ?>" class="btn btn-primary mt-auto">
+            <button type="button" class="btn btn-primary mt-auto btn-pilih-jalur" 
+                    data-jalur-id="<?= $jalur['id_jalur'] ?>"
+                    data-jalur-nama="<?= htmlspecialchars($jalur['nama_jalur']) ?>"
+                    data-bs-toggle="modal" data-bs-target="#modalKonfirmasi">
                 <i class="bi bi-arrow-right-circle me-2"></i>Pilih Jalur Ini
-            </a>
+            </button>
         </div>
     </div>
     <?php endforeach; ?>
 </div>
+
+<!-- Modal Konfirmasi -->
+<div class="modal fade" id="modalKonfirmasi" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title"><i class="bi bi-question-circle text-primary me-2"></i>Konfirmasi Pilihan Jalur</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-3">
+                    <i class="bi bi-exclamation-triangle text-warning" style="font-size: 3rem;"></i>
+                </div>
+                <p class="mb-2">Anda akan memilih jalur pendaftaran:</p>
+                <h4 class="text-primary mb-3" id="namaJalurTerpilih">-</h4>
+                <div class="alert alert-warning mb-0">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <strong>Perhatian!</strong> Setelah memilih jalur, Anda <strong>tidak dapat mengubahnya</strong>. 
+                    Pastikan pilihan Anda sudah benar.
+                </div>
+            </div>
+            <div class="modal-footer border-0 justify-content-center gap-2">
+                <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">
+                    <i class="bi bi-x-lg me-2"></i>Batal
+                </button>
+                <a href="#" id="btnKonfirmasiPilih" class="btn btn-primary px-4">
+                    <i class="bi bi-check-lg me-2"></i>Ya, Pilih Jalur Ini
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.querySelectorAll('.btn-pilih-jalur').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        const jalurId = this.getAttribute('data-jalur-id');
+        const jalurNama = this.getAttribute('data-jalur-nama');
+        
+        document.getElementById('namaJalurTerpilih').textContent = jalurNama;
+        document.getElementById('btnKonfirmasiPilih').href = 'pendaftaran.php?jalur=' + jalurId;
+    });
+});
+</script>
 
 <?php require_once 'includes/footer.php'; ?>

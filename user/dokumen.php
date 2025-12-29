@@ -170,8 +170,8 @@ foreach ($uploadedDocs as $doc) {
             <div class="card-header"><h6 class="mb-0"><i class="bi bi-folder me-2"></i>Daftar Dokumen</h6></div>
             <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-dark mb-0">
-                        <thead><tr><th>Jenis Dokumen</th><th>Status</th><th>File</th><th>Aksi</th></tr></thead>
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light"><tr><th>Jenis Dokumen</th><th>Status</th><th>File</th><th>Aksi</th></tr></thead>
                         <tbody>
                             <?php foreach ($requiredDocs as $doc => $required): ?>
                             <tr>
@@ -187,7 +187,7 @@ foreach ($uploadedDocs as $doc) {
             </div>
         </div>
         <div class="d-flex justify-content-between mt-4">
-            <a href="pendaftaran.php" class="btn btn-dark"><i class="bi bi-arrow-left me-2"></i>Kembali</a>
+            <a href="pendaftaran.php" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-2"></i>Kembali</a>
             <a href="status.php" class="btn btn-primary">Lanjut ke Status <i class="bi bi-arrow-right ms-2"></i></a>
         </div>
     </div>
