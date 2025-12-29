@@ -53,10 +53,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'id_smk_pilihan1' => $smkPilihan1,
             'id_smk_pilihan2' => $smkPilihan2,
             'nilai_rata_rata' => $nilaiRataRata
-        ], 'id_pendaftaran = ?', ['id_pendaftaran' => $pendaftaran['id_pendaftaran']]);
+        ], 'id_pendaftaran = :where_id', ['where_id' => $pendaftaran['id_pendaftaran']]);
 
         // Update siswa data
-        db()->update('tb_siswa', [
+        $siswaData = [
             'alamat' => sanitize($_POST['alamat'] ?? ''),
             'kelurahan' => sanitize($_POST['kelurahan'] ?? ''),
             'kecamatan' => sanitize($_POST['kecamatan'] ?? ''),
@@ -70,7 +70,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'no_hp_ortu' => sanitize($_POST['no_hp_ortu'] ?? ''),
             'latitude' => !empty($_POST['latitude']) ? (float) $_POST['latitude'] : null,
             'longitude' => !empty($_POST['longitude']) ? (float) $_POST['longitude'] : null
-        ], 'id_siswa = ?', ['id_siswa' => $userId]);
+        ];
+
+        // Tambahan data kepindahan orang tua - VELI
+        if ($pendaftaran['kode_jalur'] === 'kepindahan') {
+            $siswaData['jenis_instansi_ortu'] = sanitize($_POST['jenis_instansi_ortu'] ?? '');
+            $siswaData['nama_instansi_asal'] = sanitize($_POST['nama_instansi_asal'] ?? '');
+            $siswaData['nama_instansi_tujuan'] = sanitize($_POST['nama_instansi_tujuan'] ?? '');
+            $siswaData['nomor_sk_pindah'] = sanitize($_POST['nomor_sk_pindah'] ?? '');
+            $siswaData['tanggal_sk_pindah'] = !empty($_POST['tanggal_sk_pindah']) ? $_POST['tanggal_sk_pindah'] : null;
+            $siswaData['kota_asal'] = sanitize($_POST['kota_asal'] ?? '');
+            $siswaData['alasan_kepindahan'] = sanitize($_POST['alasan_kepindahan'] ?? '');
+        }
+
+        db()->update('tb_siswa', $siswaData, 'id_siswa = :where_id', ['where_id' => $userId]);
 
         Session::flash('success', 'Data pendaftaran berhasil disimpan.');
         redirect('pendaftaran.php');
@@ -189,7 +202,7 @@ $kejuruanList = getKejuruanBySMK($pendaftaran['id_smk_pilihan1']);
     </div>
 
     <?php if ($pendaftaran['kode_jalur'] === 'zonasi'): ?>
-        <!-- Peta Zonasi - Hanya tampil untuk jalur zonasi -->
+        <!-- Peta Zonasi - Hanya tampil untuk jalur zonasi - RAFA -->
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h6 class="mb-0"><i class="bi bi-map me-2"></i>Peta Lokasi & SMK Terdekat</h6>
@@ -280,6 +293,66 @@ $kejuruanList = getKejuruanBySMK($pendaftaran['id_smk_pilihan1']);
         </div>
     </div>
 
+    <?php if ($pendaftaran['kode_jalur'] === 'kepindahan'): ?>
+        <!-- Data Kepindahan Orang Tua - VELI -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h6 class="mb-0"><i class="bi bi-arrow-left-right me-2"></i>Data Kepindahan Orang Tua</h6>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info mb-3">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Lengkapi data kepindahan orang tua untuk verifikasi jalur kepindahan.
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Jenis Instansi Orang Tua <span class="text-danger">*</span></label>
+                        <select name="jenis_instansi_ortu" class="form-select" required>
+                            <option value="">-- Pilih Jenis Instansi --</option>
+                            <?php foreach (['ASN', 'TNI', 'POLRI', 'BUMN', 'Swasta'] as $jenis): ?>
+                                <option value="<?= $jenis ?>" <?= ($siswa['jenis_instansi_ortu'] ?? '') === $jenis ? 'selected' : '' ?>><?= $jenis ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Nama Instansi Asal <span class="text-danger">*</span></label>
+                        <input type="text" name="nama_instansi_asal" class="form-control" required
+                            placeholder="Contoh: Dinas Pendidikan Kota Jakarta"
+                            value="<?= htmlspecialchars($siswa['nama_instansi_asal'] ?? '') ?>">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Nama Instansi Tujuan <span class="text-danger">*</span></label>
+                        <input type="text" name="nama_instansi_tujuan" class="form-control" required
+                            placeholder="Contoh: Dinas Pendidikan Kota Padang"
+                            value="<?= htmlspecialchars($siswa['nama_instansi_tujuan'] ?? '') ?>">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Nomor SK Pindah Tugas <span class="text-danger">*</span></label>
+                        <input type="text" name="nomor_sk_pindah" class="form-control" required
+                            placeholder="Contoh: SK/123/IV/2025"
+                            value="<?= htmlspecialchars($siswa['nomor_sk_pindah'] ?? '') ?>">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Tanggal SK Pindah <span class="text-danger">*</span></label>
+                        <input type="date" name="tanggal_sk_pindah" class="form-control" required
+                            value="<?= $siswa['tanggal_sk_pindah'] ?? '' ?>">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Kota/Kabupaten Asal <span class="text-danger">*</span></label>
+                        <input type="text" name="kota_asal" class="form-control" required
+                            placeholder="Contoh: Jakarta Selatan"
+                            value="<?= htmlspecialchars($siswa['kota_asal'] ?? '') ?>">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Alasan/Keterangan Kepindahan</label>
+                        <textarea name="alasan_kepindahan" class="form-control" rows="2"
+                            placeholder="Jelaskan alasan kepindahan orang tua (opsional)"><?= htmlspecialchars($siswa['alasan_kepindahan'] ?? '') ?></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
+
     <!-- Pilihan Sekolah -->
     <div class="card mb-4">
         <div class="card-header">
@@ -328,7 +401,7 @@ $kejuruanList = getKejuruanBySMK($pendaftaran['id_smk_pilihan1']);
 </form>
 
 <?php
-// Prepare SMK data for JavaScript
+// Prepare SMK data for JavaScript - RAFA
 $smkDataJson = json_encode(array_map(function ($smk) {
     return [
         'id' => $smk['id_smk'],

@@ -2,12 +2,81 @@
 /**
  * User - Upload Dokumen
  */
-$pageTitle = 'Upload Dokumen';
-require_once 'includes/header.php';
+
+// Load functions first for redirect capability
+require_once dirname(__DIR__) . '/config/database.php';
+require_once dirname(__DIR__) . '/config/functions.php';
+require_once dirname(__DIR__) . '/config/session.php';
+
+// Require login before any output
+Session::requireRole(ROLE_SISWA, SITE_URL . '/login.php');
+
+$userId = Session::getUserId();
+
+// Check pendaftaran before loading header
+$pendaftaran = db()->fetch(
+    "SELECT p.*, j.nama_jalur, j.kode_jalur FROM tb_pendaftaran p
+     LEFT JOIN tb_jalur j ON p.id_jalur = j.id_jalur
+     WHERE p.id_siswa = ? ORDER BY p.id_pendaftaran DESC LIMIT 1",
+    [$userId]
+);
 
 if (!$pendaftaran) {
     redirect('pilih-jalur.php');
 }
+
+// Handle upload BEFORE header (for redirect to work)
+$error = '';
+$success = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['dokumen'])) {
+    $jenisDokumen = sanitize($_POST['jenis_dokumen'] ?? '');
+
+    if (empty($jenisDokumen)) {
+        $error = 'Pilih jenis dokumen.';
+    } else {
+        $uploadPath = UPLOADS_PATH . 'dokumen/' . $pendaftaran['id_pendaftaran'] . '/';
+        $result = uploadFile($_FILES['dokumen'], $uploadPath);
+
+        if ($result['success']) {
+            // Check if doc already exists
+            $existingDoc = db()->fetch(
+                "SELECT * FROM tb_dokumen WHERE id_pendaftaran = ? AND jenis_dokumen = ?",
+                [$pendaftaran['id_pendaftaran'], $jenisDokumen]
+            );
+
+            if ($existingDoc) {
+                $oldFile = $existingDoc['path_file'];
+                if (file_exists($oldFile))
+                    unlink($oldFile);
+
+                db()->update('tb_dokumen', [
+                    'nama_file' => $result['filename'],
+                    'path_file' => $result['path'],
+                    'ukuran_file' => $result['size'],
+                    'status_verifikasi' => 'pending'
+                ], 'id_dokumen = :where_id', ['where_id' => $existingDoc['id_dokumen']]);
+            } else {
+                db()->insert('tb_dokumen', [
+                    'id_pendaftaran' => $pendaftaran['id_pendaftaran'],
+                    'jenis_dokumen' => $jenisDokumen,
+                    'nama_file' => $result['filename'],
+                    'path_file' => $result['path'],
+                    'ukuran_file' => $result['size']
+                ]);
+            }
+
+            Session::flash('success', 'Dokumen berhasil diupload.');
+            redirect('dokumen.php');
+        } else {
+            $error = $result['error'];
+        }
+    }
+}
+
+// Now safe to load header (no more redirects after this)
+$pageTitle = 'Upload Dokumen';
+require_once 'includes/header.php';
 
 // Required documents based on jalur
 $requiredDocs = [
@@ -32,65 +101,15 @@ switch ($pendaftaran['kode_jalur']) {
         $requiredDocs['Bukti Domisili (KK/Surat Keterangan)'] = true;
         break;
     case 'kepindahan':
+        // Dokumen khusus Jalur Kepindahan - VELI
         $requiredDocs['SK Pindah Tugas Orang Tua'] = true;
         $requiredDocs['Surat Keterangan dari Instansi'] = true;
+        $requiredDocs['KK Baru (Setelah Pindah)'] = true;
+        $requiredDocs['Surat Pindah Sekolah'] = true;
         break;
 }
 
-// Get uploaded documents
-$uploadedDocs = db()->fetchAll(
-    "SELECT * FROM tb_dokumen WHERE id_pendaftaran = ?",
-    [$pendaftaran['id_pendaftaran']]
-);
-$uploadedDocsMap = [];
-foreach ($uploadedDocs as $doc) {
-    $uploadedDocsMap[$doc['jenis_dokumen']] = $doc;
-}
-
-$error = '';
-$success = '';
-
-// Handle upload
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['dokumen'])) {
-    $jenisDokumen = sanitize($_POST['jenis_dokumen'] ?? '');
-    
-    if (empty($jenisDokumen)) {
-        $error = 'Pilih jenis dokumen.';
-    } else {
-        $uploadPath = UPLOADS_PATH . 'dokumen/' . $pendaftaran['id_pendaftaran'] . '/';
-        $result = uploadFile($_FILES['dokumen'], $uploadPath);
-        
-        if ($result['success']) {
-            // Delete old file if exists
-            if (isset($uploadedDocsMap[$jenisDokumen])) {
-                $oldFile = $uploadedDocsMap[$jenisDokumen]['path_file'];
-                if (file_exists($oldFile)) unlink($oldFile);
-                
-                db()->update('tb_dokumen', [
-                    'nama_file' => $result['filename'],
-                    'path_file' => $result['path'],
-                    'ukuran_file' => $result['size'],
-                    'status_verifikasi' => 'pending'
-                ], 'id_dokumen = ?', ['id_dokumen' => $uploadedDocsMap[$jenisDokumen]['id_dokumen']]);
-            } else {
-                db()->insert('tb_dokumen', [
-                    'id_pendaftaran' => $pendaftaran['id_pendaftaran'],
-                    'jenis_dokumen' => $jenisDokumen,
-                    'nama_file' => $result['filename'],
-                    'path_file' => $result['path'],
-                    'ukuran_file' => $result['size']
-                ]);
-            }
-            
-            Session::flash('success', 'Dokumen berhasil diupload.');
-            redirect('dokumen.php');
-        } else {
-            $error = $result['error'];
-        }
-    }
-}
-
-// Refresh uploaded docs
+// Get uploaded documents (refresh after possible upload)
 $uploadedDocs = db()->fetchAll(
     "SELECT * FROM tb_dokumen WHERE id_pendaftaran = ?",
     [$pendaftaran['id_pendaftaran']]
@@ -112,7 +131,7 @@ foreach ($uploadedDocs as $doc) {
 </div>
 
 <?php if ($error): ?>
-<div class="alert alert-danger"><i class="bi bi-exclamation-circle me-2"></i><?= $error ?></div>
+    <div class="alert alert-danger"><i class="bi bi-exclamation-circle me-2"></i><?= $error ?></div>
 <?php endif; ?>
 
 <div class="row g-4">
@@ -125,27 +144,30 @@ foreach ($uploadedDocs as $doc) {
             <div class="card-body">
                 <form method="POST" enctype="multipart/form-data">
                     <?= Session::csrfField() ?>
-                    
+
                     <div class="mb-3">
                         <label class="form-label">Jenis Dokumen</label>
                         <select name="jenis_dokumen" class="form-select" required>
                             <option value="">-- Pilih Jenis --</option>
                             <?php foreach ($requiredDocs as $doc => $required): ?>
-                            <option value="<?= htmlspecialchars($doc) ?>"><?= htmlspecialchars($doc) ?><?= $required ? ' *' : '' ?></option>
+                                <option value="<?= htmlspecialchars($doc) ?>">
+                                    <?= htmlspecialchars($doc) ?>     <?= $required ? ' *' : '' ?>
+                                </option>
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label class="form-label">File Dokumen</label>
-                        <div class="file-upload">
-                            <input type="file" name="dokumen" accept=".pdf,.jpg,.jpeg,.png" required>
+                        <label for="fileInput" class="file-upload" style="display: block;">
+                            <input type="file" name="dokumen" id="fileInput" accept=".pdf,.jpg,.jpeg,.png" required
+                                style="display: none;">
                             <div class="file-upload-icon"><i class="bi bi-cloud-arrow-up"></i></div>
-                            <div class="file-upload-text">Klik atau drag file ke sini</div>
+                            <div class="file-upload-text" id="fileText">Klik atau drag file ke sini</div>
                             <div class="file-upload-hint">PDF, JPG, PNG (max 5MB)</div>
-                        </div>
+                        </label>
                     </div>
-                    
+
                     <button type="submit" class="btn btn-primary w-100">
                         <i class="bi bi-upload me-2"></i>Upload
                     </button>
@@ -153,7 +175,7 @@ foreach ($uploadedDocs as $doc) {
             </div>
         </div>
     </div>
-    
+
     <!-- Document List -->
     <div class="col-lg-8">
         <div class="card">
@@ -173,43 +195,43 @@ foreach ($uploadedDocs as $doc) {
                         </thead>
                         <tbody>
                             <?php foreach ($requiredDocs as $doc => $required): ?>
-                            <tr>
-                                <td>
-                                    <?= htmlspecialchars($doc) ?>
-                                    <?php if ($required): ?>
-                                    <span class="text-danger">*</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <?php if (isset($uploadedDocsMap[$doc])): ?>
-                                        <?= getStatusBadge($uploadedDocsMap[$doc]['status_verifikasi']) ?>
-                                    <?php else: ?>
-                                        <span class="badge bg-secondary">Belum Upload</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <?php if (isset($uploadedDocsMap[$doc])): ?>
-                                        <small><?= $uploadedDocsMap[$doc]['nama_file'] ?></small>
-                                    <?php else: ?>
-                                        <small class="text-muted">-</small>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <?php if (isset($uploadedDocsMap[$doc])): ?>
-                                    <a href="<?= UPLOADS_URL ?>/dokumen/<?= $pendaftaran['id_pendaftaran'] ?>/<?= $uploadedDocsMap[$doc]['nama_file'] ?>" 
-                                       target="_blank" class="btn btn-sm btn-outline-primary">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                    <?php endif; ?>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td>
+                                        <?= htmlspecialchars($doc) ?>
+                                        <?php if ($required): ?>
+                                            <span class="text-danger">*</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <?php if (isset($uploadedDocsMap[$doc])): ?>
+                                            <?= getStatusBadge($uploadedDocsMap[$doc]['status_verifikasi']) ?>
+                                        <?php else: ?>
+                                            <span class="badge bg-secondary">Belum Upload</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <?php if (isset($uploadedDocsMap[$doc])): ?>
+                                            <small><?= $uploadedDocsMap[$doc]['nama_file'] ?></small>
+                                        <?php else: ?>
+                                            <small class="text-muted">-</small>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <?php if (isset($uploadedDocsMap[$doc])): ?>
+                                            <a href="<?= UPLOADS_URL ?>/dokumen/<?= $pendaftaran['id_pendaftaran'] ?>/<?= $uploadedDocsMap[$doc]['nama_file'] ?>"
+                                                target="_blank" class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-        
+
         <div class="d-flex justify-content-between mt-4">
             <a href="pendaftaran.php" class="btn btn-dark">
                 <i class="bi bi-arrow-left me-2"></i>Kembali
@@ -220,5 +242,20 @@ foreach ($uploadedDocs as $doc) {
         </div>
     </div>
 </div>
+
+<script>
+    // Show selected filename - VELI
+    document.getElementById('fileInput').addEventListener('change', function (e) {
+        const fileText = document.getElementById('fileText');
+        const fileUpload = document.querySelector('.file-upload');
+        if (this.files.length > 0) {
+            fileText.textContent = this.files[0].name;
+            fileUpload.classList.add('has-file');
+        } else {
+            fileText.textContent = 'Klik atau drag file ke sini';
+            fileUpload.classList.remove('has-file');
+        }
+    });
+</script>
 
 <?php require_once 'includes/footer.php'; ?>
