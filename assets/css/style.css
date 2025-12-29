@@ -1698,87 +1698,68 @@ body {
     border-color: var(--primary-dark);
 }
 
-/* === JALUR AFIRMASI STYLES START === */
-/* Purple/Afirmasi Color Utilities */
-.text-purple {
-    color: #8B5CF6 !important;
+/* ===== File Upload Component ===== */
+.file-upload {
+    position: relative;
+    border: 2px dashed rgba(139, 92, 246, 0.3);
+    border-radius: var(--radius-md);
+    padding: 2rem 1rem;
+    text-align: center;
+    background: rgba(139, 92, 246, 0.03);
+    transition: var(--transition-normal);
+    cursor: pointer;
+    overflow: hidden;
 }
 
-.bg-purple {
-    background-color: #8B5CF6 !important;
+.file-upload:hover {
+    border-color: var(--primary);
+    background: rgba(139, 92, 246, 0.08);
 }
 
-.bg-purple-soft {
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(139, 92, 246, 0.06)) !important;
-    color: #6D28D9;
+.file-upload:hover .file-upload-icon {
+    transform: translateY(-5px);
 }
 
-.border-purple {
-    border-color: rgba(139, 92, 246, 0.3) !important;
+.file-upload input[type="file"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 10;
 }
 
-.btn-purple {
-    background: linear-gradient(135deg, #8B5CF6, #A78BFA);
-    color: white !important;
-    border: none;
-    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+.file-upload-icon {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 0.75rem;
+    transition: var(--transition-normal);
 }
 
-.btn-purple:hover {
-    background: linear-gradient(135deg, #7C3AED, #8B5CF6);
-    color: white !important;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
-}
-
-.btn-outline-purple {
-    background: transparent;
-    color: #8B5CF6 !important;
-    border: 2px solid #8B5CF6;
-}
-
-.btn-outline-purple:hover {
-    background: linear-gradient(135deg, #8B5CF6, #A78BFA);
-    color: white !important;
-    border-color: #8B5CF6;
-}
-
-.alert-purple {
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05));
-    border: 1px solid rgba(139, 92, 246, 0.3);
-    color: #6D28D9;
-}
-
-.badge.bg-purple-soft {
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(139, 92, 246, 0.1)) !important;
-    color: #7C3AED !important;
+.file-upload-text {
+    font-size: 0.95rem;
+    color: var(--text-primary);
     font-weight: 500;
+    margin-bottom: 0.25rem;
 }
 
-/* Afirmasi Card Accent */
-.card.border-purple {
-    border: 1px solid rgba(139, 92, 246, 0.25) !important;
-    box-shadow: 0 4px 20px rgba(139, 92, 246, 0.08);
+.file-upload-hint {
+    font-size: 0.8rem;
+    color: var(--text-muted);
 }
 
-.card.border-purple .card-header.bg-purple-soft {
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05)) !important;
-    border-bottom: 1px solid rgba(139, 92, 246, 0.15);
+.file-upload.dragover {
+    border-color: var(--primary);
+    background: rgba(139, 92, 246, 0.12);
 }
 
-.card.border-purple .card-header h6 {
-    color: #6D28D9;
+.file-upload.has-file {
+    border-color: var(--accent-green);
+    background: rgba(52, 211, 153, 0.08);
 }
 
-/* Afirmasi Form Styling */
-.card.border-purple .form-check-input:checked {
-    background-color: #8B5CF6;
-    border-color: #8B5CF6;
+.file-upload.has-file .file-upload-icon {
+    color: var(--accent-green);
 }
-
-.card.border-purple .form-select:focus,
-.card.border-purple .form-control:focus {
-    border-color: rgba(139, 92, 246, 0.5);
-    box-shadow: 0 0 0 0.2rem rgba(139, 92, 246, 0.15);
-}
-/* === JALUR AFIRMASI STYLES END === */

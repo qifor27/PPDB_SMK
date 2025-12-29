@@ -8,11 +8,9 @@ require_once 'includes/header.php';
 $smkList = getAllSMK();
 $error = '';
 
-// Create new pendaftaran if jalur is selected
 if (isset($_GET['jalur']) && !$pendaftaran) {
     $jalurId = (int) $_GET['jalur'];
     $jalur = db()->fetch("SELECT * FROM tb_jalur WHERE id_jalur = ? AND is_active = 1", [$jalurId]);
-
     if ($jalur) {
         $nomorPendaftaran = generateNomorPendaftaran($jalur['kode_jalur']);
         db()->insert('tb_pendaftaran', [
@@ -27,7 +25,6 @@ if (isset($_GET['jalur']) && !$pendaftaran) {
     }
 }
 
-// Get fresh pendaftaran data
 $pendaftaran = db()->fetch(
     "SELECT p.*, j.nama_jalur, j.kode_jalur FROM tb_pendaftaran p
      LEFT JOIN tb_jalur j ON p.id_jalur = j.id_jalur
@@ -35,11 +32,8 @@ $pendaftaran = db()->fetch(
     [$userId]
 );
 
-if (!$pendaftaran) {
-    redirect('pilih-jalur.php');
-}
+if (!$pendaftaran) { redirect('pilih-jalur.php'); }
 
-// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!Session::verifyCsrf($_POST['csrf_token'] ?? '')) {
         $error = 'Token tidak valid.';
@@ -48,15 +42,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $smkPilihan2 = !empty($_POST['smk_pilihan2']) ? (int) $_POST['smk_pilihan2'] : null;
         $nilaiRataRata = !empty($_POST['nilai_rata_rata']) ? (float) $_POST['nilai_rata_rata'] : null;
 
-        // Update pendaftaran
         db()->update('tb_pendaftaran', [
             'id_smk_pilihan1' => $smkPilihan1,
             'id_smk_pilihan2' => $smkPilihan2,
             'nilai_rata_rata' => $nilaiRataRata
-        ], 'id_pendaftaran = :where_id_pendaftaran', ['where_id_pendaftaran' => $pendaftaran['id_pendaftaran']]);
+        ], 'id_pendaftaran = :where_id', ['where_id' => $pendaftaran['id_pendaftaran']]);
 
-        // Update siswa data
-        db()->update('tb_siswa', [
+        $siswaData = [
             'alamat' => sanitize($_POST['alamat'] ?? ''),
             'kelurahan' => sanitize($_POST['kelurahan'] ?? ''),
             'kecamatan' => sanitize($_POST['kecamatan'] ?? ''),
@@ -70,75 +62,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'no_hp_ortu' => sanitize($_POST['no_hp_ortu'] ?? ''),
             'latitude' => !empty($_POST['latitude']) ? (float) $_POST['latitude'] : null,
             'longitude' => !empty($_POST['longitude']) ? (float) $_POST['longitude'] : null
-        ], 'id_siswa = :where_id_siswa', ['where_id_siswa' => $userId]);
+        ];
+
+        // Tambahan data kepindahan orang tua - VELI
+        if ($pendaftaran['kode_jalur'] === 'kepindahan') {
+            $siswaData['jenis_instansi_ortu'] = sanitize($_POST['jenis_instansi_ortu'] ?? '');
+            $siswaData['nama_instansi_asal'] = sanitize($_POST['nama_instansi_asal'] ?? '');
+            $siswaData['nama_instansi_tujuan'] = sanitize($_POST['nama_instansi_tujuan'] ?? '');
+            $siswaData['nomor_sk_pindah'] = sanitize($_POST['nomor_sk_pindah'] ?? '');
+            $siswaData['tanggal_sk_pindah'] = !empty($_POST['tanggal_sk_pindah']) ? $_POST['tanggal_sk_pindah'] : null;
+            $siswaData['kota_asal'] = sanitize($_POST['kota_asal'] ?? '');
+            $siswaData['alasan_kepindahan'] = sanitize($_POST['alasan_kepindahan'] ?? '');
+        }
+
+        // Tambahan data afirmasi - SABRINA
+        if ($pendaftaran['kode_jalur'] === 'afirmasi') {
+            $siswaData['jenis_bantuan'] = sanitize($_POST['jenis_bantuan'] ?? '');
+            $siswaData['nomor_kartu_bantuan'] = sanitize($_POST['nomor_kartu_bantuan'] ?? '');
+            $siswaData['penghasilan_ortu'] = sanitize($_POST['penghasilan_ortu'] ?? '');
+            $siswaData['jumlah_tanggungan'] = !empty($_POST['jumlah_tanggungan']) ? (int) $_POST['jumlah_tanggungan'] : null;
+            $siswaData['catatan_ekonomi'] = sanitize($_POST['catatan_ekonomi'] ?? '');
+            $siswaData['memiliki_kip'] = isset($_POST['memiliki_kip']) ? 1 : 0;
+            $siswaData['memiliki_pkh'] = isset($_POST['memiliki_pkh']) ? 1 : 0;
+            $siswaData['memiliki_kis'] = isset($_POST['memiliki_kis']) ? 1 : 0;
+            $siswaData['memiliki_kks'] = isset($_POST['memiliki_kks']) ? 1 : 0;
+            $siswaData['memiliki_sktm'] = isset($_POST['memiliki_sktm']) ? 1 : 0;
+        }
+
+        db()->update('tb_siswa', $siswaData, 'id_siswa = :where_id', ['where_id' => $userId]);
 
         Session::flash('success', 'Data pendaftaran berhasil disimpan.');
         redirect('pendaftaran.php');
     }
 }
 
-// Refresh siswa data
 $siswa = db()->fetch("SELECT * FROM tb_siswa WHERE id_siswa = ?", [$userId]);
 $kejuruanList = getKejuruanBySMK($pendaftaran['id_smk_pilihan1']);
 ?>
 
 <div class="card mb-4">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <div>
-            <h5 class="mb-0">Data Pendaftaran</h5>
-            <small class="text-muted">No: <?= $pendaftaran['nomor_pendaftaran'] ?></small>
-        </div>
+        <div><h5 class="mb-0">Data Pendaftaran</h5><small class="text-muted">No: <?= $pendaftaran['nomor_pendaftaran'] ?></small></div>
         <?= getJalurBadge($pendaftaran['kode_jalur']) ?>
     </div>
 </div>
 
-<?php if ($error): ?>
-    <div class="alert alert-danger"><i class="bi bi-exclamation-circle me-2"></i><?= $error ?></div>
-<?php endif; ?>
+<?php if ($error): ?><div class="alert alert-danger"><i class="bi bi-exclamation-circle me-2"></i><?= $error ?></div><?php endif; ?>
 
 <form method="POST" class="needs-validation" novalidate>
     <?= Session::csrfField() ?>
 
     <!-- Data Pribadi -->
     <div class="card mb-4">
-        <div class="card-header">
-            <h6 class="mb-0"><i class="bi bi-person me-2"></i>Data Pribadi</h6>
-        </div>
+        <div class="card-header"><h6 class="mb-0"><i class="bi bi-person me-2"></i>Data Pribadi</h6></div>
         <div class="card-body">
             <div class="row g-3">
-                <div class="col-md-6">
-                    <label class="form-label">Nama Lengkap</label>
-                    <input type="text" class="form-control" value="<?= htmlspecialchars($siswa['nama_lengkap']) ?>"
-                        disabled>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">NISN</label>
-                    <input type="text" class="form-control" value="<?= $siswa['nisn'] ?>" disabled>
-                </div>
-                <div class="col-md-3">
-                    <label class="form-label">Jenis Kelamin</label>
-                    <input type="text" class="form-control"
-                        value="<?= $siswa['jenis_kelamin'] === 'L' ? 'Laki-laki' : 'Perempuan' ?>" disabled>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Tempat Lahir</label>
-                    <input type="text" class="form-control" value="<?= htmlspecialchars($siswa['tempat_lahir']) ?>"
-                        disabled>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Tanggal Lahir</label>
-                    <input type="text" class="form-control" value="<?= formatDate($siswa['tanggal_lahir']) ?>" disabled>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Agama</label>
-                    <select name="agama" class="form-select" required>
-                        <option value="">Pilih Agama</option>
-                        <?php foreach (['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu'] as $agama): ?>
-                            <option value="<?= $agama ?>" <?= ($siswa['agama'] ?? '') === $agama ? 'selected' : '' ?>>
-                                <?= $agama ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+                <div class="col-md-6"><label class="form-label">Nama Lengkap</label><input type="text" class="form-control" value="<?= htmlspecialchars($siswa['nama_lengkap']) ?>" disabled></div>
+                <div class="col-md-3"><label class="form-label">NISN</label><input type="text" class="form-control" value="<?= $siswa['nisn'] ?>" disabled></div>
+                <div class="col-md-3"><label class="form-label">Jenis Kelamin</label><input type="text" class="form-control" value="<?= $siswa['jenis_kelamin'] === 'L' ? 'Laki-laki' : 'Perempuan' ?>" disabled></div>
+                <div class="col-md-4"><label class="form-label">Tempat Lahir</label><input type="text" class="form-control" value="<?= htmlspecialchars($siswa['tempat_lahir']) ?>" disabled></div>
+                <div class="col-md-4"><label class="form-label">Tanggal Lahir</label><input type="text" class="form-control" value="<?= formatDate($siswa['tanggal_lahir']) ?>" disabled></div>
+                <div class="col-md-4"><label class="form-label">Agama</label>
+                    <select name="agama" class="form-select" required><option value="">Pilih Agama</option>
+                    <?php foreach (['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu'] as $agama): ?>
+                        <option value="<?= $agama ?>" <?= ($siswa['agama'] ?? '') === $agama ? 'selected' : '' ?>><?= $agama ?></option>
+                    <?php endforeach; ?></select>
                 </div>
             </div>
         </div>
@@ -146,43 +134,19 @@ $kejuruanList = getKejuruanBySMK($pendaftaran['id_smk_pilihan1']);
 
     <!-- Alamat -->
     <div class="card mb-4">
-        <div class="card-header">
-            <h6 class="mb-0"><i class="bi bi-geo-alt me-2"></i>Alamat Domisili</h6>
-        </div>
+        <div class="card-header"><h6 class="mb-0"><i class="bi bi-geo-alt me-2"></i>Alamat Domisili</h6></div>
         <div class="card-body">
             <div class="row g-3">
-                <div class="col-12">
-                    <label class="form-label">Alamat Lengkap</label>
-                    <textarea name="alamat" class="form-control" rows="2"
-                        required><?= htmlspecialchars($siswa['alamat'] ?? '') ?></textarea>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Kelurahan</label>
-                    <input type="text" name="kelurahan" class="form-control"
-                        value="<?= htmlspecialchars($siswa['kelurahan'] ?? '') ?>">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Kecamatan</label>
-                    <input type="text" name="kecamatan" class="form-control"
-                        value="<?= htmlspecialchars($siswa['kecamatan'] ?? '') ?>">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Kode Pos</label>
-                    <input type="text" name="kode_pos" class="form-control"
-                        value="<?= htmlspecialchars($siswa['kode_pos'] ?? '') ?>">
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Koordinat (untuk zonasi)</label>
+                <div class="col-12"><label class="form-label">Alamat Lengkap</label><textarea name="alamat" class="form-control" rows="2" required><?= htmlspecialchars($siswa['alamat'] ?? '') ?></textarea></div>
+                <div class="col-md-4"><label class="form-label">Kelurahan</label><input type="text" name="kelurahan" class="form-control" value="<?= htmlspecialchars($siswa['kelurahan'] ?? '') ?>"></div>
+                <div class="col-md-4"><label class="form-label">Kecamatan</label><input type="text" name="kecamatan" class="form-control" value="<?= htmlspecialchars($siswa['kecamatan'] ?? '') ?>"></div>
+                <div class="col-md-4"><label class="form-label">Kode Pos</label><input type="text" name="kode_pos" class="form-control" value="<?= htmlspecialchars($siswa['kode_pos'] ?? '') ?>"></div>
+                <div class="col-md-6"><label class="form-label">Koordinat (untuk zonasi)</label>
                     <div class="input-group">
-                        <input type="text" name="latitude" class="form-control" placeholder="Latitude"
-                            value="<?= $siswa['latitude'] ?? '' ?>" id="inputLat">
-                        <input type="text" name="longitude" class="form-control" placeholder="Longitude"
-                            value="<?= $siswa['longitude'] ?? '' ?>" id="inputLng">
-                        <button type="button" class="btn btn-primary" id="btnGetLocation">
-                            <i class="bi bi-crosshair"></i>
-                        </button>
-                    </div>
-                    <small class="form-text">Klik tombol untuk mendeteksi lokasi otomatis</small>
+                        <input type="text" name="latitude" class="form-control" placeholder="Latitude" value="<?= $siswa['latitude'] ?? '' ?>" id="inputLat">
+                        <input type="text" name="longitude" class="form-control" placeholder="Longitude" value="<?= $siswa['longitude'] ?? '' ?>" id="inputLng">
+                        <button type="button" class="btn btn-primary" id="btnGetLocation"><i class="bi bi-crosshair"></i></button>
+                    </div><small class="form-text">Klik tombol untuk mendeteksi lokasi otomatis</small>
                 </div>
             </div>
         </div>
@@ -190,195 +154,100 @@ $kejuruanList = getKejuruanBySMK($pendaftaran['id_smk_pilihan1']);
 
     <!-- Asal Sekolah -->
     <div class="card mb-4">
-        <div class="card-header">
-            <h6 class="mb-0"><i class="bi bi-building me-2"></i>Asal Sekolah</h6>
-        </div>
+        <div class="card-header"><h6 class="mb-0"><i class="bi bi-building me-2"></i>Asal Sekolah</h6></div>
         <div class="card-body">
             <div class="row g-3">
-                <div class="col-md-8">
-                    <label class="form-label">Nama Sekolah Asal (SMP/MTs)</label>
-                    <input type="text" name="asal_sekolah" class="form-control" required
-                        value="<?= htmlspecialchars($siswa['asal_sekolah'] ?? '') ?>">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Nilai Rata-rata Raport</label>
-                    <input type="number" name="nilai_rata_rata" class="form-control" step="0.01" min="0" max="100"
-                        value="<?= $pendaftaran['nilai_rata_rata'] ?? '' ?>">
-                </div>
+                <div class="col-md-8"><label class="form-label">Nama Sekolah Asal (SMP/MTs)</label><input type="text" name="asal_sekolah" class="form-control" required value="<?= htmlspecialchars($siswa['asal_sekolah'] ?? '') ?>"></div>
+                <div class="col-md-4"><label class="form-label">Nilai Rata-rata Raport</label><input type="number" name="nilai_rata_rata" class="form-control" step="0.01" min="0" max="100" value="<?= $pendaftaran['nilai_rata_rata'] ?? '' ?>"></div>
             </div>
         </div>
     </div>
 
     <!-- Data Orang Tua -->
     <div class="card mb-4">
-        <div class="card-header">
-            <h6 class="mb-0"><i class="bi bi-people me-2"></i>Data Orang Tua</h6>
-        </div>
+        <div class="card-header"><h6 class="mb-0"><i class="bi bi-people me-2"></i>Data Orang Tua</h6></div>
         <div class="card-body">
             <div class="row g-3">
-                <div class="col-md-6">
-                    <label class="form-label">Nama Ayah</label>
-                    <input type="text" name="nama_ayah" class="form-control"
-                        value="<?= htmlspecialchars($siswa['nama_ayah'] ?? '') ?>">
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Pekerjaan Ayah</label>
-                    <input type="text" name="pekerjaan_ayah" class="form-control"
-                        value="<?= htmlspecialchars($siswa['pekerjaan_ayah'] ?? '') ?>">
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Nama Ibu</label>
-                    <input type="text" name="nama_ibu" class="form-control"
-                        value="<?= htmlspecialchars($siswa['nama_ibu'] ?? '') ?>">
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Pekerjaan Ibu</label>
-                    <input type="text" name="pekerjaan_ibu" class="form-control"
-                        value="<?= htmlspecialchars($siswa['pekerjaan_ibu'] ?? '') ?>">
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">No. HP Orang Tua</label>
-                    <input type="text" name="no_hp_ortu" class="form-control"
-                        value="<?= htmlspecialchars($siswa['no_hp_ortu'] ?? '') ?>">
-                </div>
+                <div class="col-md-6"><label class="form-label">Nama Ayah</label><input type="text" name="nama_ayah" class="form-control" value="<?= htmlspecialchars($siswa['nama_ayah'] ?? '') ?>"></div>
+                <div class="col-md-6"><label class="form-label">Pekerjaan Ayah</label><input type="text" name="pekerjaan_ayah" class="form-control" value="<?= htmlspecialchars($siswa['pekerjaan_ayah'] ?? '') ?>"></div>
+                <div class="col-md-6"><label class="form-label">Nama Ibu</label><input type="text" name="nama_ibu" class="form-control" value="<?= htmlspecialchars($siswa['nama_ibu'] ?? '') ?>"></div>
+                <div class="col-md-6"><label class="form-label">Pekerjaan Ibu</label><input type="text" name="pekerjaan_ibu" class="form-control" value="<?= htmlspecialchars($siswa['pekerjaan_ibu'] ?? '') ?>"></div>
+                <div class="col-md-6"><label class="form-label">No. HP Orang Tua</label><input type="text" name="no_hp_ortu" class="form-control" value="<?= htmlspecialchars($siswa['no_hp_ortu'] ?? '') ?>"></div>
             </div>
         </div>
     </div>
 
-    <!-- === JALUR AFIRMASI START === -->
     <?php if ($pendaftaran['kode_jalur'] === 'afirmasi'): ?>
-        <!-- Data Ekonomi Keluarga (Khusus Jalur Afirmasi) -->
-        <div class="card mb-4 border-purple">
-            <div class="card-header bg-purple-soft">
-                <h6 class="mb-0"><i class="bi bi-heart me-2"></i>Data Ekonomi Keluarga (Jalur Afirmasi)</h6>
+    <!-- Data Ekonomi Keluarga (Jalur Afirmasi) - SABRINA -->
+    <div class="card mb-4 border-purple">
+        <div class="card-header bg-purple-soft"><h6 class="mb-0"><i class="bi bi-heart me-2"></i>Data Ekonomi Keluarga (Jalur Afirmasi)</h6></div>
+        <div class="card-body">
+            <div class="alert alert-info mb-4"><i class="bi bi-info-circle me-2"></i><strong>Informasi Jalur Afirmasi:</strong> Jalur ini diperuntukkan bagi siswa dari keluarga kurang mampu. Pastikan Anda memiliki minimal salah satu dokumen: KIP, PKH, KIS, atau SKTM.</div>
+            <div class="row g-3">
+                <div class="col-md-6"><label class="form-label">Jenis Bantuan Pemerintah <span class="text-danger">*</span></label>
+                    <select name="jenis_bantuan" class="form-select" required><option value="">-- Pilih Jenis Bantuan --</option>
+                    <?php foreach (getJenisBantuanOptions() as $kode => $nama): ?><option value="<?= $kode ?>" <?= ($siswa['jenis_bantuan'] ?? '') === $kode ? 'selected' : '' ?>><?= $nama ?></option><?php endforeach; ?></select>
+                </div>
+                <div class="col-md-6"><label class="form-label">Nomor Kartu Bantuan</label><input type="text" name="nomor_kartu_bantuan" class="form-control" value="<?= htmlspecialchars($siswa['nomor_kartu_bantuan'] ?? '') ?>" placeholder="Contoh: 1234567890123456"></div>
+                <div class="col-md-6"><label class="form-label">Penghasilan Orang Tua (per bulan)</label>
+                    <select name="penghasilan_ortu" class="form-select"><option value="">-- Pilih Range Penghasilan --</option>
+                    <?php foreach (getRangePenghasilan() as $kode => $nama): ?><option value="<?= $kode ?>" <?= ($siswa['penghasilan_ortu'] ?? '') === $kode ? 'selected' : '' ?>><?= $nama ?></option><?php endforeach; ?></select>
+                </div>
+                <div class="col-md-6"><label class="form-label">Jumlah Tanggungan Keluarga</label><input type="number" name="jumlah_tanggungan" class="form-control" min="1" max="20" value="<?= htmlspecialchars($siswa['jumlah_tanggungan'] ?? '') ?>"></div>
+                <div class="col-12"><label class="form-label">Catatan Kondisi Ekonomi</label><textarea name="catatan_ekonomi" class="form-control" rows="2" placeholder="Jelaskan kondisi ekonomi keluarga (opsional)"><?= htmlspecialchars($siswa['catatan_ekonomi'] ?? '') ?></textarea></div>
             </div>
-            <div class="card-body">
-                <div class="alert alert-info mb-4">
-                    <i class="bi bi-info-circle me-2"></i>
-                    <strong>Informasi Jalur Afirmasi:</strong> Jalur ini diperuntukkan bagi siswa dari keluarga kurang
-                    mampu.
-                    Pastikan Anda memiliki minimal salah satu dokumen: KIP, PKH, KIS, atau SKTM.
-                </div>
-
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label">Jenis Bantuan Pemerintah <span class="text-danger">*</span></label>
-                        <select name="jenis_bantuan" class="form-select" required>
-                            <option value="">-- Pilih Jenis Bantuan --</option>
-                            <?php foreach (getJenisBantuanOptions() as $kode => $nama): ?>
-                                <option value="<?= $kode ?>" <?= ($siswa['jenis_bantuan'] ?? '') === $kode ? 'selected' : '' ?>>
-                                    <?= $nama ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                        <small class="form-text text-muted">Pilih jenis bantuan yang Anda terima</small>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Nomor Kartu Bantuan</label>
-                        <input type="text" name="nomor_kartu_bantuan" class="form-control"
-                            value="<?= htmlspecialchars($siswa['nomor_kartu_bantuan'] ?? '') ?>"
-                            placeholder="Contoh: 1234567890123456">
-                        <small class="form-text text-muted">Nomor kartu KIP/PKH/KIS (jika ada)</small>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Penghasilan Orang Tua (per bulan)</label>
-                        <select name="penghasilan_ortu" class="form-select">
-                            <option value="">-- Pilih Range Penghasilan --</option>
-                            <?php foreach (getRangePenghasilan() as $kode => $nama): ?>
-                                <option value="<?= $kode ?>" <?= ($siswa['penghasilan_ortu'] ?? '') === $kode ? 'selected' : '' ?>>
-                                    <?= $nama ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label">Jumlah Tanggungan Keluarga</label>
-                        <input type="number" name="jumlah_tanggungan" class="form-control" min="1" max="20"
-                            value="<?= htmlspecialchars($siswa['jumlah_tanggungan'] ?? '') ?>"
-                            placeholder="Jumlah anggota keluarga yang ditanggung">
-                    </div>
-                    <div class="col-12">
-                        <label class="form-label">Catatan Kondisi Ekonomi</label>
-                        <textarea name="catatan_ekonomi" class="form-control" rows="2"
-                            placeholder="Jelaskan kondisi ekonomi keluarga (opsional)"><?= htmlspecialchars($siswa['catatan_ekonomi'] ?? '') ?></textarea>
-                    </div>
-                </div>
-
-                <hr class="my-4">
-
-                <h6 class="mb-3"><i class="bi bi-file-check me-2"></i>Dokumen yang Dimiliki</h6>
-                <div class="row g-2">
-                    <?php
-                    $dokumenAfirmasi = [
-                        'memiliki_kip' => 'Kartu Indonesia Pintar (KIP)',
-                        'memiliki_pkh' => 'Program Keluarga Harapan (PKH)',
-                        'memiliki_kis' => 'Kartu Indonesia Sehat (KIS)',
-                        'memiliki_kks' => 'Kartu Keluarga Sejahtera (KKS)',
-                        'memiliki_sktm' => 'Surat Keterangan Tidak Mampu (SKTM)'
-                    ];
-                    foreach ($dokumenAfirmasi as $field => $label):
-                        ?>
-                        <div class="col-md-6">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="<?= $field ?>" id="<?= $field ?>"
-                                    value="1" <?= !empty($siswa[$field]) ? 'checked' : '' ?>>
-                                <label class="form-check-label" for="<?= $field ?>"><?= $label ?></label>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-                <small class="form-text text-muted mt-2 d-block">
-                    <i class="bi bi-exclamation-triangle text-warning me-1"></i>
-                    Centang dokumen yang Anda miliki. Anda harus mengupload minimal 1 dokumen di halaman Upload Dokumen.
-                </small>
+            <hr class="my-4"><h6 class="mb-3"><i class="bi bi-file-check me-2"></i>Dokumen yang Dimiliki</h6>
+            <div class="row g-2">
+                <?php foreach (['memiliki_kip' => 'Kartu Indonesia Pintar (KIP)', 'memiliki_pkh' => 'Program Keluarga Harapan (PKH)', 'memiliki_kis' => 'Kartu Indonesia Sehat (KIS)', 'memiliki_kks' => 'Kartu Keluarga Sejahtera (KKS)', 'memiliki_sktm' => 'Surat Keterangan Tidak Mampu (SKTM)'] as $field => $label): ?>
+                <div class="col-md-6"><div class="form-check"><input class="form-check-input" type="checkbox" name="<?= $field ?>" id="<?= $field ?>" value="1" <?= !empty($siswa[$field]) ? 'checked' : '' ?>><label class="form-check-label" for="<?= $field ?>"><?= $label ?></label></div></div>
+                <?php endforeach; ?>
             </div>
         </div>
+    </div>
     <?php endif; ?>
-    <!-- === JALUR AFIRMASI END === -->
+
+    <?php if ($pendaftaran['kode_jalur'] === 'kepindahan'): ?>
+    <!-- Data Kepindahan Orang Tua - VELI -->
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white"><h6 class="mb-0"><i class="bi bi-arrow-left-right me-2"></i>Data Kepindahan Orang Tua</h6></div>
+        <div class="card-body">
+            <div class="alert alert-info mb-3"><i class="bi bi-info-circle me-2"></i>Lengkapi data kepindahan orang tua untuk verifikasi jalur kepindahan.</div>
+            <div class="row g-3">
+                <div class="col-md-4"><label class="form-label">Jenis Instansi Orang Tua <span class="text-danger">*</span></label>
+                    <select name="jenis_instansi_ortu" class="form-select" required><option value="">-- Pilih Jenis Instansi --</option>
+                    <?php foreach (['ASN', 'TNI', 'POLRI', 'BUMN', 'Swasta'] as $jenis): ?><option value="<?= $jenis ?>" <?= ($siswa['jenis_instansi_ortu'] ?? '') === $jenis ? 'selected' : '' ?>><?= $jenis ?></option><?php endforeach; ?></select>
+                </div>
+                <div class="col-md-4"><label class="form-label">Nama Instansi Asal <span class="text-danger">*</span></label><input type="text" name="nama_instansi_asal" class="form-control" required placeholder="Contoh: Dinas Pendidikan Kota Jakarta" value="<?= htmlspecialchars($siswa['nama_instansi_asal'] ?? '') ?>"></div>
+                <div class="col-md-4"><label class="form-label">Nama Instansi Tujuan <span class="text-danger">*</span></label><input type="text" name="nama_instansi_tujuan" class="form-control" required placeholder="Contoh: Dinas Pendidikan Kota Padang" value="<?= htmlspecialchars($siswa['nama_instansi_tujuan'] ?? '') ?>"></div>
+                <div class="col-md-4"><label class="form-label">Nomor SK Pindah Tugas <span class="text-danger">*</span></label><input type="text" name="nomor_sk_pindah" class="form-control" required placeholder="Contoh: SK/123/IV/2025" value="<?= htmlspecialchars($siswa['nomor_sk_pindah'] ?? '') ?>"></div>
+                <div class="col-md-4"><label class="form-label">Tanggal SK Pindah <span class="text-danger">*</span></label><input type="date" name="tanggal_sk_pindah" class="form-control" required value="<?= $siswa['tanggal_sk_pindah'] ?? '' ?>"></div>
+                <div class="col-md-4"><label class="form-label">Kota/Kabupaten Asal <span class="text-danger">*</span></label><input type="text" name="kota_asal" class="form-control" required placeholder="Contoh: Jakarta Selatan" value="<?= htmlspecialchars($siswa['kota_asal'] ?? '') ?>"></div>
+                <div class="col-12"><label class="form-label">Alasan/Keterangan Kepindahan</label><textarea name="alasan_kepindahan" class="form-control" rows="2" placeholder="Jelaskan alasan kepindahan orang tua (opsional)"><?= htmlspecialchars($siswa['alasan_kepindahan'] ?? '') ?></textarea></div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
 
     <!-- Pilihan Sekolah -->
     <div class="card mb-4">
-        <div class="card-header">
-            <h6 class="mb-0"><i class="bi bi-building me-2"></i>Pilihan Sekolah Tujuan</h6>
-        </div>
+        <div class="card-header"><h6 class="mb-0"><i class="bi bi-building me-2"></i>Pilihan Sekolah Tujuan</h6></div>
         <div class="card-body">
             <div class="row g-3">
-                <div class="col-md-6">
-                    <label class="form-label">SMK Pilihan 1 <span class="text-danger">*</span></label>
-                    <select name="smk_pilihan1" class="form-select" required>
-                        <?php foreach ($smkList as $smk): ?>
-                            <option value="<?= $smk['id_smk'] ?>" <?= $pendaftaran['id_smk_pilihan1'] == $smk['id_smk'] ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($smk['nama_sekolah']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+                <div class="col-md-6"><label class="form-label">SMK Pilihan 1 <span class="text-danger">*</span></label>
+                    <select name="smk_pilihan1" class="form-select" required><?php foreach ($smkList as $smk): ?><option value="<?= $smk['id_smk'] ?>" <?= $pendaftaran['id_smk_pilihan1'] == $smk['id_smk'] ? 'selected' : '' ?>><?= htmlspecialchars($smk['nama_sekolah']) ?></option><?php endforeach; ?></select>
                 </div>
-                <div class="col-md-6">
-                    <label class="form-label">SMK Pilihan 2 (Opsional)</label>
-                    <select name="smk_pilihan2" class="form-select">
-                        <option value="">-- Tidak Ada --</option>
-                        <?php foreach ($smkList as $smk): ?>
-                            <option value="<?= $smk['id_smk'] ?>" <?= ($pendaftaran['id_smk_pilihan2'] ?? '') == $smk['id_smk'] ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($smk['nama_sekolah']) ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+                <div class="col-md-6"><label class="form-label">SMK Pilihan 2 (Opsional)</label>
+                    <select name="smk_pilihan2" class="form-select"><option value="">-- Tidak Ada --</option><?php foreach ($smkList as $smk): ?><option value="<?= $smk['id_smk'] ?>" <?= ($pendaftaran['id_smk_pilihan2'] ?? '') == $smk['id_smk'] ? 'selected' : '' ?>><?= htmlspecialchars($smk['nama_sekolah']) ?></option><?php endforeach; ?></select>
                 </div>
             </div>
         </div>
     </div>
 
     <div class="d-flex justify-content-between">
-        <a href="index.php" class="btn btn-dark">
-            <i class="bi bi-arrow-left me-2"></i>Kembali
-        </a>
+        <a href="index.php" class="btn btn-dark"><i class="bi bi-arrow-left me-2"></i>Kembali</a>
         <div>
-            <button type="submit" class="btn btn-primary">
-                <i class="bi bi-save me-2"></i>Simpan Data
-            </button>
-            <a href="dokumen.php" class="btn btn-outline-primary">
-                Lanjut Upload Dokumen <i class="bi bi-arrow-right ms-2"></i>
-            </a>
+            <button type="submit" class="btn btn-primary"><i class="bi bi-save me-2"></i>Simpan Data</button>
+            <a href="dokumen.php" class="btn btn-outline-primary">Lanjut Upload Dokumen <i class="bi bi-arrow-right ms-2"></i></a>
         </div>
     </div>
 </form>

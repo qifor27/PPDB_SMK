@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $updateData['tanggal_pengumuman'] = date('Y-m-d H:i:s');
     }
 
-    db()->update('tb_pendaftaran', $updateData, 'id_pendaftaran = :where_id_pendaftaran', ['where_id_pendaftaran' => $pendaftaranId]);
+    db()->update('tb_pendaftaran', $updateData, 'id_pendaftaran = :where_id', ['where_id' => $pendaftaranId]);
     Session::flash('success', 'Status pendaftaran berhasil diperbarui.');
     redirect("detail-siswa.php?id={$pendaftaranId}");
 }
@@ -142,6 +142,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
             </div>
         </div>
+
+        <?php if ($data['kode_jalur'] === 'kepindahan'): ?>
+            <!-- Data Kepindahan Orang Tua - VELI -->
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="bi bi-arrow-left-right me-2"></i>Data Kepindahan Orang Tua</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="text-muted small">Jenis Instansi</label>
+                            <div class="fw-bold"><?= htmlspecialchars($data['jenis_instansi_ortu'] ?? '-') ?></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="text-muted small">Instansi Asal</label>
+                            <div><?= htmlspecialchars($data['nama_instansi_asal'] ?? '-') ?></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="text-muted small">Instansi Tujuan</label>
+                            <div><?= htmlspecialchars($data['nama_instansi_tujuan'] ?? '-') ?></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="text-muted small">Nomor SK Pindah</label>
+                            <div class="fw-bold text-primary"><?= htmlspecialchars($data['nomor_sk_pindah'] ?? '-') ?></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="text-muted small">Tanggal SK Pindah</label>
+                            <div><?= !empty($data['tanggal_sk_pindah']) ? formatDate($data['tanggal_sk_pindah']) : '-' ?>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="text-muted small">Kota/Kabupaten Asal</label>
+                            <div><?= htmlspecialchars($data['kota_asal'] ?? '-') ?></div>
+                        </div>
+                        <?php if (!empty($data['alasan_kepindahan'])): ?>
+                            <div class="col-12">
+                                <label class="text-muted small">Alasan Kepindahan</label>
+                                <div><?= htmlspecialchars($data['alasan_kepindahan']) ?></div>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
 
         <!-- Dokumen -->
         <div class="card">
