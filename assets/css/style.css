@@ -922,19 +922,22 @@ a:hover {
     border-radius: var(--radius-md);
     padding: 0.875rem 1rem;
     color: var(--text-secondary);
-    font-weight: 400 !important;
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 300 !important;
     transition: var(--transition-fast);
 }
 
 .form-select option {
-    font-weight: 400 !important;
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 300 !important;
     color: var(--text-secondary);
 }
 
 select.form-select,
 select.form-select option,
 .form-select::-ms-expand {
-    font-weight: 400 !important;
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 300 !important;
     color: var(--text-secondary);
 }
 
