@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PPDB SMK - Helper Functions
  * Common utility functions used throughout the application
@@ -474,6 +475,16 @@ function getKejuruanBySMK($smkId)
 }
 
 /**
+ * Get kejuruan name by ID
+ */
+function getKejuruanNamaById($id)
+{
+    if (!$id) return '';
+    $kejuruan = db()->fetch("SELECT nama_kejuruan FROM tb_kejuruan WHERE id_program = ?", [$id]);
+    return $kejuruan ? $kejuruan['nama_kejuruan'] : '';
+}
+
+/**
  * Get jalur data
  */
 function getAllJalur()
@@ -672,3 +683,28 @@ function getAfirmasiVerificationChecklist()
 }
 // === JALUR AFIRMASI END ===
 
+// === PRESTASI FUNCTIONS START ===
+/**
+ * Get prestasi list by pendaftaran ID
+ */
+function getPrestasiByPendaftaran($pendaftaranId)
+{
+    return db()->fetchAll(
+        "SELECT * FROM tb_prestasi_siswa WHERE id_pendaftaran = ? ORDER BY tingkat DESC, poin DESC",
+        [$pendaftaranId]
+    );
+}
+
+/**
+ * Get total prestasi poin (only valid)
+ */
+function getTotalPrestasiPoin($pendaftaranId)
+{
+    $result = db()->fetch(
+        "SELECT COALESCE(SUM(poin), 0) as total FROM tb_prestasi_siswa 
+         WHERE id_pendaftaran = ? AND status_verifikasi = 'valid'",
+        [$pendaftaranId]
+    );
+    return (int)($result['total'] ?? 0);
+}
+// === PRESTASI FUNCTIONS END ===

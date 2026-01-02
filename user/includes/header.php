@@ -1,4 +1,5 @@
 <?php
+
 /**
  * User Dashboard - Header Include
  */
@@ -20,11 +21,15 @@ $siswa = db()->fetch("SELECT * FROM tb_siswa WHERE id_siswa = ?", [$userId]);
 
 // Get pendaftaran if exists
 $pendaftaran = db()->fetch(
-    "SELECT p.*, j.nama_jalur, j.kode_jalur, s1.nama_sekolah as sekolah_pilihan1, s2.nama_sekolah as sekolah_pilihan2
+    "SELECT p.*, j.nama_jalur, j.kode_jalur, 
+            s1.nama_sekolah as sekolah_pilihan1, s2.nama_sekolah as sekolah_pilihan2,
+            k1.nama_kejuruan as kejuruan_pilihan1, k2.nama_kejuruan as kejuruan_pilihan2
      FROM tb_pendaftaran p
      LEFT JOIN tb_jalur j ON p.id_jalur = j.id_jalur
      LEFT JOIN tb_smk s1 ON p.id_smk_pilihan1 = s1.id_smk
      LEFT JOIN tb_smk s2 ON p.id_smk_pilihan2 = s2.id_smk
+     LEFT JOIN tb_kejuruan k1 ON p.id_kejuruan_pilihan1 = k1.id_program
+     LEFT JOIN tb_kejuruan k2 ON p.id_kejuruan_pilihan2 = k2.id_program
      WHERE p.id_siswa = ?
      ORDER BY p.id_pendaftaran DESC LIMIT 1",
     [$userId]
@@ -74,28 +79,38 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
             <div class="sidebar-menu-label">Pendaftaran</div>
 
             <?php if (!$pendaftaran): ?>
-                <a href="pilih-jalur.php" class="sidebar-link <?= $currentPage === 'pilih-jalur' ? 'active' : '' ?>">
-                    <i class="bi bi-signpost-split-fill"></i>
-                    <span>Pilih Jalur</span>
+                <a href="pilih-sekolah-smk.php" class="sidebar-link <?= $currentPage === 'pilih-sekolah-smk' ? 'active' : '' ?>">
+                    <i class="bi bi-building"></i>
+                    <span>Pilih Sekolah</span>
                 </a>
             <?php else: ?>
-                <a href="pendaftaran.php" class="sidebar-link <?= $currentPage === 'pendaftaran' ? 'active' : '' ?>">
-                    <i class="bi bi-file-earmark-text-fill"></i>
-                    <span>Form Pendaftaran</span>
+                <a href="hasil-pendaftaran.php" class="sidebar-link <?= $currentPage === 'hasil-pendaftaran' ? 'active' : '' ?>">
+                    <i class="bi bi-card-checklist"></i>
+                    <span>Hasil Pendaftaran</span>
+                </a>
+                <a href="input-rapor.php" class="sidebar-link <?= $currentPage === 'input-rapor' ? 'active' : '' ?>">
+                    <i class="bi bi-journal-text"></i>
+                    <span>Nilai Rapor</span>
                 </a>
                 <a href="dokumen.php" class="sidebar-link <?= $currentPage === 'dokumen' ? 'active' : '' ?>">
                     <i class="bi bi-folder-fill"></i>
                     <span>Upload Dokumen</span>
                 </a>
-                <?php if ($pendaftaran['kode_jalur'] === 'prestasi'): ?>
-                    <a href="prestasi.php" class="sidebar-link <?= $currentPage === 'prestasi' ? 'active' : '' ?>">
-                        <i class="bi bi-trophy-fill"></i>
-                        <span>Data Prestasi</span>
-                    </a>
-                <?php endif; ?>
+                <a href="prestasi.php" class="sidebar-link <?= $currentPage === 'prestasi' ? 'active' : '' ?>">
+                    <i class="bi bi-trophy-fill"></i>
+                    <span>Data Prestasi</span>
+                </a>
+                <a href="jadwal-tes.php" class="sidebar-link <?= $currentPage === 'jadwal-tes' ? 'active' : '' ?>">
+                    <i class="bi bi-calendar-check"></i>
+                    <span>Jadwal Tes</span>
+                </a>
                 <a href="status.php" class="sidebar-link <?= $currentPage === 'status' ? 'active' : '' ?>">
                     <i class="bi bi-clock-history"></i>
                     <span>Status Pendaftaran</span>
+                </a>
+                <a href="pembatalan.php" class="sidebar-link <?= $currentPage === 'pembatalan' ? 'active' : '' ?>">
+                    <i class="bi bi-x-circle"></i>
+                    <span>Pembatalan</span>
                 </a>
             <?php endif; ?>
 
@@ -129,17 +144,27 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
                     <small class="text-muted">NISN: <?= $siswa['nisn'] ?></small>
                 </div>
                 <div class="dropdown">
-                    <button class="btn btn-dark rounded-circle" data-bs-toggle="dropdown"
-                        style="width:45px;height:45px;">
-                        <i class="bi bi-person-fill"></i>
+                    <?php
+                    $fotoUrl = !empty($siswa['foto']) && file_exists(UPLOADS_PATH . 'foto/' . $siswa['foto'])
+                        ? UPLOADS_URL . 'foto/' . $siswa['foto']
+                        : null;
+                    ?>
+                    <button class="btn rounded-circle p-0 overflow-hidden" data-bs-toggle="dropdown"
+                        style="width:45px;height:45px;border:2px solid #667eea;">
+                        <?php if ($fotoUrl): ?>
+                            <img src="<?= $fotoUrl ?>" alt="Foto" class="w-100 h-100" style="object-fit:cover;">
+                        <?php else: ?>
+                            <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-primary text-white fw-bold">
+                                <?= strtoupper(substr($siswa['nama_lengkap'], 0, 1)) ?>
+                            </div>
+                        <?php endif; ?>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end">
                         <li><a class="dropdown-item" href="profil.php"><i class="bi bi-person me-2"></i>Profil</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item text-danger" href="<?= SITE_URL ?>/logout.php"><i
-                                    class="bi bi-box-arrow-left me-2"></i>Keluar</a></li>
+                        <li><a class="dropdown-item text-danger" href="<?= SITE_URL ?>/logout.php"><i class="bi bi-box-arrow-left me-2"></i>Keluar</a></li>
                     </ul>
                 </div>
             </div>

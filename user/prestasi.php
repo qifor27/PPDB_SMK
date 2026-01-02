@@ -1,13 +1,15 @@
 <?php
+
 /**
  * User - Data Prestasi
  */
 $pageTitle = 'Data Prestasi';
 require_once 'includes/header.php';
 
-if (!$pendaftaran || $pendaftaran['kode_jalur'] !== 'prestasi') {
-    echo '<script>window.location.href = "index.php";</script>';
-    exit;
+// Cek pendaftaran - allow for all jalur
+if (!$pendaftaran) {
+    Session::flash('error', 'Silakan lengkapi pendaftaran terlebih dahulu.');
+    redirect(SITE_URL . '/user/pilih-sekolah-smk.php');
 }
 
 // Get prestasi list
@@ -38,21 +40,17 @@ $totalPoin = getTotalPrestasiPoin($pendaftaran['id_pendaftaran']);
                 <img src="<?= SITE_URL ?>/assets/img/empty.svg" alt="Empty" style="width: 150px; opacity: 0.5" class="mb-3">
                 <h5>Belum ada data prestasi</h5>
                 <p class="text-muted">Anda belum menambahkan data prestasi.</p>
-                <?php if ($pendaftaran['status'] === 'draft'): ?>
-                    <a href="pendaftaran.php" class="btn btn-primary">
-                        <i class="bi bi-plus-circle me-2"></i>Tambah Prestasi
-                    </a>
-                <?php endif; ?>
+                <a href="tambah-prestasi.php" class="btn btn-primary">
+                    <i class="bi bi-plus-circle me-2"></i>Tambah Prestasi
+                </a>
             </div>
         <?php else: ?>
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h6 class="mb-0"><i class="bi bi-trophy me-2"></i>Daftar Prestasi</h6>
-                    <?php if ($pendaftaran['status'] === 'draft'): ?>
-                        <a href="pendaftaran.php" class="btn btn-sm btn-primary">
-                            <i class="bi bi-pencil me-2"></i>Edit Data
-                        </a>
-                    <?php endif; ?>
+                    <a href="tambah-prestasi.php" class="btn btn-sm btn-primary">
+                        <i class="bi bi-plus-circle me-2"></i>Tambah Prestasi
+                    </a>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
