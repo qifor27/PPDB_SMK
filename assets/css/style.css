@@ -934,7 +934,7 @@ a:hover {
 
 .form-label {
     color: var(--text-secondary);
-    font-weight: 500;
+    font-weight: 400;
     margin-bottom: 0.5rem;
 }
 
