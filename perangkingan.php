@@ -243,9 +243,6 @@ if ($filterSekolah) {
                                         $rank = $i + 1;
                                         $rankClass = $rank <= 3 ? "rank-$rank" : "rank-other";
 
-                                        // Samarkan nama (3 huruf depan + ***)
-                                        $namaSamaran = substr($r['nama_lengkap'], 0, 3) . str_repeat('*', strlen($r['nama_lengkap']) - 3);
-
                                         // Calculate umur in years.months
                                         $umurTahun = floor($r['umur_bulan'] / 12);
                                         $umurBulan = $r['umur_bulan'] % 12;
@@ -255,7 +252,7 @@ if ($filterSekolah) {
                                                 <div class="rank-badge <?= $rankClass ?> mx-auto"><?= $rank ?></div>
                                             </td>
                                             <td><code><?= $r['nomor_pendaftaran'] ?></code></td>
-                                            <td class="nama-samaran"><?= htmlspecialchars($namaSamaran) ?></td>
+                                            <td class="fw-medium"><?= htmlspecialchars($r['nama_lengkap']) ?></td>
                                             <td class="text-center">
                                                 <span class="badge bg-primary">1</span>
                                             </td>
