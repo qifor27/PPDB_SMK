@@ -921,13 +921,21 @@ a:hover {
     border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: var(--radius-md);
     padding: 0.875rem 1rem;
-    color: var(--text-primary);
-    font-weight: 400;
+    color: var(--text-secondary);
+    font-weight: 400 !important;
     transition: var(--transition-fast);
 }
 
 .form-select option {
-    font-weight: 400;
+    font-weight: 400 !important;
+    color: var(--text-secondary);
+}
+
+select.form-select,
+select.form-select option,
+.form-select::-ms-expand {
+    font-weight: 400 !important;
+    color: var(--text-secondary);
 }
 
 .form-control:focus,
