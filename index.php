@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PPDB SMK - Landing Page
  * Sistem Penerimaan Peserta Didik Baru SMK Kota Padang
@@ -16,7 +17,7 @@ $tahunAjaran = getTahunAjaran();
 $isOpen = isPPDBOpen();
 
 // Prepare SMK data for map
-$smkJson = json_encode(array_map(function($smk) {
+$smkJson = json_encode(array_map(function ($smk) {
     return [
         'id_smk' => $smk['id_smk'],
         'nama_sekolah' => $smk['nama_sekolah'],
@@ -30,47 +31,49 @@ $smkJson = json_encode(array_map(function($smk) {
 ?>
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="<?= SITE_DESCRIPTION ?>">
     <title><?= SITE_NAME ?> - Tahun Ajaran <?= $tahunAjaran ?></title>
-    
+
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico">
-    
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    
+
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-    
+
     <!-- AOS Animation -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
+
 <body>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-ppdb fixed-top">
         <div class="container">
             <a class="navbar-brand" href="index.php">
-                                <img src="assets/img/sumbar.png" alt="Logo" style="height: 36px;" onerror="this.style.display='none'">
+                <img src="assets/img/sumbar.png" alt="Logo" style="height: 36px;" onerror="this.style.display='none'">
                 <span class="brand-text">SPMB SMK</span>
             </a>
-            
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <i class="bi bi-list fs-4"></i>
             </button>
-            
+
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto me-3">
                     <li class="nav-item">
@@ -89,14 +92,17 @@ $smkJson = json_encode(array_map(function($smk) {
                         <a class="nav-link" href="#sekolah">SMK</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="perangkingan.php">Perangkingan</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="#kontak">Kontak</a>
                     </li>
                 </ul>
-                
+
                 <div class="d-flex gap-2 nav-buttons">
                     <?php if (Session::isLoggedIn()): ?>
-                        <?php 
-                        $dashboardUrl = match(Session::getRole()) {
+                        <?php
+                        $dashboardUrl = match (Session::getRole()) {
                             ROLE_SUPERADMIN => 'superadmin/',
                             ROLE_ADMIN => 'admin/',
                             default => 'user/'
@@ -110,9 +116,9 @@ $smkJson = json_encode(array_map(function($smk) {
                             Masuk
                         </a>
                         <?php if ($isOpen): ?>
-                        <a href="register.php" class="btn btn-primary btn-sm">
-                            Daftar
-                        </a>
+                            <a href="register.php" class="btn btn-primary btn-sm">
+                                Daftar
+                            </a>
                         <?php endif; ?>
                     <?php endif; ?>
                 </div>
@@ -127,7 +133,7 @@ $smkJson = json_encode(array_map(function($smk) {
             <div class="floating-shape"></div>
             <div class="floating-shape"></div>
         </div>
-        
+
         <div class="container">
             <div class="row align-items-center min-vh-100">
                 <div class="col-lg-6 hero-content" data-aos="fade-right">
@@ -135,36 +141,36 @@ $smkJson = json_encode(array_map(function($smk) {
                         <i class="bi bi-calendar-check me-1"></i>
                         Tahun Ajaran <?= $tahunAjaran ?>
                     </span>
-                    
+
                     <h1 class="hero-title">
                         Sistem Penerimaan Murid Baru
                         <span class="text-gradient">SMK Kota Padang</span>
                     </h1>
-                    
+
                     <p class="hero-subtitle">
-                        Selamat datang di SPMB SMK Kota Padang. Daftarkan diri Anda sekarang 
+                        Selamat datang di SPMB SMK Kota Padang. Daftarkan diri Anda sekarang
                         dan raih masa depan cerah bersama SMK terbaik di Kota Padang.
                     </p>
-                    
+
                     <div class="d-flex gap-3 flex-wrap mb-4">
                         <?php if ($isOpen): ?>
-                        <a href="register.php" class="btn btn-primary btn-lg">
-                            <i class="bi bi-person-plus-fill me-2"></i>
-                            Daftar Sekarang
-                        </a>
+                            <a href="register.php" class="btn btn-primary btn-lg">
+                                <i class="bi bi-person-plus-fill me-2"></i>
+                                Daftar Sekarang
+                            </a>
                         <?php else: ?>
-                        <button class="btn btn-secondary btn-lg" disabled>
-                            <i class="bi bi-lock-fill me-2"></i>
-                            Pendaftaran Ditutup
-                        </button>
+                            <button class="btn btn-secondary btn-lg" disabled>
+                                <i class="bi bi-lock-fill me-2"></i>
+                                Pendaftaran Ditutup
+                            </button>
                         <?php endif; ?>
                         <a href="#jalur" class="btn btn-outline-primary btn-lg">
                             <i class="bi bi-info-circle me-2"></i>
                             Info Jalur
                         </a>
                     </div>
-                    
-                   
+
+
                     <div class="hero-stats">
                         <div class="hero-stat" data-aos="fade-up" data-aos-delay="100">
                             <div class="hero-stat-number counter" data-target="<?= count($smkList) ?>">0</div>
@@ -180,15 +186,15 @@ $smkJson = json_encode(array_map(function($smk) {
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="col-lg-6 text-center" data-aos="fade-left">
-                                        <img src="assets/img/hero-student.jpg" alt="Siswa SMK" class="img-fluid hero-image" 
-                         style="max-height: 600px; width: 100%; object-fit: cover; filter: drop-shadow(0 20px 40px rgba(139, 92, 246, 0.25)); border-radius: 24px;" 
-                         onerror="this.src='https://illustrations.popsy.co/amber/student-with-a-laptop.svg'">
+                    <img src="assets/img/hero-student.jpg" alt="Siswa SMK" class="img-fluid hero-image"
+                        style="max-height: 600px; width: 100%; object-fit: cover; filter: drop-shadow(0 20px 40px rgba(139, 92, 246, 0.25)); border-radius: 24px;"
+                        onerror="this.src='https://illustrations.popsy.co/amber/student-with-a-laptop.svg'">
                 </div>
             </div>
         </div>
-        
+
         <a href="#statistik" class="position-absolute bottom-0 start-50 translate-middle-x mb-4 text-primary">
             <i class="bi bi-chevron-double-down fs-3" style="animation: bounce 2s infinite;"></i>
         </a>
@@ -197,12 +203,12 @@ $smkJson = json_encode(array_map(function($smk) {
     <!-- Wave Separator -->
     <div class="section-wave">
         <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-            <path d="M0 120L48 105C96 90 192 60 288 45C384 30 480 30 576 37.5C672 45 768 60 864 67.5C960 75 1056 75 1152 67.5C1248 60 1344 45 1392 37.5L1440 30V0H1392C1344 0 1248 0 1152 0C1056 0 960 0 864 0C768 0 672 0 576 0C480 0 384 0 288 0C192 0 96 0 48 0H0V120Z" fill="url(#waveGradient)"/>
+            <path d="M0 120L48 105C96 90 192 60 288 45C384 30 480 30 576 37.5C672 45 768 60 864 67.5C960 75 1056 75 1152 67.5C1248 60 1344 45 1392 37.5L1440 30V0H1392C1344 0 1248 0 1152 0C1056 0 960 0 864 0C768 0 672 0 576 0C480 0 384 0 288 0C192 0 96 0 48 0H0V120Z" fill="url(#waveGradient)" />
             <defs>
                 <linearGradient id="waveGradient" x1="0" y1="0" x2="1440" y2="0">
-                    <stop offset="0%" stop-color="#E0E7FF"/>
-                    <stop offset="50%" stop-color="#DDD6FE"/>
-                    <stop offset="100%" stop-color="#E0E7FF"/>
+                    <stop offset="0%" stop-color="#E0E7FF" />
+                    <stop offset="50%" stop-color="#DDD6FE" />
+                    <stop offset="100%" stop-color="#E0E7FF" />
                 </linearGradient>
             </defs>
         </svg>
@@ -220,35 +226,35 @@ $smkJson = json_encode(array_map(function($smk) {
                     Pantau statistik pendaftaran secara real-time untuk setiap jalur seleksi.
                 </p>
             </div>
-            
+
             <div class="row g-4">
-                <?php foreach ($jalurList as $index => $jalur): 
+                <?php foreach ($jalurList as $index => $jalur):
                     $pendaftarJalur = countPendaftarByJalur($jalur['id_jalur']);
                 ?>
-                <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="<?= $index * 100 ?>">
-                    <div class="card stat-card-jalur h-100">
-                        <div class="card-body text-center">
-                            <div class="stat-jalur-icon <?= $jalur['kode_jalur'] ?> mx-auto mb-3">
-                                <i class="bi <?= $jalur['icon'] ?? 'bi-bookmark-star' ?>"></i>
-                            </div>
-                            <h5 class="fw-bold mb-3"><?= htmlspecialchars($jalur['nama_jalur']) ?></h5>
-                            <div class="row g-2 text-start">
-                                <div class="col-6">
-                                    <div class="stat-mini">
-                                        <div class="stat-mini-value text-primary"><?= number_format($jalur['kuota_persen']) ?>%</div>
-                                        <div class="stat-mini-label">Kuota</div>
-                                    </div>
+                    <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="<?= $index * 100 ?>">
+                        <div class="card stat-card-jalur h-100">
+                            <div class="card-body text-center">
+                                <div class="stat-jalur-icon <?= $jalur['kode_jalur'] ?> mx-auto mb-3">
+                                    <i class="bi <?= $jalur['icon'] ?? 'bi-bookmark-star' ?>"></i>
                                 </div>
-                                <div class="col-6">
-                                    <div class="stat-mini">
-                                        <div class="stat-mini-value"><?= $pendaftarJalur ?></div>
-                                        <div class="stat-mini-label">Pendaftar</div>
+                                <h5 class="fw-bold mb-3"><?= htmlspecialchars($jalur['nama_jalur']) ?></h5>
+                                <div class="row g-2 text-start">
+                                    <div class="col-6">
+                                        <div class="stat-mini">
+                                            <div class="stat-mini-value text-primary"><?= number_format($jalur['kuota_persen']) ?>%</div>
+                                            <div class="stat-mini-label">Kuota</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="stat-mini">
+                                            <div class="stat-mini-value"><?= $pendaftarJalur ?></div>
+                                            <div class="stat-mini-label">Pendaftar</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 <?php endforeach; ?>
             </div>
         </div>
@@ -266,27 +272,27 @@ $smkJson = json_encode(array_map(function($smk) {
                     SPMB SMK menyediakan 4 jalur pendaftaran yang dapat disesuaikan dengan kondisi dan prestasi Anda.
                 </p>
             </div>
-            
+
             <div class="row g-4">
                 <?php foreach ($jalurList as $index => $jalur): ?>
-                <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="<?= $index * 100 ?>">
-                    <div class="card jalur-card <?= $jalur['kode_jalur'] ?> h-100">
-                        <div class="jalur-icon">
-                            <i class="bi <?= $jalur['icon'] ?? 'bi-bookmark-star' ?>"></i>
-                        </div>
-                        <h4 class="jalur-title"><?= htmlspecialchars($jalur['nama_jalur']) ?></h4>
-                        <p class="jalur-desc"><?= htmlspecialchars(truncate($jalur['deskripsi'] ?? '', 100)) ?></p>
-                        <div class="jalur-quota">
-                            <i class="bi bi-pie-chart-fill me-1"></i>
-                            Kuota <?= number_format($jalur['kuota_persen'], 0) ?>%
-                        </div>
-                        <div class="mt-3">
-                            <a href="daftar.php?jalur=<?= $jalur['kode_jalur'] ?>" class="btn btn-sm btn-outline-primary">
-                                Selengkapnya <i class="bi bi-arrow-right"></i>
-                            </a>
+                    <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="<?= $index * 100 ?>">
+                        <div class="card jalur-card <?= $jalur['kode_jalur'] ?> h-100">
+                            <div class="jalur-icon">
+                                <i class="bi <?= $jalur['icon'] ?? 'bi-bookmark-star' ?>"></i>
+                            </div>
+                            <h4 class="jalur-title"><?= htmlspecialchars($jalur['nama_jalur']) ?></h4>
+                            <p class="jalur-desc"><?= htmlspecialchars(truncate($jalur['deskripsi'] ?? '', 100)) ?></p>
+                            <div class="jalur-quota">
+                                <i class="bi bi-pie-chart-fill me-1"></i>
+                                Kuota <?= number_format($jalur['kuota_persen'], 0) ?>%
+                            </div>
+                            <div class="mt-3">
+                                <a href="daftar.php?jalur=<?= $jalur['kode_jalur'] ?>" class="btn btn-sm btn-outline-primary">
+                                    Selengkapnya <i class="bi bi-arrow-right"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
                 <?php endforeach; ?>
             </div>
         </div>
@@ -304,7 +310,7 @@ $smkJson = json_encode(array_map(function($smk) {
                     Gunakan peta interaktif untuk melihat lokasi semua SMK dan mengukur jarak dari lokasi Anda.
                 </p>
             </div>
-            
+
             <div class="row g-4">
                 <!-- Map Column -->
                 <div class="col-lg-8" data-aos="fade-right">
@@ -324,7 +330,7 @@ $smkJson = json_encode(array_map(function($smk) {
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Detection Location Column -->
                 <div class="col-lg-4" data-aos="fade-left">
                     <div class="card detection-card h-100">
@@ -335,23 +341,23 @@ $smkJson = json_encode(array_map(function($smk) {
                             <p class="text-muted small mb-3">
                                 Klik tombol di bawah untuk mendeteksi lokasi Anda dan melihat SMK terdekat.
                             </p>
-                            
+
                             <button id="btnDetectLocation" class="btn btn-primary w-100 mb-3">
                                 <i class="bi bi-geo-alt-fill me-2"></i>
                                 Deteksi Lokasi Saya
                             </button>
-                            
+
                             <div id="locationStatus" class="alert alert-info small d-none">
                                 <i class="bi bi-info-circle me-1"></i>
                                 <span>Mendeteksi lokasi...</span>
                             </div>
-                            
+
                             <hr>
-                            
+
                             <h6 class="mb-3">
                                 <i class="bi bi-building me-2"></i>SMK Terdekat
                             </h6>
-                            
+
                             <div id="nearbySchools" class="nearby-schools">
                                 <p class="text-muted small">Klik "Deteksi Lokasi" untuk melihat SMK terdekat.</p>
                             </div>
@@ -379,7 +385,7 @@ $smkJson = json_encode(array_map(function($smk) {
                         <i class="bi bi-calendar-plus me-2"></i>Lihat Jadwal Lengkap
                     </a>
                 </div>
-                
+
                 <div class="col-lg-7" data-aos="fade-left">
                     <div class="timeline">
                         <div class="timeline-item completed">
@@ -425,44 +431,44 @@ $smkJson = json_encode(array_map(function($smk) {
                     Pilih sekolah yang sesuai dengan minat dan bakat Anda.
                 </p>
             </div>
-            
+
             <div class="row g-4">
                 <?php foreach (array_slice($smkList, 0, 8) as $index => $smk): ?>
-                <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="<?= $index * 50 ?>">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center mb-3">
-                                <div class="stat-icon primary me-3" style="width:50px;height:50px;font-size:1.25rem;">
-                                    <i class="bi bi-building"></i>
+                    <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="<?= $index * 50 ?>">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="stat-icon primary me-3" style="width:50px;height:50px;font-size:1.25rem;">
+                                        <i class="bi bi-building"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0"><?= htmlspecialchars($smk['nama_sekolah']) ?></h6>
+                                        <small class="text-muted"><?= htmlspecialchars($smk['kecamatan'] ?? 'Padang') ?></small>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h6 class="mb-0"><?= htmlspecialchars($smk['nama_sekolah']) ?></h6>
-                                    <small class="text-muted"><?= htmlspecialchars($smk['kecamatan'] ?? 'Padang') ?></small>
+                                <p class="small text-muted mb-3">
+                                    <?= htmlspecialchars(truncate($smk['alamat'] ?? '-', 80)) ?>
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-success-soft">
+                                        <i class="bi bi-people me-1"></i><?= $smk['jumlah_siswa'] ?> siswa
+                                    </span>
+                                    <a href="info-sekolah.php?id=<?= $smk['id_smk'] ?>" class="btn btn-sm btn-outline-primary">
+                                        Detail
+                                    </a>
                                 </div>
-                            </div>
-                            <p class="small text-muted mb-3">
-                                <?= htmlspecialchars(truncate($smk['alamat'] ?? '-', 80)) ?>
-                            </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="badge bg-success-soft">
-                                    <i class="bi bi-people me-1"></i><?= $smk['jumlah_siswa'] ?> siswa
-                                </span>
-                                <a href="info-sekolah.php?id=<?= $smk['id_smk'] ?>" class="btn btn-sm btn-outline-primary">
-                                    Detail
-                                </a>
                             </div>
                         </div>
                     </div>
-                </div>
                 <?php endforeach; ?>
             </div>
-            
+
             <?php if (count($smkList) > 8): ?>
-            <div class="text-center mt-4" data-aos="fade-up">
-                <a href="daftar-sekolah.php" class="btn btn-outline-primary">
-                    Lihat Semua SMK <i class="bi bi-arrow-right ms-1"></i>
-                </a>
-            </div>
+                <div class="text-center mt-4" data-aos="fade-up">
+                    <a href="daftar-sekolah.php" class="btn btn-outline-primary">
+                        Lihat Semua SMK <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
             <?php endif; ?>
         </div>
     </section>
@@ -479,7 +485,7 @@ $smkJson = json_encode(array_map(function($smk) {
                     Jika ada pertanyaan atau kendala, silakan hubungi kami melalui form di bawah atau WhatsApp.
                 </p>
             </div>
-            
+
             <div class="row g-4 justify-content-center">
                 <div class="col-lg-6" data-aos="fade-right">
                     <div class="card h-100">
@@ -505,7 +511,7 @@ $smkJson = json_encode(array_map(function($smk) {
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="col-lg-4" data-aos="fade-left">
                     <div class="card bg-primary text-white h-100">
                         <div class="card-body p-4 d-flex flex-column justify-content-center">
@@ -534,7 +540,7 @@ $smkJson = json_encode(array_map(function($smk) {
                         SPMB SMK
                     </div>
                     <p class="footer-desc">
-                        Sistem Penerimaan Murid Baru SMK Kota Padang. 
+                        Sistem Penerimaan Murid Baru SMK Kota Padang.
                         Mendukung pendidikan berkualitas untuk generasi Indonesia.
                     </p>
                     <div class="social-links mt-4">
@@ -544,7 +550,7 @@ $smkJson = json_encode(array_map(function($smk) {
                         <a href="#" class="social-link"><i class="bi bi-youtube"></i></a>
                     </div>
                 </div>
-                
+
                 <div class="col-6 col-lg-2">
                     <h6 class="footer-title">Menu</h6>
                     <ul class="footer-links">
@@ -554,7 +560,7 @@ $smkJson = json_encode(array_map(function($smk) {
                         <li><a href="#jadwal">Tahapan</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="col-6 col-lg-2">
                     <h6 class="footer-title">Informasi</h6>
                     <ul class="footer-links">
@@ -564,7 +570,7 @@ $smkJson = json_encode(array_map(function($smk) {
                         <li><a href="kontak.php">Kontak</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="col-lg-4">
                     <h6 class="footer-title">Kontak</h6>
                     <ul class="footer-links">
@@ -575,7 +581,7 @@ $smkJson = json_encode(array_map(function($smk) {
                     </ul>
                 </div>
             </div>
-            
+
             <div class="footer-bottom">
                 <p class="mb-0">
                     &copy; <?= date('Y') ?> SPMB SMK Kota Padang. All rights reserved.
@@ -586,22 +592,22 @@ $smkJson = json_encode(array_map(function($smk) {
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    
+
     <!-- AOS JS -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    
+
     <!-- Custom JS -->
     <script src="assets/js/map.js"></script>
     <script src="assets/js/main.js"></script>
-    
+
     <script>
         // Initialize map with schools data
         const schoolsData = <?= $smkJson ?>;
         let ppdbMap;
-        
+
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize map
             ppdbMap = new PPDBMap('mapLeaflet', {
@@ -611,23 +617,23 @@ $smkJson = json_encode(array_map(function($smk) {
                     console.log('Selected:', school);
                 }
             });
-            
+
             // Detect location button
             const btnDetect = document.getElementById('btnDetectLocation');
             const locationStatus = document.getElementById('locationStatus');
             const nearbySchools = document.getElementById('nearbySchools');
-            
+
             btnDetect.addEventListener('click', async function() {
                 this.disabled = true;
                 this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Mendeteksi...';
                 locationStatus.classList.remove('d-none');
                 locationStatus.innerHTML = '<i class="bi bi-info-circle me-1"></i>Mendeteksi lokasi Anda...';
-                
+
                 try {
                     const nearby = await ppdbMap.getCurrentLocation();
                     locationStatus.className = 'alert alert-success small';
                     locationStatus.innerHTML = '<i class="bi bi-check-circle me-1"></i>Lokasi berhasil terdeteksi!';
-                    
+
                     // Show nearby schools
                     if (nearby.length > 0) {
                         nearbySchools.innerHTML = nearby.slice(0, 5).map(school => `
@@ -648,20 +654,37 @@ $smkJson = json_encode(array_map(function($smk) {
                     locationStatus.className = 'alert alert-danger small';
                     locationStatus.innerHTML = '<i class="bi bi-exclamation-circle me-1"></i>' + error.message;
                 }
-                
+
                 this.disabled = false;
                 this.innerHTML = '<i class="bi bi-crosshair me-2"></i>Deteksi Lokasi Saya';
             });
         });
     </script>
-    
+
     <style>
         @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-10px); }
-            60% { transform: translateY(-5px); }
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-10px);
+            }
+
+            60% {
+                transform: translateY(-5px);
+            }
         }
-        .bg-primary-soft { background: rgba(16, 185, 129, 0.15); }
+
+        .bg-primary-soft {
+            background: rgba(16, 185, 129, 0.15);
+        }
     </style>
 </body>
+
 </html>
