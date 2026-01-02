@@ -922,7 +922,12 @@ a:hover {
     border-radius: var(--radius-md);
     padding: 0.875rem 1rem;
     color: var(--text-primary);
+    font-weight: 400;
     transition: var(--transition-fast);
+}
+
+.form-select option {
+    font-weight: 400;
 }
 
 .form-control:focus,
