@@ -155,7 +155,7 @@ if ($filterSekolah) {
             <div class="card-body">
                 <form method="GET" class="row g-3 align-items-end">
                     <div class="col-md-4">
-                        <label class="form-label fw-semibold">Sekolah</label>
+                        <label class="form-label">Sekolah</label>
                         <select name="sekolah" id="sekolah" class="form-select" required>
                             <option value="">-- Pilih Sekolah --</option>
                             <?php foreach ($smkList as $smk): ?>
@@ -166,7 +166,7 @@ if ($filterSekolah) {
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label class="form-label fw-semibold">Jurusan</label>
+                        <label class="form-label">Jurusan</label>
                         <select name="jurusan" id="jurusan" class="form-select">
                             <option value="">Semua Jurusan</option>
                             <?php foreach ($jurusanList as $j): ?>
@@ -177,7 +177,7 @@ if ($filterSekolah) {
                         </select>
                     </div>
                     <div class="col-md-2">
-                        <label class="form-label fw-semibold">Tahap</label>
+                        <label class="form-label">Tahap</label>
                         <select name="tahap" class="form-select">
                             <option value="">Semua</option>
                             <option value="1" <?= $filterTahap === '1' ? 'selected' : '' ?>>Tahap 1</option>
