@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Admin Sekolah - Seleksi Jalur Kepindahan
  * Tugas: VELI
@@ -151,7 +152,7 @@ foreach ($pendaftarList as $p) {
     </div>
     <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table table-dark mb-0">
+            <table class="table table-hover mb-0">
                 <thead>
                     <tr>
                         <th>#</th>

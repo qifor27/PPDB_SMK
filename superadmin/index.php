@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Super Admin - Dashboard
  */
@@ -104,7 +105,7 @@ $recentPendaftar = db()->fetchAll(
                 </div>
             </div>
         </div>
-        
+
         <!-- Recent Pendaftar -->
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
@@ -113,7 +114,7 @@ $recentPendaftar = db()->fetchAll(
             </div>
             <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-dark mb-0">
+                    <table class="table table-hover mb-0">
                         <thead>
                             <tr>
                                 <th>No. Daftar</th>
@@ -125,13 +126,13 @@ $recentPendaftar = db()->fetchAll(
                         </thead>
                         <tbody>
                             <?php foreach ($recentPendaftar as $p): ?>
-                            <tr>
-                                <td><code><?= $p['nomor_pendaftaran'] ?></code></td>
-                                <td><?= htmlspecialchars($p['nama_lengkap']) ?></td>
-                                <td class="small"><?= htmlspecialchars(truncate($p['nama_sekolah'], 30)) ?></td>
-                                <td><?= getJalurBadge($p['kode_jalur']) ?></td>
-                                <td><?= getStatusBadge($p['status']) ?></td>
-                            </tr>
+                                <tr>
+                                    <td><code><?= $p['nomor_pendaftaran'] ?></code></td>
+                                    <td><?= htmlspecialchars($p['nama_lengkap']) ?></td>
+                                    <td class="small"><?= htmlspecialchars(truncate($p['nama_sekolah'], 30)) ?></td>
+                                    <td><?= getJalurBadge($p['kode_jalur']) ?></td>
+                                    <td><?= getStatusBadge($p['status']) ?></td>
+                                </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
@@ -139,7 +140,7 @@ $recentPendaftar = db()->fetchAll(
             </div>
         </div>
     </div>
-    
+
     <!-- Sidebar -->
     <div class="col-lg-4">
         <!-- Top Schools -->
@@ -150,15 +151,15 @@ $recentPendaftar = db()->fetchAll(
             <div class="card-body p-0">
                 <ul class="list-group list-group-flush">
                     <?php foreach ($statsBySchool as $i => $school): ?>
-                    <li class="list-group-item bg-transparent d-flex justify-content-between align-items-center">
-                        <span class="small"><?= $i + 1 ?>. <?= htmlspecialchars(truncate($school['nama_sekolah'], 25)) ?></span>
-                        <span class="badge bg-primary"><?= $school['total'] ?></span>
-                    </li>
+                        <li class="list-group-item bg-transparent d-flex justify-content-between align-items-center">
+                            <span class="small"><?= $i + 1 ?>. <?= htmlspecialchars(truncate($school['nama_sekolah'], 25)) ?></span>
+                            <span class="badge bg-primary"><?= $school['total'] ?></span>
+                        </li>
                     <?php endforeach; ?>
                 </ul>
             </div>
         </div>
-        
+
         <!-- Quick Actions -->
         <div class="card">
             <div class="card-header">
@@ -182,7 +183,7 @@ $recentPendaftar = db()->fetchAll(
     </div>
 </div>
 
-<?php 
+<?php
 $jalurLabels = json_encode(array_column($statsByJalur, 'nama_jalur'));
 $jalurData = json_encode(array_column($statsByJalur, 'total'));
 $statusLabels = json_encode(array_keys($statusMap));
@@ -226,5 +227,5 @@ new Chart(document.getElementById('chartStatus'), {
 });
 </script>
 EOT;
-require_once 'includes/footer.php'; 
+require_once 'includes/footer.php';
 ?>
