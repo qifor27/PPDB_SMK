@@ -169,7 +169,7 @@ $dokumenCount = db()->fetch("
                     <div class="mb-3">
                         <small class="text-muted d-block">Sekolah</small>
                         <strong class="text-primary">
-                            <?= htmlspecialchars($sekolah2['nama_sekolah'] ?? $sekolah1['nama_sekolah']) ?>
+                            <?= htmlspecialchars($sekolah2['nama_sekolah'] ?? '-') ?>
                         </strong>
                     </div>
 

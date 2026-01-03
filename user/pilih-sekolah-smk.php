@@ -45,12 +45,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!$sekolah1) $errors[] = 'Pilih sekolah pilihan 1';
         if (!$kejuruan1) $errors[] = 'Pilih jurusan pilihan 1';
 
-        if ($pilihanMode === 'satu_sekolah_dua_jurusan') {
+        // Validasi berdasarkan mode dan pilihan yang dipilih
+        if ($sekolah2 && $sekolah1 === $sekolah2) {
+            // Satu sekolah, dua jurusan - pastikan jurusan berbeda
             if ($kejuruan1 === $kejuruan2) $errors[] = 'Jurusan pilihan 1 dan 2 tidak boleh sama';
-            $sekolah2 = $sekolah1; // Sama dengan pilihan 1
-        } elseif ($pilihanMode === 'dua_sekolah_satu_jurusan') {
-            if ($sekolah1 === $sekolah2) $errors[] = 'Sekolah pilihan 1 dan 2 tidak boleh sama';
-            // Get jurusan yang sama dari sekolah 2
+            $pilihanMode = 'satu_sekolah_dua_jurusan';
+        } elseif ($sekolah2 && $sekolah1 !== $sekolah2) {
+            // Dua sekolah berbeda
+            $pilihanMode = 'dua_sekolah';
         }
 
         // Cek syarat buta warna
