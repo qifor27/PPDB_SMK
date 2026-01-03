@@ -766,6 +766,45 @@ a:hover {
     margin-bottom: 0;
 }
 
+/* ===== Hover Lift Effect ===== */
+.hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(139, 92, 246, 0.15);
+}
+
+/* ===== Soft Background Colors ===== */
+.bg-success-soft {
+    background: rgba(52, 211, 153, 0.15) !important;
+}
+
+.bg-info-soft {
+    background: rgba(59, 173, 227, 0.15) !important;
+}
+
+.bg-warning-soft {
+    background: rgba(251, 191, 36, 0.15) !important;
+}
+
+.text-success {
+    color: #10B981 !important;
+}
+
+.text-info {
+    color: #3BADE3 !important;
+}
+
+.text-warning {
+    color: #F59E0B !important;
+}
+
+.stat-icon.success {
+    background: linear-gradient(135deg, #10B981, #34D399);
+}
+
 /* ===== Timeline ===== */
 .timeline {
     position: relative;
@@ -917,28 +956,23 @@ a:hover {
 /* ===== Forms ===== */
 .form-control,
 .form-select {
-    background: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: var(--radius-md);
-    padding: 0.875rem 1rem;
-    color: var(--text-secondary);
-    font-family: 'Poppins', sans-serif !important;
-    font-weight: 300 !important;
+    background: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    color: #495057;
+    font-size: 0.95rem;
     transition: var(--transition-fast);
 }
 
 .form-select option {
-    font-family: 'Poppins', sans-serif !important;
-    font-weight: 300 !important;
-    color: var(--text-secondary);
+    color: #495057;
+    padding: 8px 12px;
 }
 
 select.form-select,
-select.form-select option,
-.form-select::-ms-expand {
-    font-family: 'Poppins', sans-serif !important;
-    font-weight: 300 !important;
-    color: var(--text-secondary);
+select.form-select option {
+    color: #495057;
 }
 
 .form-control:focus,
@@ -1540,7 +1574,7 @@ body {
     left: 0;
     width: 260px;
     height: 100vh;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.95) !important;
     backdrop-filter: blur(20px);
     border-right: 1px solid rgba(139, 92, 246, 0.15);
     box-shadow: 4px 0 30px rgba(139, 92, 246, 0.08);

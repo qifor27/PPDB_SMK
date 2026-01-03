@@ -80,10 +80,10 @@ $smkJson = json_encode(array_map(function ($smk) {
                         <a class="nav-link active" href="#home">Beranda</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#statistik">Statistik</a>
+                        <a class="nav-link" href="#statistik">Informasi</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#jalur">Jalur</a>
+                        <a class="nav-link" href="#seleksi">Seleksi</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#jadwal">Tahapan</a>
@@ -164,9 +164,9 @@ $smkJson = json_encode(array_map(function ($smk) {
                                 Pendaftaran Ditutup
                             </button>
                         <?php endif; ?>
-                        <a href="#jalur" class="btn btn-outline-primary btn-lg">
-                            <i class="bi bi-info-circle me-2"></i>
-                            Info Jalur
+                        <a href="#seleksi" class="btn btn-outline-primary btn-lg">
+                            <i class="bi bi-calendar-check me-2"></i>
+                            Jadwal Seleksi
                         </a>
                     </div>
 
@@ -188,9 +188,8 @@ $smkJson = json_encode(array_map(function ($smk) {
                 </div>
 
                 <div class="col-lg-6 text-center" data-aos="fade-left">
-                    <img src="assets/img/hero-student.jpg" alt="Siswa SMK" class="img-fluid hero-image"
-                        style="max-height: 600px; width: 100%; object-fit: cover; filter: drop-shadow(0 20px 40px rgba(139, 92, 246, 0.25)); border-radius: 24px;"
-                        onerror="this.src='https://illustrations.popsy.co/amber/student-with-a-laptop.svg'">
+                    <img src="assets/img/hero-students.png" alt="Siswa SMK" class="img-fluid hero-image"
+                        style="max-height: 600px; width: 100%; object-fit: contain; filter: drop-shadow(0 20px 40px rgba(139, 92, 246, 0.25)); border-radius: 24px; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
                 </div>
             </div>
         </div>
@@ -214,86 +213,203 @@ $smkJson = json_encode(array_map(function ($smk) {
         </svg>
     </div>
 
-    <!-- Statistik Section -->
+    <!-- Pusat Informasi Section -->
     <section id="statistik" class="py-5 bg-light-gradient">
         <div class="container py-5">
             <div class="text-center mb-5" data-aos="fade-up">
                 <span class="badge bg-primary-soft text-primary mb-3 px-3 py-2">
-                    <i class="bi bi-bar-chart-fill me-1"></i> Statistik Real-time
+                    <i class="bi bi-journal-bookmark me-1"></i> Pusat Informasi
                 </span>
-                <h2 class="mb-3">Data Pendaftaran SPMB</h2>
+                <h2 class="mb-3">Dokumen & Panduan SPMB</h2>
                 <p class="text-muted mx-auto" style="max-width: 600px;">
-                    Pantau statistik pendaftaran secara real-time untuk setiap jalur seleksi.
+                    Unduh dokumen penting dan pelajari panduan lengkap untuk mengikuti proses SPMB SMK Kota Padang.
                 </p>
             </div>
 
             <div class="row g-4">
-                <?php foreach ($jalurList as $index => $jalur):
-                    $pendaftarJalur = countPendaftarByJalur($jalur['id_jalur']);
-                ?>
-                    <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="<?= $index * 100 ?>">
-                        <div class="card stat-card-jalur h-100">
-                            <div class="card-body text-center">
-                                <div class="stat-jalur-icon <?= $jalur['kode_jalur'] ?> mx-auto mb-3">
-                                    <i class="bi <?= $jalur['icon'] ?? 'bi-bookmark-star' ?>"></i>
-                                </div>
-                                <h5 class="fw-bold mb-3"><?= htmlspecialchars($jalur['nama_jalur']) ?></h5>
-                                <div class="row g-2 text-start">
-                                    <div class="col-6">
-                                        <div class="stat-mini">
-                                            <div class="stat-mini-value text-primary"><?= number_format($jalur['kuota_persen']) ?>%</div>
-                                            <div class="stat-mini-label">Kuota</div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="stat-mini">
-                                            <div class="stat-mini-value"><?= $pendaftarJalur ?></div>
-                                            <div class="stat-mini-label">Pendaftar</div>
-                                        </div>
-                                    </div>
-                                </div>
+                <!-- Juknis SPMB -->
+                <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="0">
+                    <div class="card h-100 text-center border-0 shadow-sm hover-lift">
+                        <div class="card-body p-4">
+                            <div class="info-icon bg-primary-soft text-primary mx-auto mb-3" style="width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="bi bi-file-earmark-text fs-2"></i>
                             </div>
+                            <h5 class="fw-bold mb-2">Juknis SPMB</h5>
+                            <p class="text-muted small mb-3">Petunjuk teknis lengkap pelaksanaan SPMB SMK tahun ajaran <?= $tahunAjaran ?></p>
+                            <a href="uploads/docs/juknis-spmb-2025.pdf" class="btn btn-outline-primary btn-sm" target="_blank">
+                                <i class="bi bi-download me-1"></i> Unduh PDF
+                            </a>
                         </div>
                     </div>
-                <?php endforeach; ?>
+                </div>
+
+                <!-- Manual Book -->
+                <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card h-100 text-center border-0 shadow-sm hover-lift">
+                        <div class="card-body p-4">
+                            <div class="info-icon bg-success-soft text-success mx-auto mb-3" style="width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="bi bi-book fs-2"></i>
+                            </div>
+                            <h5 class="fw-bold mb-2">Manual Book</h5>
+                            <p class="text-muted small mb-3">Panduan lengkap cara mendaftar dan menggunakan sistem SPMB online</p>
+                            <a href="uploads/docs/manual-book-spmb.pdf" class="btn btn-outline-success btn-sm" target="_blank">
+                                <i class="bi bi-download me-1"></i> Unduh PDF
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Persyaratan Dokumen -->
+                <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card h-100 text-center border-0 shadow-sm hover-lift">
+                        <div class="card-body p-4">
+                            <div class="info-icon bg-warning-soft text-warning mx-auto mb-3" style="width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="bi bi-folder-check fs-2"></i>
+                            </div>
+                            <h5 class="fw-bold mb-2">Persyaratan</h5>
+                            <p class="text-muted small mb-3">Daftar dokumen yang harus disiapkan untuk proses pendaftaran</p>
+                            <a href="uploads/docs/persyaratan-dokumen.pdf" class="btn btn-outline-warning btn-sm" target="_blank">
+                                <i class="bi bi-download me-1"></i> Unduh PDF
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ & Bantuan -->
+                <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
+                    <div class="card h-100 text-center border-0 shadow-sm hover-lift">
+                        <div class="card-body p-4">
+                            <div class="info-icon bg-info-soft text-info mx-auto mb-3" style="width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                <i class="bi bi-question-circle fs-2"></i>
+                            </div>
+                            <h5 class="fw-bold mb-2">FAQ & Bantuan</h5>
+                            <p class="text-muted small mb-3">Pertanyaan umum dan panduan troubleshooting pendaftaran</p>
+                            <a href="#kontak" class="btn btn-outline-info btn-sm">
+                                <i class="bi bi-chat-dots me-1"></i> Lihat FAQ
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Jalur Pendaftaran Section -->
-    <section id="jalur" class="py-5 bg-dark-alt">
+    <!-- Penjadwalan Tahap Seleksi Section -->
+    <?php
+    // Jadwal tahap seleksi
+    $jadwalSeleksi = [
+        1 => [
+            'nama' => 'Tahap 1',
+            'mulai' => '2026-01-01 00:00:00',
+            'selesai' => '2026-01-06 23:59:59',
+            'tes' => '2026-01-08',
+            'keterangan' => 'Gelombang pertama pendaftaran dan tes minat bakat',
+            'icon' => 'bi-1-circle-fill',
+            'color' => 'primary'
+        ],
+        2 => [
+            'nama' => 'Tahap 2',
+            'mulai' => '2026-01-07 08:00:00',
+            'selesai' => '2026-01-15 23:59:59',
+            'tes' => '2026-01-17',
+            'keterangan' => 'Gelombang kedua untuk kuota yang tersisa',
+            'icon' => 'bi-2-circle-fill',
+            'color' => 'warning'
+        ]
+    ];
+    $nowTime = date('Y-m-d H:i:s');
+    ?>
+    <section id="seleksi" class="py-5 bg-dark-alt">
         <div class="container py-5">
             <div class="text-center mb-5" data-aos="fade-up">
                 <span class="badge bg-primary-soft text-primary mb-3 px-3 py-2">
-                    <i class="bi bi-signpost-split me-1"></i> Jalur Pendaftaran
+                    <i class="bi bi-calendar-check me-1"></i> Penjadwalan Seleksi
                 </span>
-                <h2 class="mb-3">Pilih Jalur Pendaftaran</h2>
+                <h2 class="mb-3">Jadwal Tahap Seleksi</h2>
                 <p class="text-muted mx-auto" style="max-width: 600px;">
-                    SPMB SMK menyediakan 4 jalur pendaftaran yang dapat disesuaikan dengan kondisi dan prestasi Anda.
+                    SPMB SMK dilaksanakan dalam 2 tahap seleksi. Pilih tahap yang sesuai dan ikuti proses pendaftaran.
                 </p>
             </div>
 
-            <div class="row g-4">
-                <?php foreach ($jalurList as $index => $jalur): ?>
-                    <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="<?= $index * 100 ?>">
-                        <div class="card jalur-card <?= $jalur['kode_jalur'] ?> h-100">
-                            <div class="jalur-icon">
-                                <i class="bi <?= $jalur['icon'] ?? 'bi-bookmark-star' ?>"></i>
+            <div class="row g-4 justify-content-center">
+                <?php foreach ($jadwalSeleksi as $tahap => $jadwal):
+                    $isAktif = ($nowTime >= $jadwal['mulai'] && $nowTime <= $jadwal['selesai']);
+                    $isBelum = ($nowTime < $jadwal['mulai']);
+                    $isSelesai = ($nowTime > $jadwal['selesai']);
+                ?>
+                    <div class="col-md-6 col-lg-5" data-aos="fade-up" data-aos-delay="<?= ($tahap - 1) * 150 ?>">
+                        <div class="card h-100 <?= $isAktif ? 'border-' . $jadwal['color'] . ' shadow-lg' : '' ?>" style="border-width: 2px;">
+                            <div class="card-header bg-<?= $isAktif ? $jadwal['color'] : 'secondary' ?> <?= $jadwal['color'] === 'warning' && $isAktif ? 'text-dark' : 'text-white' ?>">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">
+                                        <i class="bi <?= $jadwal['icon'] ?> me-2"></i><?= $jadwal['nama'] ?>
+                                    </h5>
+                                    <?php if ($isAktif): ?>
+                                        <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>BUKA</span>
+                                    <?php elseif ($isBelum): ?>
+                                        <span class="badge bg-info">Akan Datang</span>
+                                    <?php else: ?>
+                                        <span class="badge bg-secondary">Selesai</span>
+                                    <?php endif; ?>
+                                </div>
                             </div>
-                            <h4 class="jalur-title"><?= htmlspecialchars($jalur['nama_jalur']) ?></h4>
-                            <p class="jalur-desc"><?= htmlspecialchars(truncate($jalur['deskripsi'] ?? '', 100)) ?></p>
-                            <div class="jalur-quota">
-                                <i class="bi bi-pie-chart-fill me-1"></i>
-                                Kuota <?= number_format($jalur['kuota_persen'], 0) ?>%
-                            </div>
-                            <div class="mt-3">
-                                <a href="daftar.php?jalur=<?= $jalur['kode_jalur'] ?>" class="btn btn-sm btn-outline-primary">
-                                    Selengkapnya <i class="bi bi-arrow-right"></i>
-                                </a>
+                            <div class="card-body">
+                                <div class="row g-3 mb-3">
+                                    <div class="col-12">
+                                        <div class="d-flex align-items-center">
+                                            <div class="stat-icon primary me-3" style="width:45px;height:45px;">
+                                                <i class="bi bi-calendar-range"></i>
+                                            </div>
+                                            <div>
+                                                <small class="text-muted d-block">Periode Pendaftaran</small>
+                                                <strong><?= date('d M', strtotime($jadwal['mulai'])) ?> - <?= date('d M Y', strtotime($jadwal['selesai'])) ?></strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="d-flex align-items-center">
+                                            <div class="stat-icon success me-3" style="width:45px;height:45px;">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </div>
+                                            <div>
+                                                <small class="text-muted d-block">Tes Minat & Bakat</small>
+                                                <strong class="text-<?= $jadwal['color'] ?>"><?= date('d M Y', strtotime($jadwal['tes'])) ?></strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-muted small mb-3"><?= $jadwal['keterangan'] ?></p>
+                                <?php if ($isAktif): ?>
+                                    <a href="user/pilih-tahap.php" class="btn btn-<?= $jadwal['color'] ?> w-100">
+                                        <i class="bi bi-arrow-right-circle me-2"></i>Daftar Sekarang
+                                    </a>
+                                <?php elseif ($isBelum): ?>
+                                    <button class="btn btn-outline-secondary w-100" disabled>
+                                        <i class="bi bi-clock me-2"></i>Dibuka <?= date('d M Y', strtotime($jadwal['mulai'])) ?>
+                                    </button>
+                                <?php else: ?>
+                                    <button class="btn btn-secondary w-100" disabled>
+                                        <i class="bi bi-x-circle me-2"></i>Pendaftaran Ditutup
+                                    </button>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
                 <?php endforeach; ?>
+            </div>
+
+            <!-- Info Tambahan -->
+            <div class="row justify-content-center mt-4" data-aos="fade-up">
+                <div class="col-lg-8">
+                    <div class="alert alert-info border-0" style="background: rgba(59, 130, 246, 0.1);">
+                        <h6 class="mb-2"><i class="bi bi-info-circle me-2"></i>Informasi Penting</h6>
+                        <ul class="mb-0 small">
+                            <li>Setiap siswa hanya dapat mendaftar pada <strong>satu tahap</strong></li>
+                            <li>Tahap 2 adalah kesempatan bagi yang tidak lolos atau belum mendaftar di Tahap 1</li>
+                            <li>Pastikan dokumen sudah siap sebelum melakukan pendaftaran</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -556,7 +672,7 @@ $smkJson = json_encode(array_map(function ($smk) {
                     <ul class="footer-links">
                         <li><a href="#home">Beranda</a></li>
                         <li><a href="#statistik">Statistik</a></li>
-                        <li><a href="#jalur">Jalur Pendaftaran</a></li>
+                        <li><a href="#seleksi">Jadwal Seleksi</a></li>
                         <li><a href="#jadwal">Tahapan</a></li>
                     </ul>
                 </div>
@@ -599,66 +715,332 @@ $smkJson = json_encode(array_map(function ($smk) {
     <!-- AOS JS -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-    <!-- Custom JS -->
-    <script src="assets/js/map.js"></script>
     <script src="assets/js/main.js"></script>
 
     <script>
-        // Initialize map with schools data
-        const schoolsData = <?= $smkJson ?>;
-        let ppdbMap;
+        // Data SMK dari database
+        const smkData = <?= $smkJson ?>;
+        const radiusZonasi = <?= RADIUS_ZONASI ?>;
+        let map, userMarker, userCircle;
+        const schoolMarkers = [];
+        let routeLines = [];
+        let highlightCircles = [];
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize map
-            ppdbMap = new PPDBMap('mapLeaflet', {
-                schools: schoolsData,
-                radiusZonasi: <?= RADIUS_ZONASI ?>,
-                onSchoolSelect: function(school) {
-                    console.log('Selected:', school);
-                }
-            });
+            initMap();
 
             // Detect location button
             const btnDetect = document.getElementById('btnDetectLocation');
             const locationStatus = document.getElementById('locationStatus');
             const nearbySchools = document.getElementById('nearbySchools');
 
-            btnDetect.addEventListener('click', async function() {
-                this.disabled = true;
-                this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Mendeteksi...';
-                locationStatus.classList.remove('d-none');
-                locationStatus.innerHTML = '<i class="bi bi-info-circle me-1"></i>Mendeteksi lokasi Anda...';
+            btnDetect.addEventListener('click', function() {
+                if (navigator.geolocation) {
+                    this.disabled = true;
+                    this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Mendeteksi...';
+                    locationStatus.classList.remove('d-none');
+                    locationStatus.className = 'alert alert-info small';
+                    locationStatus.innerHTML = '<i class="bi bi-info-circle me-1"></i>Mendeteksi lokasi dan menghitung jarak...';
 
-                try {
-                    const nearby = await ppdbMap.getCurrentLocation();
-                    locationStatus.className = 'alert alert-success small';
-                    locationStatus.innerHTML = '<i class="bi bi-check-circle me-1"></i>Lokasi berhasil terdeteksi!';
+                    navigator.geolocation.getCurrentPosition(
+                        pos => {
+                            const lat = pos.coords.latitude;
+                            const lng = pos.coords.longitude;
+                            map.setView([lat, lng], 14);
+                            addUserMarker(lat, lng);
+                            updateNearestSchools(lat, lng);
 
-                    // Show nearby schools
-                    if (nearby.length > 0) {
-                        nearbySchools.innerHTML = nearby.slice(0, 5).map(school => `
-                            <div class="d-flex align-items-center justify-content-between py-2 border-bottom border-subtle">
-                                <div>
-                                    <div class="fw-semibold small">${school.nama_sekolah}</div>
-                                    <small class="text-muted">${formatDistance(school.distance)}</small>
-                                </div>
-                                <span class="badge ${school.distance <= <?= RADIUS_ZONASI ?> ? 'bg-success' : 'bg-warning'}">
-                                    ${school.distance <= <?= RADIUS_ZONASI ?> ? 'Dalam Radius' : 'Luar Radius'}
-                                </span>
-                            </div>
-                        `).join('');
-                    } else {
-                        nearbySchools.innerHTML = '<p class="text-muted small">Tidak ada SMK dalam radius zonasi.</p>';
-                    }
-                } catch (error) {
-                    locationStatus.className = 'alert alert-danger small';
-                    locationStatus.innerHTML = '<i class="bi bi-exclamation-circle me-1"></i>' + error.message;
+                            this.disabled = false;
+                            this.innerHTML = '<i class="bi bi-geo-alt-fill me-2"></i>Deteksi Lokasi Saya';
+                        },
+                        err => {
+                            locationStatus.className = 'alert alert-danger small';
+                            locationStatus.innerHTML = '<i class="bi bi-exclamation-circle me-1"></i>Gagal: ' + err.message;
+                            this.disabled = false;
+                            this.innerHTML = '<i class="bi bi-geo-alt-fill me-2"></i>Deteksi Lokasi Saya';
+                        }
+                    );
+                } else {
+                    alert('Geolocation tidak didukung browser Anda');
                 }
-
-                this.disabled = false;
-                this.innerHTML = '<i class="bi bi-crosshair me-2"></i>Deteksi Lokasi Saya';
             });
         });
+
+        function initMap() {
+            map = L.map('mapLeaflet').setView([-0.9471, 100.4172], 12);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Custom school icon
+            const schoolIcon = L.divIcon({
+                className: 'custom-marker',
+                html: '<div style="background: #10B981; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center;"><i class="bi bi-building" style="font-size: 10px; color: white;"></i></div>',
+                iconSize: [20, 20],
+                iconAnchor: [10, 10]
+            });
+
+            // Tambahkan marker untuk semua SMK
+            smkData.forEach(smk => {
+                const lat = parseFloat(smk.latitude);
+                const lng = parseFloat(smk.longitude);
+                if (lat && lng) {
+                    const marker = L.marker([lat, lng], {
+                            icon: schoolIcon
+                        })
+                        .addTo(map)
+                        .bindPopup('<strong>' + smk.nama_sekolah + '</strong><br><small>' + (smk.alamat || '') + '</small>');
+                    marker.smkData = smk;
+                    schoolMarkers.push(marker);
+                }
+            });
+        }
+
+        function addUserMarker(lat, lng) {
+            if (userMarker) map.removeLayer(userMarker);
+            if (userCircle) map.removeLayer(userCircle);
+
+            const userIcon = L.divIcon({
+                className: 'custom-marker',
+                html: '<div style="background: #EF4444; width: 24px; height: 24px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.4);"></div>',
+                iconSize: [24, 24],
+                iconAnchor: [12, 12]
+            });
+
+            userMarker = L.marker([lat, lng], {
+                    icon: userIcon
+                })
+                .addTo(map)
+                .bindPopup('<strong>Lokasi Anda</strong>')
+                .openPopup();
+
+            userCircle = L.circle([lat, lng], {
+                radius: radiusZonasi,
+                color: '#10B981',
+                fillOpacity: 0.1
+            }).addTo(map);
+        }
+
+        // Hitung jarak darat menggunakan OSRM - SAMA PERSIS dengan pendaftaran.php
+        async function getRoadDistance(lat1, lng1, lat2, lng2) {
+            try {
+                const url = 'https://router.project-osrm.org/route/v1/driving/' + lng1 + ',' + lat1 + ';' + lng2 + ',' + lat2 + '?overview=false';
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.routes && data.routes[0]) {
+                    return {
+                        distance: data.routes[0].distance,
+                        duration: data.routes[0].duration,
+                        success: true
+                    };
+                }
+            } catch (error) {
+                console.log('OSRM error, using Haversine fallback');
+            }
+
+            return {
+                distance: haversineDistance(lat1, lng1, lat2, lng2),
+                duration: null,
+                success: false
+            };
+        }
+
+        // Haversine formula (fallback)
+        function haversineDistance(lat1, lng1, lat2, lng2) {
+            const R = 6371000;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLng = (lng2 - lng1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLng / 2) * Math.sin(dLng / 2);
+            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        }
+
+        function formatDistance(meters) {
+            if (meters >= 1000) return (meters / 1000).toFixed(2) + ' km';
+            return Math.round(meters) + ' m';
+        }
+
+        function formatDuration(seconds) {
+            if (!seconds) return '-';
+            const minutes = Math.round(seconds / 60);
+            if (minutes >= 60) {
+                return Math.floor(minutes / 60) + ' jam ' + (minutes % 60) + ' mnt';
+            }
+            return minutes + ' menit';
+        }
+
+        function clearMapHighlights() {
+            routeLines.forEach(line => map.removeLayer(line));
+            routeLines = [];
+            highlightCircles.forEach(circle => map.removeLayer(circle));
+            highlightCircles = [];
+
+            // Reset marker SMK ke default
+            const defaultIcon = L.divIcon({
+                className: 'custom-marker',
+                html: '<div style="background: #10B981; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3);"></div>',
+                iconSize: [20, 20],
+                iconAnchor: [10, 10]
+            });
+            schoolMarkers.forEach(m => m.setIcon(defaultIcon));
+        }
+
+        // Update daftar SMK terdekat - SAMA dengan pendaftaran.php
+        async function updateNearestSchools(userLat, userLng) {
+            const locationStatus = document.getElementById('locationStatus');
+            const nearbySchools = document.getElementById('nearbySchools');
+
+            nearbySchools.innerHTML = '<div class="text-center py-3"><span class="spinner-border spinner-border-sm"></span> Menghitung jarak darat...</div>';
+
+            clearMapHighlights();
+
+            // Hitung jarak ke semua SMK
+            const distances = [];
+            for (const smk of smkData) {
+                const lat = parseFloat(smk.latitude);
+                const lng = parseFloat(smk.longitude);
+                if (lat && lng) {
+                    const result = await getRoadDistance(userLat, userLng, lat, lng);
+                    distances.push({
+                        ...smk,
+                        lat: lat,
+                        lng: lng,
+                        distance: result.distance,
+                        duration: result.duration,
+                        isRoadDistance: result.success
+                    });
+                }
+            }
+
+            distances.sort((a, b) => a.distance - b.distance);
+            const nearest = distances.slice(0, 2);
+
+            // Update status
+            if (distances.length > 0) {
+                const isRoad = distances[0].isRoadDistance;
+                locationStatus.className = isRoad ? 'alert alert-success small' : 'alert alert-warning small';
+                locationStatus.innerHTML = isRoad ?
+                    '<i class="bi bi-car-front me-1"></i>Jarak via jalur darat (OSRM)' :
+                    '<i class="bi bi-geo me-1"></i>Jarak garis lurus (fallback)';
+            }
+
+            // Highlight dan gambar garis ke 2 SMK terdekat
+            await highlightNearestOnMap(userLat, userLng, nearest);
+
+            // Render daftar SMK
+            nearbySchools.innerHTML = distances.slice(0, 5).map((smk, i) => `
+                <div class="d-flex align-items-center justify-content-between py-2 ${i < 4 ? 'border-bottom border-light' : ''}">
+                    <div>
+                        <div class="fw-semibold small">${i < 2 ? '<span class="badge bg-' + (i===0 ? 'danger' : 'warning') + ' me-1">#' + (i+1) + '</span>' : ''}${smk.nama_sekolah}</div>
+                        <small class="text-muted">
+                            <i class="bi bi-signpost-2 me-1"></i>${formatDistance(smk.distance)}
+                            ${smk.duration ? ' <i class="bi bi-clock ms-1 me-1"></i>' + formatDuration(smk.duration) : ''}
+                        </small>
+                    </div>
+                    <span class="badge ${smk.distance <= radiusZonasi ? 'bg-success' : 'bg-secondary'}">${smk.distance <= radiusZonasi ? 'Dalam Radius' : 'Luar Radius'}</span>
+                </div>
+            `).join('');
+
+            // Fit bounds
+            if (nearest.length > 0) {
+                const bounds = L.latLngBounds([
+                    [userLat, userLng], ...nearest.map(s => [s.lat, s.lng])
+                ]);
+                map.fitBounds(bounds, {
+                    padding: [50, 50]
+                });
+            }
+        }
+
+        // Highlight dan gambar garis ke SMK terdekat - SAMA dengan pendaftaran.php
+        async function highlightNearestOnMap(userLat, userLng, nearestSchools) {
+            const colors = [{
+                    bg: '#EF4444',
+                    glow: 'rgba(239, 68, 68, 0.3)'
+                },
+                {
+                    bg: '#F97316',
+                    glow: 'rgba(249, 115, 22, 0.3)'
+                }
+            ];
+
+            for (const [index, smk] of nearestSchools.entries()) {
+                const color = colors[index];
+
+                // Lingkaran glow
+                const glowCircle = L.circle([smk.lat, smk.lng], {
+                    radius: 150,
+                    color: color.bg,
+                    fillColor: color.glow,
+                    fillOpacity: 0.4,
+                    weight: 2
+                }).addTo(map);
+                highlightCircles.push(glowCircle);
+
+                // Marker highlight
+                const highlightIcon = L.divIcon({
+                    className: 'highlight-marker',
+                    html: '<div style="background: ' + color.bg + '; width: 32px; height: 32px; border-radius: 50%; border: 3px solid white; box-shadow: 0 4px 12px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">' + (index + 1) + '</div>',
+                    iconSize: [32, 32],
+                    iconAnchor: [16, 16]
+                });
+
+                schoolMarkers.forEach(marker => {
+                    if (marker.smkData && marker.smkData.id_smk === smk.id_smk) {
+                        marker.setIcon(highlightIcon);
+                        marker.bindPopup(
+                            '<div style="text-align: center;"><div style="background: ' + color.bg + '; color: white; padding: 5px 10px; border-radius: 5px; margin-bottom: 8px;"><strong>#' + (index + 1) + ' Terdekat</strong></div>' +
+                            '<strong>' + smk.nama_sekolah + '</strong><br><small>📍 ' + formatDistance(smk.distance) + '</small>' +
+                            (smk.duration ? '<br><small>⏱️ ' + formatDuration(smk.duration) + '</small>' : '') + '</div>'
+                        );
+                    }
+                });
+
+                // Gambar garis rute
+                await drawRoadRoute(userLat, userLng, smk.lat, smk.lng, color.bg, index);
+            }
+        }
+
+        // Gambar garis jalur darat - SAMA dengan pendaftaran.php
+        async function drawRoadRoute(lat1, lng1, lat2, lng2, lineColor, index) {
+            try {
+                const url = 'https://router.project-osrm.org/route/v1/driving/' + lng1 + ',' + lat1 + ';' + lng2 + ',' + lat2 + '?overview=full&geometries=geojson';
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.routes && data.routes[0] && data.routes[0].geometry) {
+                    const coords = data.routes[0].geometry.coordinates;
+                    const latLngs = coords.map(c => [c[1], c[0]]);
+
+                    const routeLine = L.polyline(latLngs, {
+                        color: lineColor,
+                        weight: index === 0 ? 5 : 4,
+                        opacity: index === 0 ? 0.9 : 0.7,
+                        lineCap: 'round',
+                        lineJoin: 'round'
+                    }).addTo(map);
+                    routeLines.push(routeLine);
+                    return;
+                }
+            } catch (error) {
+                console.log('OSRM route error');
+            }
+
+            // Fallback garis lurus putus-putus
+            const routeLine = L.polyline([
+                [lat1, lng1],
+                [lat2, lng2]
+            ], {
+                color: lineColor,
+                weight: index === 0 ? 4 : 3,
+                opacity: 0.7,
+                dashArray: '10, 10'
+            }).addTo(map);
+            routeLines.push(routeLine);
+        }
     </script>
 
     <style>
