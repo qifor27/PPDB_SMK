@@ -97,6 +97,11 @@ $currentDir = basename(dirname($_SERVER['PHP_SELF']));
                 <span>Pengaturan Sistem</span>
             </a>
 
+            <a href="<?= SITE_URL ?>/superadmin/beranda.php" class="sidebar-link <?= $currentPage === 'beranda' ? 'active' : '' ?>">
+                <i class="bi bi-house-door"></i>
+                <span>Kelola Beranda</span>
+            </a>
+
             <a href="<?= SITE_URL ?>/superadmin/laporan.php" class="sidebar-link <?= $currentPage === 'laporan' ? 'active' : '' ?>">
                 <i class="bi bi-file-earmark-bar-graph"></i>
                 <span>Laporan</span>
