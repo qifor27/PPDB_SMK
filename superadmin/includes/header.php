@@ -85,11 +85,6 @@ $currentDir = basename(dirname($_SERVER['PHP_SELF']));
                 <span>Semua Pendaftar</span>
             </a>
 
-            <a href="<?= SITE_URL ?>/superadmin/kuota.php" class="sidebar-link <?= $currentPage === 'kuota' ? 'active' : '' ?>">
-                <i class="bi bi-pie-chart"></i>
-                <span>Kuota Global</span>
-            </a>
-
             <div class="sidebar-menu-label">Pengaturan</div>
 
             <a href="<?= SITE_URL ?>/superadmin/pengaturan.php" class="sidebar-link <?= $currentPage === 'pengaturan' ? 'active' : '' ?>">
