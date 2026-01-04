@@ -11,7 +11,9 @@ $idPendaftaran = $_GET['id'] ?? 0;
 
 // Get pendaftar data
 $pendaftar = db()->fetch("
-    SELECT p.*, s.*, 
+    SELECT p.id_pendaftaran, p.nomor_pendaftaran, p.status, p.tanggal_daftar, p.tahap_pendaftaran,
+           p.nilai_rata_rata, p.bobot_rapor, p.nilai_tes, p.nilai_akumulasi,
+           s.nisn, s.nama_lengkap, s.tempat_lahir, s.tanggal_lahir, s.jenis_kelamin, s.no_hp,
            smk1.nama_sekolah as sekolah_1,
            smk2.nama_sekolah as sekolah_2,
            k1.nama_kejuruan as kejuruan_1,
