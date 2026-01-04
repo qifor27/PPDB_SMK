@@ -10,7 +10,8 @@ header('Content-Type: application/json');
 require_once dirname(__DIR__) . '/config/database.php';
 require_once dirname(__DIR__) . '/config/functions.php';
 
-$idSmk = (int)($_GET['id_smk'] ?? 0);
+// Support both id_smk and smk_id parameters
+$idSmk = (int)($_GET['id_smk'] ?? $_GET['smk_id'] ?? 0);
 
 if (!$idSmk) {
     echo json_encode(['success' => false, 'message' => 'ID SMK diperlukan']);
@@ -19,14 +20,14 @@ if (!$idSmk) {
 
 try {
     $kejuruan = db()->fetchAll("
-        SELECT k.*, 
-               COALESCE(kk.kuota_afirmasi + kk.kuota_domisili + kk.kuota_prestasi + kk.kuota_nilai_akhir, k.kuota, 36) as kuota,
-               COALESCE(kk.terisi_afirmasi + kk.terisi_domisili + kk.terisi_prestasi + kk.terisi_nilai_akhir, k.kuota_terisi, 0) as terisi
+        SELECT k.id_program, k.nama_kejuruan, k.kode_kejuruan, k.deskripsi,
+               COALESCE(kj.kuota, 36) as kuota,
+               COALESCE(kj.terisi, 0) as terisi
         FROM tb_kejuruan k
-        LEFT JOIN tb_kuota_kejuruan kk ON k.id_program = kk.id_kejuruan AND kk.tahun_ajaran = ?
+        LEFT JOIN tb_kuota_jurusan kj ON k.id_program = kj.id_kejuruan AND kj.tahun_ajaran = '2025/2026'
         WHERE k.id_smk = ?
         ORDER BY k.nama_kejuruan
-    ", [getPengaturan('tahun_ajaran'), $idSmk]);
+    ", [$idSmk]);
 
     echo json_encode([
         'success' => true,

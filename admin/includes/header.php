@@ -90,6 +90,11 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
                 <span>Ranking</span>
             </a>
 
+            <a href="proses-kelulusan.php" class="sidebar-link <?= $currentPage === 'proses-kelulusan' ? 'active' : '' ?>">
+                <i class="bi bi-check2-all"></i>
+                <span>Proses Kelulusan</span>
+            </a>
+
             <div class="sidebar-menu-label">Data Sekolah</div>
 
             <a href="jurusan.php" class="sidebar-link <?= $currentPage === 'jurusan' ? 'active' : '' ?>">

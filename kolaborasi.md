@@ -49,6 +49,34 @@ Jika Anda belum pernah menghubungkan folder proyek di laptop ke repository GitHu
 
 ---
 
+## 🗄️ Sinkronisasi Database (PENTING!)
+
+Git **TIDAK** menyimpan database MySQL Anda secara otomatis. Jika Anda menambahkan data baru (contoh: Menambah Jurusan/SMK baru) dan ingin teman Anda juga memilikinya, lakukan ini:
+
+### Cara Mengirim Update Database:
+1.  **Export Database**: Buka phpMyAdmin, pilih database proyek, klik **Export**.
+2.  **Pilih Custom**: Pastikan pilih opsi "Custom" atau "Quick". Jika "Custom", pastikan :
+    *   centang *Add DROP TABLE / VIEW / PROCEDURE / FUNCTION / EVENT / TRIGGER statement*.
+    *   centang *IF NOT EXISTS*.
+3.  **Simpan File**: Simpan hasil export dengan nama `dbesemka.sql` (timpa file lama di folder root proyek).
+4.  **Push ke Git**:
+    ```bash
+    git add dbesemka.sql
+    git commit -m "Update database: Menambah jurusan SMK baru"
+    git push origin <nama-branch>
+    ```
+
+### Cara Mengambil Update Database (Untuk Teman):
+1.  **Pull dari Git**: `git pull origin main`.
+2.  **Import ke phpMyAdmin**:
+    *   Buka phpMyAdmin.
+    *   Pilih database yang digunakan.
+    *   Pilih **Import**.
+    *   Upload file `dbesemka.sql` terbaru.
+    *   Klik **Go** / **Kirim**.
+
+> **Note**: Import ini biasanya akan menimpa data lama. Pastikan komunikasi di grup jika ada data penting yang tidak boleh hilang.
+
 ## �🛠 Strategi Git & Merge (Anti-Konflik)
 
 Karena kita sudah bekerja dengan branch masing-masing, ikuti langkah berikut untuk menggabungkan kode (merge) kembali ke branch utama (`main`) dengan aman.
