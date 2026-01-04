@@ -24,7 +24,7 @@ $jurusanList = db()->fetchAll("
 
 // Handle process kelulusan
 if (isset($_POST['proses_kelulusan']) && isset($_POST['id_kejuruan'])) {
-    $kejuruanId = (int)$_POST['id_kejuruan'];
+    $kejuruanId = (int) $_POST['id_kejuruan'];
 
     // Get kuota for this jurusan
     $kuotaInfo = db()->fetch("
@@ -34,7 +34,7 @@ if (isset($_POST['proses_kelulusan']) && isset($_POST['id_kejuruan'])) {
         WHERE k.id_program = ?
     ", [$kejuruanId]);
 
-    $kuota = (int)$kuotaInfo['kuota'];
+    $kuota = (int) $kuotaInfo['kuota'];
 
     // Get all verified pendaftar for this jurusan, sorted by ranking
     $pendaftar = db()->fetchAll("
@@ -67,7 +67,7 @@ if (isset($_POST['proses_kelulusan']) && isset($_POST['id_kejuruan'])) {
     }
 
     // Update kuota terisi
-    db()->execute("
+    db()->query("
         UPDATE tb_kuota_jurusan SET terisi = ? 
         WHERE id_smk = ? AND id_kejuruan = ? AND tahun_ajaran = '2025/2026'
     ", [$accepted, $smkId, $kejuruanId]);
@@ -78,8 +78,8 @@ if (isset($_POST['proses_kelulusan']) && isset($_POST['id_kejuruan'])) {
 
 // Handle update kuota
 if (isset($_POST['update_kuota'])) {
-    $kejuruanId = (int)$_POST['id_kejuruan'];
-    $kuotaBaru = (int)$_POST['kuota'];
+    $kejuruanId = (int) $_POST['id_kejuruan'];
+    $kuotaBaru = (int) $_POST['kuota'];
 
     // Check if exists
     $existing = db()->fetch("SELECT * FROM tb_kuota_jurusan WHERE id_smk = ? AND id_kejuruan = ? AND tahun_ajaran = '2025/2026'", [$smkId, $kejuruanId]);
@@ -110,7 +110,9 @@ if (isset($_POST['update_kuota'])) {
             <div class="card-body">
                 <div class="alert alert-info mb-4">
                     <i class="bi bi-info-circle me-2"></i>
-                    <strong>Petunjuk:</strong> Proses kelulusan akan mengubah status pendaftar yang sudah diverifikasi menjadi <span class="badge bg-success">Diterima</span> atau <span class="badge bg-danger">Ditolak</span> berdasarkan ranking dan kuota.
+                    <strong>Petunjuk:</strong> Proses kelulusan akan mengubah status pendaftar yang sudah diverifikasi
+                    menjadi <span class="badge bg-success">Diterima</span> atau <span
+                        class="badge bg-danger">Ditolak</span> berdasarkan ranking dan kuota.
                 </div>
 
                 <div class="table-responsive">
@@ -129,7 +131,7 @@ if (isset($_POST['update_kuota'])) {
                         <tbody>
                             <?php foreach ($jurusanList as $j):
                                 $sisa = $j['kuota'] - $j['diterima'];
-                            ?>
+                                ?>
                                 <tr>
                                     <td>
                                         <strong><?= htmlspecialchars($j['nama_kejuruan']) ?></strong>
@@ -139,9 +141,10 @@ if (isset($_POST['update_kuota'])) {
                                         <form method="POST" class="d-inline">
                                             <input type="hidden" name="id_kejuruan" value="<?= $j['id_program'] ?>">
                                             <input type="number" name="kuota" value="<?= $j['kuota'] ?>"
-                                                class="form-control form-control-sm text-center" style="width: 70px; display: inline-block;"
-                                                min="1" max="200">
-                                            <button type="submit" name="update_kuota" class="btn btn-sm btn-outline-primary">
+                                                class="form-control form-control-sm text-center"
+                                                style="width: 70px; display: inline-block;" min="1" max="200">
+                                            <button type="submit" name="update_kuota"
+                                                class="btn btn-sm btn-outline-primary">
                                                 <i class="bi bi-check"></i>
                                             </button>
                                         </form>
@@ -178,7 +181,8 @@ if (isset($_POST['update_kuota'])) {
                                     </td>
                                     <td class="text-center">
                                         <?php if ($j['pending'] > 0): ?>
-                                            <form method="POST" class="d-inline" onsubmit="return confirm('Proses kelulusan untuk <?= htmlspecialchars($j['nama_kejuruan']) ?>?\n\nPendaftar Pending: <?= $j['pending'] ?>\nKuota: <?= $j['kuota'] ?>\n\nDiterima: <?= min($j['pending'], $j['kuota'] - $j['diterima']) ?>\nDitolak: <?= max(0, $j['pending'] - ($j['kuota'] - $j['diterima'])) ?>');">
+                                            <form method="POST" class="d-inline"
+                                                onsubmit="return confirm('Proses kelulusan untuk <?= htmlspecialchars($j['nama_kejuruan']) ?>?\n\nPendaftar Pending: <?= $j['pending'] ?>\nKuota: <?= $j['kuota'] ?>\n\nDiterima: <?= min($j['pending'], $j['kuota'] - $j['diterima']) ?>\nDitolak: <?= max(0, $j['pending'] - ($j['kuota'] - $j['diterima'])) ?>');">
                                                 <input type="hidden" name="id_kejuruan" value="<?= $j['id_program'] ?>">
                                                 <button type="submit" name="proses_kelulusan" class="btn btn-sm btn-primary">
                                                     <i class="bi bi-play-fill me-1"></i>Proses
@@ -206,7 +210,9 @@ if (isset($_POST['update_kuota'])) {
                                 <th class="text-center"><?= array_sum(array_column($jurusanList, 'pending')) ?></th>
                                 <th class="text-center"><?= array_sum(array_column($jurusanList, 'diterima')) ?></th>
                                 <th class="text-center"><?= array_sum(array_column($jurusanList, 'ditolak')) ?></th>
-                                <th class="text-center"><?= array_sum(array_column($jurusanList, 'kuota')) - array_sum(array_column($jurusanList, 'diterima')) ?></th>
+                                <th class="text-center">
+                                    <?= array_sum(array_column($jurusanList, 'kuota')) - array_sum(array_column($jurusanList, 'diterima')) ?>
+                                </th>
                                 <th></th>
                             </tr>
                         </tfoot>
@@ -225,7 +231,8 @@ if (isset($_POST['update_kuota'])) {
             </div>
             <div class="card-body">
                 <ol class="mb-0">
-                    <li class="mb-2">Pastikan semua pendaftar sudah <strong>diverifikasi</strong> dan memiliki <strong>nilai tes</strong></li>
+                    <li class="mb-2">Pastikan semua pendaftar sudah <strong>diverifikasi</strong> dan memiliki
+                        <strong>nilai tes</strong></li>
                     <li class="mb-2">Atur <strong>kuota</strong> per jurusan sesuai daya tampung</li>
                     <li class="mb-2">Klik <strong>"Proses"</strong> untuk menentukan kelulusan</li>
                     <li class="mb-2">Sistem akan otomatis mengurutkan berdasarkan:

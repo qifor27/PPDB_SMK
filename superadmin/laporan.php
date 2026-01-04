@@ -18,21 +18,6 @@ $stats = [
     'rejected' => db()->count('tb_pendaftaran', 'status = ?', ['rejected']),
 ];
 
-// Stats per jalur
-$statsJalur = db()->fetchAll(
-    "SELECT j.nama_jalur, j.kode_jalur, COUNT(p.id_pendaftaran) as total
-     FROM tb_jalur j
-     LEFT JOIN tb_pendaftaran p ON j.id_jalur = p.id_jalur
-     WHERE j.is_active = 1
-     GROUP BY j.id_jalur
-     ORDER BY total DESC"
-);
-
-// Stats per tahap
-$statsTahap = [
-    1 => db()->count('tb_pendaftaran', 'tahap_pendaftaran = ?', [1]),
-    2 => db()->count('tb_pendaftaran', 'tahap_pendaftaran = ?', [2]),
-];
 ?>
 
 <div class="row g-4">
@@ -87,36 +72,6 @@ $statsTahap = [
     </div>
 
     <div class="col-lg-4">
-        <div class="card mb-4">
-            <div class="card-header">
-                <h6 class="mb-0"><i class="bi bi-signpost-split me-2"></i>Per Jalur</h6>
-            </div>
-            <div class="card-body">
-                <?php foreach ($statsJalur as $jalur): ?>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span><?= htmlspecialchars($jalur['nama_jalur']) ?></span>
-                        <span class="badge bg-primary"><?= $jalur['total'] ?></span>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-
-        <div class="card mb-4">
-            <div class="card-header">
-                <h6 class="mb-0"><i class="bi bi-calendar-check me-2"></i>Per Tahap</h6>
-            </div>
-            <div class="card-body">
-                <div class="d-flex justify-content-between mb-3">
-                    <span>Tahap 1</span>
-                    <span class="badge bg-primary"><?= $statsTahap[1] ?></span>
-                </div>
-                <div class="d-flex justify-content-between">
-                    <span>Tahap 2</span>
-                    <span class="badge bg-warning text-dark"><?= $statsTahap[2] ?></span>
-                </div>
-            </div>
-        </div>
-
         <div class="card">
             <div class="card-header">
                 <h6 class="mb-0"><i class="bi bi-download me-2"></i>Download Laporan</h6>

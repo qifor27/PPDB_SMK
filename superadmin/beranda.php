@@ -47,7 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if (isset($_FILES['doc_file']) && $_FILES['doc_file']['error'] === UPLOAD_ERR_OK) {
                 $uploadDir = dirname(__DIR__) . '/uploads/docs/';
-                if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+                if (!is_dir($uploadDir))
+                    mkdir($uploadDir, 0755, true);
 
                 $ext = strtolower(pathinfo($_FILES['doc_file']['name'], PATHINFO_EXTENSION));
                 $filename = $docType . '-' . time() . '.' . $ext;
@@ -82,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $jadwalData = $_POST['jadwal'] ?? [];
 
             // Clear existing
-            db()->execute("DELETE FROM tb_jadwal_spmb");
+            db()->query("DELETE FROM tb_jadwal_spmb");
 
             foreach ($jadwalData as $j) {
                 if (!empty($j['nama']) && !empty($j['tanggal_mulai'])) {
@@ -91,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         'tanggal_mulai' => $j['tanggal_mulai'],
                         'tanggal_selesai' => $j['tanggal_selesai'] ?: null,
                         'keterangan' => sanitize($j['keterangan'] ?? ''),
-                        'urutan' => (int)($j['urutan'] ?? 0)
+                        'urutan' => (int) ($j['urutan'] ?? 0)
                     ]);
                 }
             }
@@ -174,7 +175,8 @@ $jadwalList = db()->fetchAll("SELECT * FROM tb_jadwal_spmb ORDER BY urutan, tang
 
                             <div class="mb-3">
                                 <label class="form-label">Subtitle Hero</label>
-                                <textarea name="hero_subtitle" class="form-control" rows="3"><?= htmlspecialchars($settings['hero_subtitle'] ?? 'Selamat datang di SPMB SMK Kota Padang. Daftarkan diri Anda sekarang dan raih masa depan cerah bersama SMK terbaik di Kota Padang.') ?></textarea>
+                                <textarea name="hero_subtitle" class="form-control"
+                                    rows="3"><?= htmlspecialchars($settings['hero_subtitle'] ?? 'Selamat datang di SPMB SMK Kota Padang. Daftarkan diri Anda sekarang dan raih masa depan cerah bersama SMK terbaik di Kota Padang.') ?></textarea>
                             </div>
 
                             <div class="mb-3">
@@ -209,18 +211,20 @@ $jadwalList = db()->fetchAll("SELECT * FROM tb_jadwal_spmb ORDER BY urutan, tang
                             ];
                             foreach ($docTypes as $type => $info):
                                 $doc = $docsMap[$type] ?? null;
-                            ?>
+                                ?>
                                 <div class="col-md-6">
                                     <div class="card h-100 border">
                                         <div class="card-body">
                                             <div class="d-flex align-items-center mb-3">
-                                                <div class="bg-<?= $info['color'] ?>-soft text-<?= $info['color'] ?> rounded-circle p-3 me-3">
+                                                <div
+                                                    class="bg-<?= $info['color'] ?>-soft text-<?= $info['color'] ?> rounded-circle p-3 me-3">
                                                     <i class="bi <?= $info['icon'] ?> fs-4"></i>
                                                 </div>
                                                 <div>
                                                     <h6 class="mb-0"><?= $info['title'] ?></h6>
                                                     <?php if ($doc): ?>
-                                                        <small class="text-success"><i class="bi bi-check-circle me-1"></i>Tersedia</small>
+                                                        <small class="text-success"><i
+                                                                class="bi bi-check-circle me-1"></i>Tersedia</small>
                                                     <?php else: ?>
                                                         <small class="text-muted">Belum diupload</small>
                                                     <?php endif; ?>
@@ -234,10 +238,12 @@ $jadwalList = db()->fetchAll("SELECT * FROM tb_jadwal_spmb ORDER BY urutan, tang
 
                                                 <div class="mb-2">
                                                     <input type="text" name="doc_title" class="form-control form-control-sm"
-                                                        placeholder="Judul dokumen" value="<?= htmlspecialchars($doc['judul'] ?? $info['title']) ?>">
+                                                        placeholder="Judul dokumen"
+                                                        value="<?= htmlspecialchars($doc['judul'] ?? $info['title']) ?>">
                                                 </div>
                                                 <div class="mb-2">
-                                                    <input type="file" name="doc_file" class="form-control form-control-sm" accept=".pdf,.doc,.docx">
+                                                    <input type="file" name="doc_file" class="form-control form-control-sm"
+                                                        accept=".pdf,.doc,.docx">
                                                 </div>
                                                 <div class="d-flex gap-2">
                                                     <button type="submit" class="btn btn-<?= $info['color'] ?> btn-sm">
@@ -291,23 +297,28 @@ $jadwalList = db()->fetchAll("SELECT * FROM tb_jadwal_spmb ORDER BY urutan, tang
                                         foreach ($jadwalList as $j): ?>
                                             <tr>
                                                 <td>
-                                                    <input type="hidden" name="jadwal[<?= $no ?>][urutan]" value="<?= $no ?>">
+                                                    <input type="hidden" name="jadwal[<?= $no ?>][urutan]"
+                                                        value="<?= $no ?>">
                                                     <?= $no ?>
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="jadwal[<?= $no ?>][nama]" class="form-control form-control-sm"
+                                                    <input type="text" name="jadwal[<?= $no ?>][nama]"
+                                                        class="form-control form-control-sm"
                                                         value="<?= htmlspecialchars($j['nama_kegiatan']) ?>" required>
                                                 </td>
                                                 <td>
-                                                    <input type="date" name="jadwal[<?= $no ?>][tanggal_mulai]" class="form-control form-control-sm"
+                                                    <input type="date" name="jadwal[<?= $no ?>][tanggal_mulai]"
+                                                        class="form-control form-control-sm"
                                                         value="<?= $j['tanggal_mulai'] ?>" required>
                                                 </td>
                                                 <td>
-                                                    <input type="date" name="jadwal[<?= $no ?>][tanggal_selesai]" class="form-control form-control-sm"
+                                                    <input type="date" name="jadwal[<?= $no ?>][tanggal_selesai]"
+                                                        class="form-control form-control-sm"
                                                         value="<?= $j['tanggal_selesai'] ?>">
                                                 </td>
                                                 <td>
-                                                    <input type="text" name="jadwal[<?= $no ?>][keterangan]" class="form-control form-control-sm"
+                                                    <input type="text" name="jadwal[<?= $no ?>][keterangan]"
+                                                        class="form-control form-control-sm"
                                                         value="<?= htmlspecialchars($j['keterangan'] ?? '') ?>">
                                                 </td>
                                                 <td>
@@ -316,7 +327,7 @@ $jadwalList = db()->fetchAll("SELECT * FROM tb_jadwal_spmb ORDER BY urutan, tang
                                                     </button>
                                                 </td>
                                             </tr>
-                                        <?php $no++;
+                                            <?php $no++;
                                         endforeach; ?>
                                     </tbody>
                                 </table>
@@ -341,24 +352,30 @@ $jadwalList = db()->fetchAll("SELECT * FROM tb_jadwal_spmb ORDER BY urutan, tang
                             <?= Session::csrfField() ?>
                             <input type="hidden" name="action" value="update_general">
                             <!-- Hidden field for other settings -->
-                            <input type="hidden" name="hero_title" value="<?= htmlspecialchars($settings['hero_title'] ?? '') ?>">
-                            <input type="hidden" name="hero_subtitle" value="<?= htmlspecialchars($settings['hero_subtitle'] ?? '') ?>">
-                            <input type="hidden" name="hero_image" value="<?= htmlspecialchars($settings['hero_image'] ?? '') ?>">
+                            <input type="hidden" name="hero_title"
+                                value="<?= htmlspecialchars($settings['hero_title'] ?? '') ?>">
+                            <input type="hidden" name="hero_subtitle"
+                                value="<?= htmlspecialchars($settings['hero_subtitle'] ?? '') ?>">
+                            <input type="hidden" name="hero_image"
+                                value="<?= htmlspecialchars($settings['hero_image'] ?? '') ?>">
 
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label class="form-label"><i class="bi bi-telephone me-1"></i>Telepon</label>
                                     <input type="text" name="contact_phone" class="form-control"
-                                        value="<?= htmlspecialchars($settings['contact_phone'] ?? '') ?>" placeholder="(0751) xxxxxx">
+                                        value="<?= htmlspecialchars($settings['contact_phone'] ?? '') ?>"
+                                        placeholder="(0751) xxxxxx">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label"><i class="bi bi-envelope me-1"></i>Email</label>
                                     <input type="email" name="contact_email" class="form-control"
-                                        value="<?= htmlspecialchars($settings['contact_email'] ?? '') ?>" placeholder="info@smk.sch.id">
+                                        value="<?= htmlspecialchars($settings['contact_email'] ?? '') ?>"
+                                        placeholder="info@smk.sch.id">
                                 </div>
                                 <div class="col-12">
                                     <label class="form-label"><i class="bi bi-geo-alt me-1"></i>Alamat</label>
-                                    <textarea name="contact_address" class="form-control" rows="2"><?= htmlspecialchars($settings['contact_address'] ?? '') ?></textarea>
+                                    <textarea name="contact_address" class="form-control"
+                                        rows="2"><?= htmlspecialchars($settings['contact_address'] ?? '') ?></textarea>
                                 </div>
 
                                 <div class="col-12">
@@ -367,19 +384,25 @@ $jadwalList = db()->fetchAll("SELECT * FROM tb_jadwal_spmb ORDER BY urutan, tang
                                 </div>
 
                                 <div class="col-md-4">
-                                    <label class="form-label"><i class="bi bi-facebook me-1 text-primary"></i>Facebook</label>
+                                    <label class="form-label"><i
+                                            class="bi bi-facebook me-1 text-primary"></i>Facebook</label>
                                     <input type="url" name="social_facebook" class="form-control"
-                                        value="<?= htmlspecialchars($settings['social_facebook'] ?? '') ?>" placeholder="https://facebook.com/...">
+                                        value="<?= htmlspecialchars($settings['social_facebook'] ?? '') ?>"
+                                        placeholder="https://facebook.com/...">
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label"><i class="bi bi-instagram me-1 text-danger"></i>Instagram</label>
+                                    <label class="form-label"><i
+                                            class="bi bi-instagram me-1 text-danger"></i>Instagram</label>
                                     <input type="url" name="social_instagram" class="form-control"
-                                        value="<?= htmlspecialchars($settings['social_instagram'] ?? '') ?>" placeholder="https://instagram.com/...">
+                                        value="<?= htmlspecialchars($settings['social_instagram'] ?? '') ?>"
+                                        placeholder="https://instagram.com/...">
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="form-label"><i class="bi bi-youtube me-1 text-danger"></i>YouTube</label>
+                                    <label class="form-label"><i
+                                            class="bi bi-youtube me-1 text-danger"></i>YouTube</label>
                                     <input type="url" name="social_youtube" class="form-control"
-                                        value="<?= htmlspecialchars($settings['social_youtube'] ?? '') ?>" placeholder="https://youtube.com/...">
+                                        value="<?= htmlspecialchars($settings['social_youtube'] ?? '') ?>"
+                                        placeholder="https://youtube.com/...">
                                 </div>
                             </div>
 
@@ -395,11 +418,11 @@ $jadwalList = db()->fetchAll("SELECT * FROM tb_jadwal_spmb ORDER BY urutan, tang
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         let rowCount = <?= count($jadwalList) ?>;
 
         // Add new jadwal row
-        document.getElementById('btnAddJadwal').addEventListener('click', function() {
+        document.getElementById('btnAddJadwal').addEventListener('click', function () {
             rowCount++;
             const tbody = document.querySelector('#tableJadwal tbody');
             const newRow = `
@@ -419,7 +442,7 @@ $jadwalList = db()->fetchAll("SELECT * FROM tb_jadwal_spmb ORDER BY urutan, tang
         });
 
         // Remove row
-        document.getElementById('tableJadwal').addEventListener('click', function(e) {
+        document.getElementById('tableJadwal').addEventListener('click', function (e) {
             if (e.target.closest('.btn-remove-row')) {
                 e.target.closest('tr').remove();
             }

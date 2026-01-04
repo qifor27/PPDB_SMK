@@ -1,0 +1,66 @@
+/* Landing Page Specific Styles */
+
+@keyframes bounce {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateY(-10px);
+    }
+
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+.bg-primary-soft {
+    background: rgba(16, 185, 129, 0.15);
+}
+
+.bg-success-soft {
+    background: rgba(16, 185, 129, 0.15);
+}
+
+.bg-warning-soft {
+    background: rgba(245, 158, 11, 0.15);
+}
+
+.bg-info-soft {
+    background: rgba(59, 130, 246, 0.15);
+}
+
+/* Map Section Styles */
+.map-container {
+    height: 400px;
+    width: 100%;
+    border-radius: 0 0 8px 8px;
+    overflow: hidden;
+}
+
+#mapLeaflet {
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+}
+
+.custom-marker {
+    background: transparent;
+    border: none;
+}
+
+.highlight-marker {
+    background: transparent;
+    border: none;
+    z-index: 1000 !important;
+}
+
+.nearby-schools {
+    max-height: 300px;
+    overflow-y: auto;
+}

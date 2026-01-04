@@ -17,7 +17,8 @@ $statsByJalur = db()->fetchAll(
 // Stats by status
 $statsByStatus = db()->fetchAll("SELECT status, COUNT(*) as total FROM tb_pendaftaran GROUP BY status");
 $statusMap = [];
-foreach ($statsByStatus as $s) $statusMap[$s['status']] = $s['total'];
+foreach ($statsByStatus as $s)
+    $statusMap[$s['status']] = $s['total'];
 
 // Stats by school
 $statsBySchool = db()->fetchAll(
@@ -84,23 +85,13 @@ $recentPendaftar = db()->fetchAll(
     <!-- Charts -->
     <div class="col-lg-8">
         <div class="row g-4 mb-4">
-            <div class="col-md-6">
-                <div class="card h-100">
-                    <div class="card-header">
-                        <h6 class="mb-0"><i class="bi bi-pie-chart me-2"></i>Per Jalur</h6>
-                    </div>
-                    <div class="card-body">
-                        <canvas id="chartJalur" height="200"></canvas>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
+            <div class="col-12">
                 <div class="card h-100">
                     <div class="card-header">
                         <h6 class="mb-0"><i class="bi bi-bar-chart me-2"></i>Per Status</h6>
                     </div>
                     <div class="card-body">
-                        <canvas id="chartStatus" height="200"></canvas>
+                        <canvas id="chartStatus" height="100"></canvas>
                     </div>
                 </div>
             </div>
@@ -152,7 +143,8 @@ $recentPendaftar = db()->fetchAll(
                 <ul class="list-group list-group-flush">
                     <?php foreach ($statsBySchool as $i => $school): ?>
                         <li class="list-group-item bg-transparent d-flex justify-content-between align-items-center">
-                            <span class="small"><?= $i + 1 ?>. <?= htmlspecialchars(truncate($school['nama_sekolah'], 25)) ?></span>
+                            <span class="small"><?= $i + 1 ?>.
+                                <?= htmlspecialchars(truncate($school['nama_sekolah'], 25)) ?></span>
                             <span class="badge bg-primary"><?= $school['total'] ?></span>
                         </li>
                     <?php endforeach; ?>
@@ -184,28 +176,11 @@ $recentPendaftar = db()->fetchAll(
 </div>
 
 <?php
-$jalurLabels = json_encode(array_column($statsByJalur, 'nama_jalur'));
-$jalurData = json_encode(array_column($statsByJalur, 'total'));
 $statusLabels = json_encode(array_keys($statusMap));
 $statusData = json_encode(array_values($statusMap));
 
 $extraScripts = <<<EOT
 <script>
-new Chart(document.getElementById('chartJalur'), {
-    type: 'doughnut',
-    data: {
-        labels: {$jalurLabels},
-        datasets: [{
-            data: {$jalurData},
-            backgroundColor: ['#8B5CF6', '#F59E0B', '#10B981', '#3B82F6']
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: { legend: { position: 'bottom', labels: { color: '#94A3B8' } } }
-    }
-});
-
 new Chart(document.getElementById('chartStatus'), {
     type: 'bar',
     data: {

@@ -8,25 +8,6 @@ require_once 'includes/header.php';
 $smkList = getAllSMK();
 $error = '';
 
-// Create new pendaftaran if jalur is selected
-if (isset($_GET['jalur']) && !$pendaftaran) {
-    $jalurId = (int) $_GET['jalur'];
-    $jalur = db()->fetch("SELECT * FROM tb_jalur WHERE id_jalur = ? AND is_active = 1", [$jalurId]);
-
-    if ($jalur) {
-        $nomorPendaftaran = generateNomorPendaftaran($jalur['kode_jalur']);
-        db()->insert('tb_pendaftaran', [
-            'nomor_pendaftaran' => $nomorPendaftaran,
-            'id_siswa' => $userId,
-            'id_smk_pilihan1' => $smkList[0]['id_smk'],
-            'id_jalur' => $jalurId,
-            'tahun_ajaran' => getTahunAjaran(),
-            'status' => 'draft'
-        ]);
-        redirect('pendaftaran.php');
-    }
-}
-
 // Get fresh pendaftaran data
 $pendaftaran = db()->fetch(
     "SELECT p.*, j.nama_jalur, j.kode_jalur FROM tb_pendaftaran p
@@ -36,7 +17,7 @@ $pendaftaran = db()->fetch(
 );
 
 if (!$pendaftaran) {
-    redirect('pilih-jalur.php');
+    redirect('pilih-tahap.php');
 }
 
 // Handle form submission
@@ -72,16 +53,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'longitude' => !empty($_POST['longitude']) ? (float) $_POST['longitude'] : null
         ];
 
-        // Tambahan data kepindahan orang tua - VELI
-        if ($pendaftaran['kode_jalur'] === 'kepindahan') {
-            $siswaData['jenis_instansi_ortu'] = sanitize($_POST['jenis_instansi_ortu'] ?? '');
-            $siswaData['nama_instansi_asal'] = sanitize($_POST['nama_instansi_asal'] ?? '');
-            $siswaData['nama_instansi_tujuan'] = sanitize($_POST['nama_instansi_tujuan'] ?? '');
-            $siswaData['nomor_sk_pindah'] = sanitize($_POST['nomor_sk_pindah'] ?? '');
-            $siswaData['tanggal_sk_pindah'] = !empty($_POST['tanggal_sk_pindah']) ? $_POST['tanggal_sk_pindah'] : null;
-            $siswaData['kota_asal'] = sanitize($_POST['kota_asal'] ?? '');
-            $siswaData['alasan_kepindahan'] = sanitize($_POST['alasan_kepindahan'] ?? '');
-        }
+        // Tambahan data kepindahan orang tua (Optional)
+        $siswaData['jenis_instansi_ortu'] = sanitize($_POST['jenis_instansi_ortu'] ?? '');
+        $siswaData['nama_instansi_asal'] = sanitize($_POST['nama_instansi_asal'] ?? '');
+        $siswaData['nama_instansi_tujuan'] = sanitize($_POST['nama_instansi_tujuan'] ?? '');
+        $siswaData['nomor_sk_pindah'] = sanitize($_POST['nomor_sk_pindah'] ?? '');
+        $siswaData['tanggal_sk_pindah'] = !empty($_POST['tanggal_sk_pindah']) ? $_POST['tanggal_sk_pindah'] : null;
+        $siswaData['kota_asal'] = sanitize($_POST['kota_asal'] ?? '');
+        $siswaData['alasan_kepindahan'] = sanitize($_POST['alasan_kepindahan'] ?? '');
 
         db()->update('tb_siswa', $siswaData, 'id_siswa = :where_id', ['where_id' => $userId]);
 
@@ -101,7 +80,6 @@ $kejuruanList = getKejuruanBySMK($pendaftaran['id_smk_pilihan1']);
             <h5 class="mb-0">Data Pendaftaran</h5>
             <small class="text-muted">No: <?= $pendaftaran['nomor_pendaftaran'] ?></small>
         </div>
-        <?= getJalurBadge($pendaftaran['kode_jalur']) ?>
     </div>
 </div>
 
@@ -201,40 +179,38 @@ $kejuruanList = getKejuruanBySMK($pendaftaran['id_smk_pilihan1']);
         </div>
     </div>
 
-    <?php if ($pendaftaran['kode_jalur'] === 'zonasi'): ?>
-        <!-- Peta Zonasi - Hanya tampil untuk jalur zonasi - RAFA -->
-        <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h6 class="mb-0"><i class="bi bi-map me-2"></i>Peta Lokasi & SMK Terdekat</h6>
-                <span class="badge bg-success" id="distanceInfo">Klik peta untuk menentukan lokasi</span>
-            </div>
-            <div class="card-body p-0">
-                <div class="row g-0">
-                    <!-- Peta -->
-                    <div class="col-md-8">
-                        <div id="mapZonasi" style="height: 400px; width: 100%;"></div>
-                    </div>
-                    <!-- List SMK Terdekat -->
-                    <div class="col-md-4">
-                        <div class="p-3 h-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                            <h6 class="text-white mb-3">
-                                <i class="bi bi-geo-fill me-2"></i>2 SMK Terdekat
-                            </h6>
-                            <div id="nearestSchoolsList">
-                                <div class="text-white-50 text-center py-4">
-                                    <i class="bi bi-geo-alt" style="font-size: 2rem;"></i>
-                                    <p class="mt-2 mb-0">Tentukan lokasi Anda terlebih dahulu</p>
-                                </div>
+    <!-- Peta Zonasi -->
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h6 class="mb-0"><i class="bi bi-map me-2"></i>Peta Lokasi & SMK Terdekat</h6>
+            <span class="badge bg-success" id="distanceInfo">Klik peta untuk menentukan lokasi</span>
+        </div>
+        <div class="card-body p-0">
+            <div class="row g-0">
+                <!-- Peta -->
+                <div class="col-md-8">
+                    <div id="mapZonasi" style="height: 400px; width: 100%;"></div>
+                </div>
+                <!-- List SMK Terdekat -->
+                <div class="col-md-4">
+                    <div class="p-3 h-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <h6 class="text-white mb-3">
+                            <i class="bi bi-geo-fill me-2"></i>2 SMK Terdekat
+                        </h6>
+                        <div id="nearestSchoolsList">
+                            <div class="text-white-50 text-center py-4">
+                                <i class="bi bi-geo-alt" style="font-size: 2rem;"></i>
+                                <p class="mt-2 mb-0">Tentukan lokasi Anda terlebih dahulu</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Leaflet CSS -->
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <?php endif; ?>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <!-- Asal Sekolah -->
     <div class="card mb-4">
@@ -293,65 +269,62 @@ $kejuruanList = getKejuruanBySMK($pendaftaran['id_smk_pilihan1']);
         </div>
     </div>
 
-    <?php if ($pendaftaran['kode_jalur'] === 'kepindahan'): ?>
-        <!-- Data Kepindahan Orang Tua - VELI -->
-        <div class="card mb-4">
-            <div class="card-header bg-info text-white">
-                <h6 class="mb-0"><i class="bi bi-arrow-left-right me-2"></i>Data Kepindahan Orang Tua</h6>
+    <!-- Data Kepindahan Orang Tua (Opsional) -->
+    <div class="card mb-4">
+        <div class="card-header bg-light">
+            <h6 class="mb-0"><i class="bi bi-arrow-left-right me-2"></i>Data Kepindahan Orang Tua (Jika Ada)</h6>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-light mb-3">
+                <i class="bi bi-info-circle me-2"></i>
+                Isi data ini <strong>hanya jika</strong> Anda adalah siswa pindahan mengikuti tugas orang tua. Kosongkan
+                jika tidak.
             </div>
-            <div class="card-body">
-                <div class="alert alert-info mb-3">
-                    <i class="bi bi-info-circle me-2"></i>
-                    Lengkapi data kepindahan orang tua untuk verifikasi jalur kepindahan.
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Jenis Instansi Orang Tua</label>
+                    <select name="jenis_instansi_ortu" class="form-select">
+                        <option value="">-- Pilih Jenis Instansi --</option>
+                        <?php foreach (['ASN', 'TNI', 'POLRI', 'BUMN', 'Swasta'] as $jenis): ?>
+                            <option value="<?= $jenis ?>" <?= ($siswa['jenis_instansi_ortu'] ?? '') === $jenis ? 'selected' : '' ?>><?= $jenis ?></option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <label class="form-label">Jenis Instansi Orang Tua <span class="text-danger">*</span></label>
-                        <select name="jenis_instansi_ortu" class="form-select" required>
-                            <option value="">-- Pilih Jenis Instansi --</option>
-                            <?php foreach (['ASN', 'TNI', 'POLRI', 'BUMN', 'Swasta'] as $jenis): ?>
-                                <option value="<?= $jenis ?>" <?= ($siswa['jenis_instansi_ortu'] ?? '') === $jenis ? 'selected' : '' ?>><?= $jenis ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Nama Instansi Asal <span class="text-danger">*</span></label>
-                        <input type="text" name="nama_instansi_asal" class="form-control" required
-                            placeholder="Contoh: Dinas Pendidikan Kota Jakarta"
-                            value="<?= htmlspecialchars($siswa['nama_instansi_asal'] ?? '') ?>">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Nama Instansi Tujuan <span class="text-danger">*</span></label>
-                        <input type="text" name="nama_instansi_tujuan" class="form-control" required
-                            placeholder="Contoh: Dinas Pendidikan Kota Padang"
-                            value="<?= htmlspecialchars($siswa['nama_instansi_tujuan'] ?? '') ?>">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Nomor SK Pindah Tugas <span class="text-danger">*</span></label>
-                        <input type="text" name="nomor_sk_pindah" class="form-control" required
-                            placeholder="Contoh: SK/123/IV/2025"
-                            value="<?= htmlspecialchars($siswa['nomor_sk_pindah'] ?? '') ?>">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Tanggal SK Pindah <span class="text-danger">*</span></label>
-                        <input type="date" name="tanggal_sk_pindah" class="form-control" required
-                            value="<?= $siswa['tanggal_sk_pindah'] ?? '' ?>">
-                    </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Kota/Kabupaten Asal <span class="text-danger">*</span></label>
-                        <input type="text" name="kota_asal" class="form-control" required
-                            placeholder="Contoh: Jakarta Selatan"
-                            value="<?= htmlspecialchars($siswa['kota_asal'] ?? '') ?>">
-                    </div>
-                    <div class="col-12">
-                        <label class="form-label">Alasan/Keterangan Kepindahan</label>
-                        <textarea name="alasan_kepindahan" class="form-control" rows="2"
-                            placeholder="Jelaskan alasan kepindahan orang tua (opsional)"><?= htmlspecialchars($siswa['alasan_kepindahan'] ?? '') ?></textarea>
-                    </div>
+                <div class="col-md-4">
+                    <label class="form-label">Nama Instansi Asal</label>
+                    <input type="text" name="nama_instansi_asal" class="form-control"
+                        placeholder="Contoh: Dinas Pendidikan Kota Jakarta"
+                        value="<?= htmlspecialchars($siswa['nama_instansi_asal'] ?? '') ?>">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Nama Instansi Tujuan</label>
+                    <input type="text" name="nama_instansi_tujuan" class="form-control"
+                        placeholder="Contoh: Dinas Pendidikan Kota Padang"
+                        value="<?= htmlspecialchars($siswa['nama_instansi_tujuan'] ?? '') ?>">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Nomor SK Pindah Tugas</label>
+                    <input type="text" name="nomor_sk_pindah" class="form-control" placeholder="Contoh: SK/123/IV/2025"
+                        value="<?= htmlspecialchars($siswa['nomor_sk_pindah'] ?? '') ?>">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Tanggal SK Pindah</label>
+                    <input type="date" name="tanggal_sk_pindah" class="form-control"
+                        value="<?= $siswa['tanggal_sk_pindah'] ?? '' ?>">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Kota/Kabupaten Asal</label>
+                    <input type="text" name="kota_asal" class="form-control" placeholder="Contoh: Jakarta Selatan"
+                        value="<?= htmlspecialchars($siswa['kota_asal'] ?? '') ?>">
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Alasan/Keterangan Kepindahan</label>
+                    <textarea name="alasan_kepindahan" class="form-control" rows="2"
+                        placeholder="Jelaskan alasan kepindahan orang tua (opsional)"><?= htmlspecialchars($siswa['alasan_kepindahan'] ?? '') ?></textarea>
                 </div>
             </div>
         </div>
-    <?php endif; ?>
+    </div>
 
     <!-- Pilihan Sekolah -->
     <div class="card mb-4">
@@ -412,8 +385,7 @@ $smkDataJson = json_encode(array_map(function ($smk) {
     ];
 }, $smkList));
 
-$isZonasi = $pendaftaran['kode_jalur'] === 'zonasi';
-$isZonasiJs = $isZonasi ? 'true' : 'false';
+$isZonasiJs = 'true';
 $initialLat = $siswa['latitude'] ?? -0.9471;
 $initialLng = $siswa['longitude'] ?? 100.4172;
 

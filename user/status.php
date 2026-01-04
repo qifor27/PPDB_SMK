@@ -6,7 +6,7 @@ $pageTitle = 'Status Pendaftaran';
 require_once 'includes/header.php';
 
 if (!$pendaftaran) {
-    redirect('pilih-jalur.php');
+    redirect('pilih-tahap.php');
 }
 
 // Get documents count
@@ -28,10 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_pendaftaran'])
 
 // Refresh pendaftaran
 $pendaftaran = db()->fetch(
-    "SELECT p.*, j.nama_jalur, j.kode_jalur, s1.nama_sekolah as sekolah_pilihan1,
+    "SELECT p.*, s1.nama_sekolah as sekolah_pilihan1,
             s2.nama_sekolah as sekolah_pilihan2, k1.nama_kejuruan as kejuruan1
      FROM tb_pendaftaran p
-     LEFT JOIN tb_jalur j ON p.id_jalur = j.id_jalur
      LEFT JOIN tb_smk s1 ON p.id_smk_pilihan1 = s1.id_smk
      LEFT JOIN tb_smk s2 ON p.id_smk_pilihan2 = s2.id_smk
      LEFT JOIN tb_kejuruan k1 ON p.id_kejuruan_pilihan1 = k1.id_program
@@ -55,8 +54,8 @@ $pendaftaran = db()->fetch(
                         <div class="fw-bold fs-5 text-primary"><?= $pendaftaran['nomor_pendaftaran'] ?></div>
                     </div>
                     <div class="col-md-6">
-                        <label class="text-muted small">Jalur Pendaftaran</label>
-                        <div><?= getJalurBadge($pendaftaran['kode_jalur']) ?></div>
+                        <label class="text-muted small">Tanggal Daftar</label>
+                        <div><?= formatDate($pendaftaran['tanggal_daftar']) ?></div>
                     </div>
                     <div class="col-md-6">
                         <label class="text-muted small">Sekolah Pilihan 1</label>
@@ -66,60 +65,15 @@ $pendaftaran = db()->fetch(
                         <label class="text-muted small">Sekolah Pilihan 2</label>
                         <div><?= htmlspecialchars($pendaftaran['sekolah_pilihan2'] ?? '-') ?></div>
                     </div>
-                    <div class="col-md-4">
-                        <label class="text-muted small">Tanggal Daftar</label>
-                        <div><?= formatDate($pendaftaran['tanggal_daftar']) ?></div>
-                    </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <label class="text-muted small">Dokumen Terupload</label>
                         <div><?= $docsCount ?> dokumen</div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <label class="text-muted small">Dokumen Terverifikasi</label>
                         <div><?= $verifiedDocs ?> dokumen</div>
                     </div>
                 </div>
-
-                <!-- === JALUR AFIRMASI START === -->
-                <?php if ($pendaftaran['kode_jalur'] === 'afirmasi'):
-                    $afirmasiStatus = getAfirmasiStatus($pendaftaran['id_pendaftaran']);
-                    ?>
-                    <div class="border rounded p-3 mb-4"
-                        style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(139, 92, 246, 0.02)); border-color: rgba(139, 92, 246, 0.3) !important;">
-                        <h6 class="mb-3"><i class="bi bi-heart-fill text-purple me-2"></i>Status Dokumen Afirmasi</h6>
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="d-flex align-items-center">
-                                    <?php if ($afirmasiStatus['dokumen_complete']): ?>
-                                        <span class="badge bg-success me-2"><i class="bi bi-check-circle"></i></span>
-                                        <span class="small">Dokumen bantuan sudah diupload</span>
-                                    <?php else: ?>
-                                        <span class="badge bg-warning me-2"><i class="bi bi-exclamation-triangle"></i></span>
-                                        <span class="small text-warning">Belum ada dokumen bantuan</span>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="d-flex align-items-center">
-                                    <?php if ($afirmasiStatus['all_verified']): ?>
-                                        <span class="badge bg-success me-2"><i class="bi bi-patch-check"></i></span>
-                                        <span class="small">Semua dokumen terverifikasi</span>
-                                    <?php else: ?>
-                                        <span class="badge bg-info me-2"><i class="bi bi-hourglass-split"></i></span>
-                                        <span
-                                            class="small"><?= $afirmasiStatus['verified_count'] ?>/<?= $afirmasiStatus['total_count'] ?>
-                                            dokumen terverifikasi</span>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-3 small text-muted">
-                            <i class="bi bi-info-circle me-1"></i>
-                            Jalur Afirmasi memerlukan minimal 1 dokumen bantuan (KIP/PKH/KIS/SKTM) yang valid.
-                        </div>
-                    </div>
-                <?php endif; ?>
-                <!-- === JALUR AFIRMASI END === -->
 
                 <?php if ($pendaftaran['status'] === 'draft'): ?>
                     <div class="alert alert-warning">
@@ -174,7 +128,7 @@ $pendaftaran = db()->fetch(
                     <div class="timeline-item completed">
                         <div class="timeline-date"><?= formatDate($pendaftaran['tanggal_daftar']) ?></div>
                         <div class="timeline-title">Pendaftaran Dibuat</div>
-                        <div class="timeline-desc">Memilih jalur <?= $pendaftaran['nama_jalur'] ?></div>
+                        <div class="timeline-desc">Melakukan pendaftaran online</div>
                     </div>
 
                     <div

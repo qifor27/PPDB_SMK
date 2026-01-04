@@ -10,10 +10,9 @@ $pendaftaranId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
 // Get pendaftaran with siswa data
 $data = db()->fetch(
-    "SELECT p.*, s.*, j.nama_jalur, j.kode_jalur, smk1.nama_sekolah as sekolah1, smk2.nama_sekolah as sekolah2
+    "SELECT p.*, s.*, smk1.nama_sekolah as sekolah1, smk2.nama_sekolah as sekolah2
      FROM tb_pendaftaran p
      JOIN tb_siswa s ON p.id_siswa = s.id_siswa
-     JOIN tb_jalur j ON p.id_jalur = j.id_jalur
      LEFT JOIN tb_smk smk1 ON p.id_smk_pilihan1 = smk1.id_smk
      LEFT JOIN tb_smk smk2 ON p.id_smk_pilihan2 = smk2.id_smk
      WHERE p.id_pendaftaran = ? AND p.id_smk_pilihan1 = ?",
@@ -62,7 +61,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0"><i class="bi bi-person me-2"></i>Data Siswa</h5>
                 <div>
-                    <?= getJalurBadge($data['kode_jalur']) ?>
                     <?= getStatusBadge($data['status']) ?>
                 </div>
             </div>
@@ -144,8 +142,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
 
-        <?php if ($data['kode_jalur'] === 'kepindahan'): ?>
-            <!-- Data Kepindahan Orang Tua - VELI -->
+        <?php if (!empty($data['jenis_instansi_ortu']) || !empty($data['nomor_sk_pindah'])): ?>
+            <!-- Data Kepindahan Orang Tua -->
             <div class="card mb-4">
                 <div class="card-header bg-info text-white">
                     <h5 class="mb-0"><i class="bi bi-arrow-left-right me-2"></i>Data Kepindahan Orang Tua</h5>
@@ -233,10 +231,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="mb-3">
                     <label class="text-muted small">No. Pendaftaran</label>
                     <div class="fw-bold text-primary"><?= $data['nomor_pendaftaran'] ?></div>
-                </div>
-                <div class="mb-3">
-                    <label class="text-muted small">Jalur</label>
-                    <div><?= getJalurBadge($data['kode_jalur']) ?></div>
                 </div>
                 <div class="mb-3">
                     <label class="text-muted small">SMK Pilihan 1</label>

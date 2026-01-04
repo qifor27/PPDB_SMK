@@ -50,7 +50,7 @@ if ($pendaftaran && $siswa['latitude'] && $siswa['longitude']) {
                 <h3 class="text-white mb-2">Selamat Datang, <?= htmlspecialchars($siswa['nama_lengkap']) ?>! 👋</h3>
                 <p class="text-white-50 mb-0">
                     <?php if (!$pendaftaran): ?>
-                        Anda belum melakukan pendaftaran. Silakan pilih jalur pendaftaran untuk memulai.
+                        Anda belum melakukan pendaftaran. Silakan lakukan pendaftaran untuk memulai.
                     <?php else: ?>
                         Status pendaftaran Anda: <strong class="text-white"><?= ucfirst($pendaftaran['status']) ?></strong>
                     <?php endif; ?>
@@ -58,7 +58,7 @@ if ($pendaftaran && $siswa['latitude'] && $siswa['longitude']) {
             </div>
             <div class="col-md-4 text-md-end mt-3 mt-md-0">
                 <?php if (!$pendaftaran): ?>
-                    <a href="pilih-jalur.php" class="btn btn-light">
+                    <a href="pilih-tahap.php" class="btn btn-light">
                         <i class="bi bi-plus-lg me-2"></i>Mulai Daftar
                     </a>
                 <?php else: ?>
@@ -112,7 +112,8 @@ if ($pendaftaran && $siswa['latitude'] && $siswa['longitude']) {
     <div class="col-md-6 col-lg-3">
         <div class="stat-card">
             <div class="stat-icon <?= ($pendaftaran['status'] ?? '') === 'accepted' ? 'primary' : 'danger' ?>">
-                <i class="bi bi-<?= ($pendaftaran['status'] ?? '') === 'accepted' ? 'check-circle' : 'hourglass-split' ?>"></i>
+                <i
+                    class="bi bi-<?= ($pendaftaran['status'] ?? '') === 'accepted' ? 'check-circle' : 'hourglass-split' ?>"></i>
             </div>
             <div class="stat-info">
                 <h3><?= ucfirst($pendaftaran['status'] ?? 'N/A') ?></h3>
@@ -152,14 +153,16 @@ if ($pendaftaran && $siswa['latitude'] && $siswa['longitude']) {
                             <label class="text-muted small">Sekolah Pilihan 1</label>
                             <div class="fw-semibold"><?= htmlspecialchars($pendaftaran['sekolah_pilihan1'] ?? '-') ?></div>
                             <?php if (!empty($pendaftaran['kejuruan_pilihan1'])): ?>
-                                <small class="text-primary"><i class="bi bi-mortarboard me-1"></i><?= htmlspecialchars($pendaftaran['kejuruan_pilihan1']) ?></small>
+                                <small class="text-primary"><i
+                                        class="bi bi-mortarboard me-1"></i><?= htmlspecialchars($pendaftaran['kejuruan_pilihan1']) ?></small>
                             <?php endif; ?>
                         </div>
                         <div class="col-md-6">
                             <label class="text-muted small">Sekolah Pilihan 2</label>
                             <div class="fw-semibold"><?= htmlspecialchars($pendaftaran['sekolah_pilihan2'] ?? '-') ?></div>
                             <?php if (!empty($pendaftaran['kejuruan_pilihan2'])): ?>
-                                <small class="text-primary"><i class="bi bi-mortarboard me-1"></i><?= htmlspecialchars($pendaftaran['kejuruan_pilihan2']) ?></small>
+                                <small class="text-primary"><i
+                                        class="bi bi-mortarboard me-1"></i><?= htmlspecialchars($pendaftaran['kejuruan_pilihan2']) ?></small>
                             <?php endif; ?>
                         </div>
                         <div class="col-md-6">
@@ -174,13 +177,15 @@ if ($pendaftaran && $siswa['latitude'] && $siswa['longitude']) {
                                         <span class="badge bg-danger me-1">P1</span><?= formatDistance($distance1) ?>
                                     <?php endif; ?>
                                     <?php if ($distance2): ?>
-                                        <span class="badge bg-warning text-dark ms-2 me-1">P2</span><?= formatDistance($distance2) ?>
+                                        <span
+                                            class="badge bg-warning text-dark ms-2 me-1">P2</span><?= formatDistance($distance2) ?>
                                     <?php endif; ?>
                                 </div>
                             <?php elseif ($siswa['latitude'] && $siswa['longitude']): ?>
                                 <div class="text-muted small">Menghitung...</div>
                             <?php else: ?>
-                                <div class="small"><a href="profil.php" class="text-primary"><i class="bi bi-geo-alt me-1"></i>Set lokasi rumah</a></div>
+                                <div class="small"><a href="profil.php" class="text-primary"><i
+                                            class="bi bi-geo-alt me-1"></i>Set lokasi rumah</a></div>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -209,19 +214,22 @@ if ($pendaftaran && $siswa['latitude'] && $siswa['longitude']) {
                                 <div class="step-title">Pilih Sekolah & Jurusan</div>
                             </div>
                         </div>
-                        <div class="step <?= $pendaftaran['status'] !== 'draft' ? 'completed' : 'active' ?> mb-3 text-start">
+                        <div
+                            class="step <?= $pendaftaran['status'] !== 'draft' ? 'completed' : 'active' ?> mb-3 text-start">
                             <div class="d-flex align-items-center">
                                 <div class="step-number me-3">2</div>
                                 <div class="step-title">Lengkapi Data & Dokumen</div>
                             </div>
                         </div>
-                        <div class="step <?= in_array($pendaftaran['status'], ['submitted', 'verified', 'accepted']) ? 'completed' : '' ?> mb-3 text-start">
+                        <div
+                            class="step <?= in_array($pendaftaran['status'], ['submitted', 'verified', 'accepted']) ? 'completed' : '' ?> mb-3 text-start">
                             <div class="d-flex align-items-center">
                                 <div class="step-number me-3">3</div>
                                 <div class="step-title">Tes Minat & Bakat</div>
                             </div>
                         </div>
-                        <div class="step <?= in_array($pendaftaran['status'], ['verified', 'accepted']) ? 'completed' : '' ?> mb-3 text-start">
+                        <div
+                            class="step <?= in_array($pendaftaran['status'], ['verified', 'accepted']) ? 'completed' : '' ?> mb-3 text-start">
                             <div class="d-flex align-items-center">
                                 <div class="step-number me-3">4</div>
                                 <div class="step-title">Verifikasi</div>
@@ -271,7 +279,7 @@ if ($pendaftaran && $siswa['latitude'] && $siswa['longitude']) {
                         </li>
                         <li class="mb-3">
                             <i class="bi bi-check-circle text-success me-2"></i>
-                            Pilih jalur sesuai kondisi
+                            Pilih tahap sesuai jadwal
                         </li>
                         <li>
                             <i class="bi bi-check-circle text-success me-2"></i>

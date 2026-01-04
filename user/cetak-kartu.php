@@ -13,16 +13,15 @@ require_once dirname(__DIR__) . '/config/session.php';
 Session::requireRole(ROLE_SISWA, SITE_URL . '/login.php');
 
 $userId = Session::getUserId();
-$pilihan = (int)($_GET['pilihan'] ?? 1);
+$pilihan = (int) ($_GET['pilihan'] ?? 1);
 
 // Get siswa data
 $siswa = db()->fetch("SELECT * FROM tb_siswa WHERE id_siswa = ?", [$userId]);
 
 // Get pendaftaran
 $pendaftaran = db()->fetch("
-    SELECT p.*, j.nama_jalur, j.kode_jalur
+    SELECT p.*
     FROM tb_pendaftaran p
-    LEFT JOIN tb_jalur j ON p.id_jalur = j.id_jalur
     WHERE p.id_siswa = ?
     ORDER BY p.id_pendaftaran DESC LIMIT 1
 ", [$userId]);
@@ -320,7 +319,8 @@ $namaKejuruan = $kejuruan['nama_kejuruan'] ?? 'Belum dipilih';
                     <tr>
                         <td>TEMPAT/TGL LAHIR</td>
                         <td>:</td>
-                        <td><?= htmlspecialchars($siswa['tempat_lahir']) ?>, <?= date('d F Y', strtotime($siswa['tanggal_lahir'])) ?></td>
+                        <td><?= htmlspecialchars($siswa['tempat_lahir']) ?>,
+                            <?= date('d F Y', strtotime($siswa['tanggal_lahir'])) ?></td>
                     </tr>
                     <tr>
                         <td>JENIS KELAMIN</td>
@@ -358,7 +358,7 @@ $namaKejuruan = $kejuruan['nama_kejuruan'] ?? 'Belum dipilih';
         <div class="pilihan-box">
             <table class="data-table">
                 <tr>
-                    <td>JALUR SELEKSI NILAI RAPOR / PILIHAN <?= $pilihan ?></td>
+                    <td>SELEKSI PENERIMAAN PESERTA DIDIK BARU / PILIHAN <?= $pilihan ?></td>
                     <td></td>
                     <td></td>
                 </tr>
@@ -390,8 +390,10 @@ $namaKejuruan = $kejuruan['nama_kejuruan'] ?? 'Belum dipilih';
         <!-- Pernyataan -->
         <div class="pernyataan">
             <h4>PERNYATAAN KESEPAKATAN YANG TELAH DISETUJUI</h4>
-            <p>Dengan ini menyatakan telah diminta dan melaksanakan pengisian data dan pengajuan pendaftaran sesuai isian diatas
-                dinyatakan dengan Sebenar-benarnya dan dapat dibuktikan jika diperlukan serta Pendaftaran yang sudah diberi
+            <p>Dengan ini menyatakan telah diminta dan melaksanakan pengisian data dan pengajuan pendaftaran sesuai
+                isian diatas
+                dinyatakan dengan Sebenar-benarnya dan dapat dibuktikan jika diperlukan serta Pendaftaran yang sudah
+                diberi
                 Untuk dapat mengganti Lain-Lainnya sebelum diterima dalam masa diterima.</p>
         </div>
 

@@ -31,16 +31,6 @@ $statsTahap = [
     1 => db()->count('tb_pendaftaran', 'tahap_pendaftaran = ?', [1]),
     2 => db()->count('tb_pendaftaran', 'tahap_pendaftaran = ?', [2]),
 ];
-
-// Stats per jalur (tetap ada untuk referensi)
-$statsJalur = db()->fetchAll(
-    "SELECT j.nama_jalur, j.kode_jalur, j.icon, COUNT(p.id_pendaftaran) as total
-     FROM tb_jalur j
-     LEFT JOIN tb_pendaftaran p ON j.id_jalur = p.id_jalur
-     WHERE j.is_active = 1
-     GROUP BY j.id_jalur
-     ORDER BY j.id_jalur"
-);
 ?>
 
 <div class="row g-4">
@@ -48,7 +38,8 @@ $statsJalur = db()->fetchAll(
     <div class="col-12">
         <div class="alert alert-info">
             <i class="bi bi-info-circle me-2"></i>
-            <strong>Info:</strong> Sistem SPMB menggunakan <strong>2 Tahap Seleksi</strong> dengan masing-masing jadwal pendaftaran dan tes yang berbeda.
+            <strong>Info:</strong> Sistem SPMB menggunakan <strong>2 Tahap Seleksi</strong> dengan masing-masing jadwal
+            pendaftaran dan tes yang berbeda.
         </div>
     </div>
 
@@ -65,11 +56,13 @@ $statsJalur = db()->fetchAll(
                         <div class="d-flex gap-2">
                             <div class="flex-fill">
                                 <label class="form-label small">Mulai</label>
-                                <input type="datetime-local" class="form-control" value="<?= date('Y-m-d\TH:i', strtotime($jadwalTahap[1]['mulai'])) ?>">
+                                <input type="datetime-local" class="form-control"
+                                    value="<?= date('Y-m-d\TH:i', strtotime($jadwalTahap[1]['mulai'])) ?>">
                             </div>
                             <div class="flex-fill">
                                 <label class="form-label small">Selesai</label>
-                                <input type="datetime-local" class="form-control" value="<?= date('Y-m-d\TH:i', strtotime($jadwalTahap[1]['selesai'])) ?>">
+                                <input type="datetime-local" class="form-control"
+                                    value="<?= date('Y-m-d\TH:i', strtotime($jadwalTahap[1]['selesai'])) ?>">
                             </div>
                         </div>
                     </div>
@@ -119,11 +112,13 @@ $statsJalur = db()->fetchAll(
                         <div class="d-flex gap-2">
                             <div class="flex-fill">
                                 <label class="form-label small">Mulai</label>
-                                <input type="datetime-local" class="form-control" value="<?= date('Y-m-d\TH:i', strtotime($jadwalTahap[2]['mulai'])) ?>">
+                                <input type="datetime-local" class="form-control"
+                                    value="<?= date('Y-m-d\TH:i', strtotime($jadwalTahap[2]['mulai'])) ?>">
                             </div>
                             <div class="flex-fill">
                                 <label class="form-label small">Selesai</label>
-                                <input type="datetime-local" class="form-control" value="<?= date('Y-m-d\TH:i', strtotime($jadwalTahap[2]['selesai'])) ?>">
+                                <input type="datetime-local" class="form-control"
+                                    value="<?= date('Y-m-d\TH:i', strtotime($jadwalTahap[2]['selesai'])) ?>">
                             </div>
                         </div>
                     </div>
@@ -160,29 +155,6 @@ $statsJalur = db()->fetchAll(
         </div>
     </div>
 
-    <!-- Statistik Jalur (Referensi) -->
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <h6 class="mb-0"><i class="bi bi-signpost-split me-2"></i>Distribusi per Jalur Pendaftaran</h6>
-            </div>
-            <div class="card-body">
-                <div class="row g-3">
-                    <?php foreach ($statsJalur as $jalur): ?>
-                        <div class="col-md-3">
-                            <div class="d-flex align-items-center gap-2 p-3 rounded" style="background: rgba(139, 92, 246, 0.08);">
-                                <i class="bi <?= $jalur['icon'] ?? 'bi-bookmark-star' ?> text-primary fs-4"></i>
-                                <div>
-                                    <div class="fw-semibold"><?= htmlspecialchars($jalur['nama_jalur']) ?></div>
-                                    <small class="text-muted"><?= $jalur['total'] ?> pendaftar</small>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <?php require_once 'includes/footer.php'; ?>

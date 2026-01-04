@@ -3,7 +3,23 @@
 /**
  * Admin Sekolah - Export Data
  */
-require_once 'includes/header.php';
+require_once dirname(__DIR__) . '/config/database.php';
+require_once dirname(__DIR__) . '/config/functions.php';
+require_once dirname(__DIR__) . '/config/session.php';
+
+// Require admin login
+Session::requireRole(ROLE_ADMIN, SITE_URL . '/login.php');
+
+$adminId = Session::getUserId();
+
+// Get admin data with school
+$admin = db()->fetch(
+    "SELECT a.*, s.nama_sekolah, s.id_smk FROM tb_admin_sekolah a 
+     LEFT JOIN tb_smk s ON a.id_smk = s.id_smk 
+     WHERE a.id_admin_sekolah = ?",
+    [$adminId]
+);
+$smkId = $admin['id_smk'];
 
 $type = $_GET['type'] ?? 'pendaftar';
 
@@ -90,13 +106,17 @@ if ($type === 'pendaftar') {
 
     foreach ($pendaftarList as $p) {
         $tahap = $p['tahap_pendaftaran'] ?? 1;
-        if ($tahap == 1) $stats['tahap1']++;
-        else $stats['tahap2']++;
+        if ($tahap == 1)
+            $stats['tahap1']++;
+        else
+            $stats['tahap2']++;
 
         $stats[$p['status']]++;
 
-        if ($p['jenis_kelamin'] === 'L') $stats['laki']++;
-        else $stats['perempuan']++;
+        if ($p['jenis_kelamin'] === 'L')
+            $stats['laki']++;
+        else
+            $stats['perempuan']++;
     }
 
     // Get jurusan stats
@@ -109,7 +129,7 @@ if ($type === 'pendaftar') {
          ORDER BY total DESC",
         [$smkId, $smkId]
     );
-?>
+    ?>
     <!DOCTYPE html>
     <html lang="id">
 
@@ -226,7 +246,7 @@ if ($type === 'pendaftar') {
     </body>
 
     </html>
-<?php
+    <?php
     exit;
 }
 

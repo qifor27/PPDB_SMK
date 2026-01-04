@@ -15,7 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['foto']) && $_FILES['
         $error = 'Token tidak valid.';
     } else {
         $fotoPath = UPLOADS_PATH . 'foto/';
-        if (!is_dir($fotoPath)) mkdir($fotoPath, 0755, true);
+        if (!is_dir($fotoPath))
+            mkdir($fotoPath, 0755, true);
 
         // Delete old foto
         if (!empty($siswa['foto']) && file_exists($fotoPath . $siswa['foto'])) {
@@ -44,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_FILES['foto'])) {
             'email' => sanitize($_POST['email']),
             'no_hp' => sanitize($_POST['no_hp']),
             'alamat' => sanitize($_POST['alamat']),
-            'kota_kabupaten' => sanitize($_POST['kota_kabupaten_nama'] ?? ''),
+            'kota' => sanitize($_POST['kota_kabupaten_nama'] ?? ''),
             'kelurahan' => sanitize($_POST['kelurahan']),
             'kecamatan' => sanitize($_POST['kecamatan']),
             'agama' => sanitize($_POST['agama']),
@@ -87,8 +88,8 @@ $fotoUrl = !empty($siswa['foto']) && file_exists(UPLOADS_PATH . 'foto/' . $siswa
                 <!-- Foto Profil dengan Upload -->
                 <div class="mb-3 position-relative d-inline-block">
                     <?php if ($fotoUrl): ?>
-                        <img src="<?= $fotoUrl ?>" alt="Foto Profil"
-                            class="rounded-circle" style="width:120px;height:120px;object-fit:cover;border:4px solid #667eea;">
+                        <img src="<?= $fotoUrl ?>" alt="Foto Profil" class="rounded-circle"
+                            style="width:120px;height:120px;object-fit:cover;border:4px solid #667eea;">
                     <?php else: ?>
                         <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto"
                             style="width:120px;height:120px;font-size:3rem;color:white;border:4px solid #667eea;">
@@ -98,7 +99,8 @@ $fotoUrl = !empty($siswa['foto']) && file_exists(UPLOADS_PATH . 'foto/' . $siswa
 
                     <form method="POST" enctype="multipart/form-data" id="fotoForm">
                         <?= Session::csrfField() ?>
-                        <label for="fotoInput" class="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
+                        <label for="fotoInput"
+                            class="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
                             style="width:35px;height:35px;cursor:pointer;border:2px solid white;" title="Ganti Foto">
                             <i class="bi bi-camera-fill"></i>
                             <input type="file" name="foto" id="fotoInput" accept=".jpg,.jpeg,.png" style="display:none;"
@@ -128,7 +130,8 @@ $fotoUrl = !empty($siswa['foto']) && file_exists(UPLOADS_PATH . 'foto/' . $siswa
                             class="bi bi-phone me-2 text-primary"></i><?= htmlspecialchars($siswa['no_hp'] ?? '-') ?>
                     </p>
                     <p class="small mb-0"><i class="bi bi-calendar me-2 text-primary"></i>Bergabung:
-                        <?= formatDate($siswa['created_at'], 'd M Y') ?></p>
+                        <?= formatDate($siswa['created_at'], 'd M Y') ?>
+                    </p>
                 </div>
             </div>
         </div>
@@ -175,7 +178,8 @@ $fotoUrl = !empty($siswa['foto']) && file_exists(UPLOADS_PATH . 'foto/' . $siswa
                             <select name="agama" class="form-select">
                                 <?php foreach (['Islam', 'Kristen', 'Katolik', 'Hindu', 'Buddha', 'Konghucu'] as $agama): ?>
                                     <option value="<?= $agama ?>" <?= ($siswa['agama'] ?? '') === $agama ? 'selected' : '' ?>>
-                                        <?= $agama ?></option>
+                                        <?= $agama ?>
+                                    </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -197,7 +201,8 @@ $fotoUrl = !empty($siswa['foto']) && file_exists(UPLOADS_PATH . 'foto/' . $siswa
                             <select name="kota_kabupaten" id="selectKota" class="form-select" required>
                                 <option value="">-- Pilih Kota/Kabupaten --</option>
                             </select>
-                            <input type="hidden" name="kota_kabupaten_nama" id="inputKotaNama" value="<?= htmlspecialchars($siswa['kota_kabupaten'] ?? '') ?>">
+                            <input type="hidden" name="kota_kabupaten_nama" id="inputKotaNama"
+                                value="<?= htmlspecialchars($siswa['kota'] ?? '') ?>">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Kecamatan</label>
@@ -218,7 +223,8 @@ $fotoUrl = !empty($siswa['foto']) && file_exists(UPLOADS_PATH . 'foto/' . $siswa
                             <hr>
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <div>
-                                    <h6 class="mb-0"><i class="bi bi-geo-alt me-2" style="color: #667eea;"></i>Lokasi Rumah</h6>
+                                    <h6 class="mb-0"><i class="bi bi-geo-alt me-2" style="color: #667eea;"></i>Lokasi
+                                        Rumah</h6>
                                     <small class="text-muted">Tentukan lokasi untuk menghitung jarak ke sekolah</small>
                                 </div>
                                 <button type="button" class="btn btn-sm" id="btnGetLocation"
@@ -229,12 +235,17 @@ $fotoUrl = !empty($siswa['foto']) && file_exists(UPLOADS_PATH . 'foto/' . $siswa
                         </div>
 
                         <div class="col-12 mb-3">
-                            <div id="mapLokasi" style="height: 350px; width: 100%; border-radius: 12px; overflow: hidden; border: 2px solid rgba(102, 126, 234, 0.3);"></div>
+                            <div id="mapLokasi"
+                                style="height: 350px; width: 100%; border-radius: 12px; overflow: hidden; border: 2px solid rgba(102, 126, 234, 0.3);">
+                            </div>
                             <div class="d-flex justify-content-between align-items-center mt-2">
-                                <small class="text-muted"><i class="bi bi-hand-index me-1"></i>Klik pada peta untuk menentukan lokasi</small>
-                                <small id="koordinatDisplay" class="badge" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                <small class="text-muted"><i class="bi bi-hand-index me-1"></i>Klik pada peta untuk
+                                    menentukan lokasi</small>
+                                <small id="koordinatDisplay" class="badge"
+                                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                                     <?php if ($siswa['latitude'] && $siswa['longitude']): ?>
-                                        📍 <?= number_format($siswa['latitude'], 6) ?>, <?= number_format($siswa['longitude'], 6) ?>
+                                        📍 <?= number_format($siswa['latitude'], 6) ?>,
+                                        <?= number_format($siswa['longitude'], 6) ?>
                                     <?php else: ?>
                                         Belum ada koordinat
                                     <?php endif; ?>
@@ -294,16 +305,16 @@ $fotoUrl = !empty($siswa['foto']) && file_exists(UPLOADS_PATH . 'foto/' . $siswa
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // Data SMK dari database
         const smkData = <?= json_encode(array_map(function ($smk) {
-                            return [
-                                'id' => $smk['id_smk'],
-                                'nama' => $smk['nama_sekolah'],
-                                'lat' => (float)$smk['latitude'],
-                                'lng' => (float)$smk['longitude']
-                            ];
-                        }, $smkList)) ?>;
+            return [
+                'id' => $smk['id_smk'],
+                'nama' => $smk['nama_sekolah'],
+                'lat' => (float) $smk['latitude'],
+                'lng' => (float) $smk['longitude']
+            ];
+        }, $smkList)) ?>;
 
         const selectedSchool1 = <?= $pendaftaran['id_smk_pilihan1'] ?? 'null' ?>;
         const selectedSchool2 = <?= $pendaftaran['id_smk_pilihan2'] ?? 'null' ?>;
@@ -365,8 +376,8 @@ $fotoUrl = !empty($siswa['foto']) && file_exists(UPLOADS_PATH . 'foto/' . $siswa
                 }
 
                 L.marker([smk.lat, smk.lng], {
-                        icon: icon
-                    })
+                    icon: icon
+                })
                     .addTo(map)
                     .bindPopup('<strong>' + smk.nama + '</strong>');
             }
@@ -381,14 +392,14 @@ $fotoUrl = !empty($siswa['foto']) && file_exists(UPLOADS_PATH . 'foto/' . $siswa
             if (userMarker) map.removeLayer(userMarker);
 
             userMarker = L.marker([lat, lng], {
-                    icon: userIcon,
-                    draggable: true
-                })
+                icon: userIcon,
+                draggable: true
+            })
                 .addTo(map)
                 .bindPopup('<strong>Lokasi Rumah Anda</strong>')
                 .openPopup();
 
-            userMarker.on('dragend', function(e) {
+            userMarker.on('dragend', function (e) {
                 const pos = e.target.getLatLng();
                 document.getElementById('inputLat').value = pos.lat.toFixed(8);
                 document.getElementById('inputLng').value = pos.lng.toFixed(8);
@@ -408,7 +419,7 @@ $fotoUrl = !empty($siswa['foto']) && file_exists(UPLOADS_PATH . 'foto/' . $siswa
         }
 
         // Map click handler
-        map.on('click', function(e) {
+        map.on('click', function (e) {
             document.getElementById('inputLat').value = e.latlng.lat.toFixed(8);
             document.getElementById('inputLng').value = e.latlng.lng.toFixed(8);
             addUserMarker(e.latlng.lat, e.latlng.lng);
@@ -416,7 +427,7 @@ $fotoUrl = !empty($siswa['foto']) && file_exists(UPLOADS_PATH . 'foto/' . $siswa
         });
 
         // Get location button
-        document.getElementById('btnGetLocation').addEventListener('click', function() {
+        document.getElementById('btnGetLocation').addEventListener('click', function () {
             if (navigator.geolocation) {
                 this.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Mendeteksi...';
                 navigator.geolocation.getCurrentPosition(
@@ -574,7 +585,7 @@ $fotoUrl = !empty($siswa['foto']) && file_exists(UPLOADS_PATH . 'foto/' . $siswa
         const inputKecamatanKode = document.getElementById('inputKecamatanKode');
 
         // Saved values for pre-selection
-        const savedKota = '<?= htmlspecialchars($siswa['kota_kabupaten'] ?? '') ?>';
+        const savedKota = '<?= htmlspecialchars($siswa['kota'] ?? '') ?>';
         const savedKecamatan = '<?= htmlspecialchars($siswa['kecamatan'] ?? '') ?>';
         const savedKelurahan = '<?= htmlspecialchars($siswa['kelurahan'] ?? '') ?>';
 
@@ -603,7 +614,7 @@ $fotoUrl = !empty($siswa['foto']) && file_exists(UPLOADS_PATH . 'foto/' . $siswa
             }
         }
 
-        selectKota.addEventListener('change', function() {
+        selectKota.addEventListener('change', function () {
             const selectedOption = this.options[this.selectedIndex];
             inputKotaNama.value = selectedOption.dataset.name || '';
 
@@ -645,7 +656,7 @@ $fotoUrl = !empty($siswa['foto']) && file_exists(UPLOADS_PATH . 'foto/' . $siswa
             }
         }
 
-        selectKecamatan.addEventListener('change', function() {
+        selectKecamatan.addEventListener('change', function () {
             inputKecamatanKode.value = this.value;
 
             // Reset kelurahan
