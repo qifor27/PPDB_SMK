@@ -10,7 +10,10 @@ $error = '';
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    Session::verifyCsrf();
+    if (!Session::verifyCsrf($_POST['csrf_token'] ?? '')) {
+        Session::flash('error', 'Token keamanan tidak valid.');
+        redirect('profil.php');
+    }
 
     $action = $_POST['action'] ?? '';
 
