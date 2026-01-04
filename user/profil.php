@@ -44,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_FILES['foto'])) {
             'email' => sanitize($_POST['email']),
             'no_hp' => sanitize($_POST['no_hp']),
             'alamat' => sanitize($_POST['alamat']),
+            'kota_kabupaten' => sanitize($_POST['kota_kabupaten_nama'] ?? ''),
             'kelurahan' => sanitize($_POST['kelurahan']),
             'kecamatan' => sanitize($_POST['kecamatan']),
             'agama' => sanitize($_POST['agama']),
@@ -191,15 +192,25 @@ $fotoUrl = !empty($siswa['foto']) && file_exists(UPLOADS_PATH . 'foto/' . $siswa
                                 rows="2"><?= htmlspecialchars($siswa['alamat'] ?? '') ?></textarea>
                         </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label">Kelurahan</label>
-                            <input type="text" name="kelurahan" class="form-control"
-                                value="<?= htmlspecialchars($siswa['kelurahan'] ?? '') ?>">
+                        <div class="col-md-4">
+                            <label class="form-label">Kota/Kabupaten</label>
+                            <select name="kota_kabupaten" id="selectKota" class="form-select" required>
+                                <option value="">-- Pilih Kota/Kabupaten --</option>
+                            </select>
+                            <input type="hidden" name="kota_kabupaten_nama" id="inputKotaNama" value="<?= htmlspecialchars($siswa['kota_kabupaten'] ?? '') ?>">
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="form-label">Kecamatan</label>
-                            <input type="text" name="kecamatan" class="form-control"
-                                value="<?= htmlspecialchars($siswa['kecamatan'] ?? '') ?>">
+                            <select name="kecamatan" id="selectKecamatan" class="form-select" disabled>
+                                <option value="">-- Pilih Kecamatan --</option>
+                            </select>
+                            <input type="hidden" name="kecamatan_kode" id="inputKecamatanKode" value="">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Kelurahan/Nagari</label>
+                            <select name="kelurahan" id="selectKelurahan" class="form-select" disabled>
+                                <option value="">-- Pilih Kelurahan --</option>
+                            </select>
                         </div>
 
                         <!-- Lokasi Rumah dengan Peta -->
@@ -529,6 +540,121 @@ $fotoUrl = !empty($siswa['foto']) && file_exists(UPLOADS_PATH . 'foto/' . $siswa
                 };
             }
             return null;
+        }
+
+        // ========================================
+        // CASCADING LOCATION DROPDOWNS
+        // ========================================
+        const selectKota = document.getElementById('selectKota');
+        const selectKecamatan = document.getElementById('selectKecamatan');
+        const selectKelurahan = document.getElementById('selectKelurahan');
+        const inputKotaNama = document.getElementById('inputKotaNama');
+        const inputKecamatanKode = document.getElementById('inputKecamatanKode');
+
+        // Saved values for pre-selection
+        const savedKota = '<?= htmlspecialchars($siswa['kota_kabupaten'] ?? '') ?>';
+        const savedKecamatan = '<?= htmlspecialchars($siswa['kecamatan'] ?? '') ?>';
+        const savedKelurahan = '<?= htmlspecialchars($siswa['kelurahan'] ?? '') ?>';
+
+        // Load Kabupaten/Kota
+        loadKabupaten();
+
+        async function loadKabupaten() {
+            try {
+                const response = await fetch('<?= SITE_URL ?>/api/get-kabupaten.php');
+                const result = await response.json();
+
+                if (result.success) {
+                    selectKota.innerHTML = '<option value="">-- Pilih Kota/Kabupaten --</option>';
+                    result.data.forEach(item => {
+                        const selected = item.name === savedKota ? 'selected' : '';
+                        selectKota.innerHTML += `<option value="${item.code}" data-name="${item.name}" ${selected}>${item.name}</option>`;
+                    });
+
+                    // Trigger kecamatan load if already has saved value
+                    if (savedKota && selectKota.value) {
+                        loadKecamatan(selectKota.value);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading kabupaten:', error);
+            }
+        }
+
+        selectKota.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            inputKotaNama.value = selectedOption.dataset.name || '';
+
+            // Reset kecamatan and kelurahan
+            selectKecamatan.innerHTML = '<option value="">-- Pilih Kecamatan --</option>';
+            selectKelurahan.innerHTML = '<option value="">-- Pilih Kelurahan --</option>';
+            selectKecamatan.disabled = true;
+            selectKelurahan.disabled = true;
+
+            if (this.value) {
+                loadKecamatan(this.value);
+            }
+        });
+
+        async function loadKecamatan(kodeKabupaten) {
+            selectKecamatan.innerHTML = '<option value="">Memuat...</option>';
+            selectKecamatan.disabled = true;
+
+            try {
+                const response = await fetch('<?= SITE_URL ?>/api/get-kecamatan.php?kode=' + kodeKabupaten);
+                const result = await response.json();
+
+                if (result.success) {
+                    selectKecamatan.innerHTML = '<option value="">-- Pilih Kecamatan --</option>';
+                    result.data.forEach(item => {
+                        const selected = item.name === savedKecamatan ? 'selected' : '';
+                        selectKecamatan.innerHTML += `<option value="${item.code}" data-name="${item.name}" ${selected}>${item.name}</option>`;
+                    });
+                    selectKecamatan.disabled = false;
+
+                    // Trigger kelurahan load if already has saved value
+                    if (savedKecamatan && selectKecamatan.value) {
+                        loadKelurahan(selectKecamatan.value);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading kecamatan:', error);
+                selectKecamatan.innerHTML = '<option value="">Gagal memuat</option>';
+            }
+        }
+
+        selectKecamatan.addEventListener('change', function() {
+            inputKecamatanKode.value = this.value;
+
+            // Reset kelurahan
+            selectKelurahan.innerHTML = '<option value="">-- Pilih Kelurahan --</option>';
+            selectKelurahan.disabled = true;
+
+            if (this.value) {
+                loadKelurahan(this.value);
+            }
+        });
+
+        async function loadKelurahan(kodeKecamatan) {
+            selectKelurahan.innerHTML = '<option value="">Memuat...</option>';
+            selectKelurahan.disabled = true;
+
+            try {
+                const response = await fetch('<?= SITE_URL ?>/api/get-kelurahan.php?kode=' + kodeKecamatan);
+                const result = await response.json();
+
+                if (result.success) {
+                    selectKelurahan.innerHTML = '<option value="">-- Pilih Kelurahan --</option>';
+                    result.data.forEach(item => {
+                        const selected = item.name === savedKelurahan ? 'selected' : '';
+                        selectKelurahan.innerHTML += `<option value="${item.name}" ${selected}>${item.name}</option>`;
+                    });
+                    selectKelurahan.disabled = false;
+                }
+            } catch (error) {
+                console.error('Error loading kelurahan:', error);
+                selectKelurahan.innerHTML = '<option value="">Gagal memuat</option>';
+            }
         }
     });
 </script>
