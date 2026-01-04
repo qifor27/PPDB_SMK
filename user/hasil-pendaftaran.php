@@ -51,6 +51,23 @@ $dokumenCount = db()->fetch("
         </div>
     </div>
 
+    <?php if ($pendaftaran['jenis_pilihan'] === 'diff_school' && $sekolah2): ?>
+        <!-- Info Lokasi Tes untuk 2 Sekolah Berbeda -->
+        <div class="col-12">
+            <div class="alert alert-warning d-flex align-items-start">
+                <i class="bi bi-geo-alt-fill me-3 fs-4"></i>
+                <div>
+                    <strong>Informasi Lokasi Tes Bakat & Minat</strong>
+                    <p class="mb-0 small">
+                        Karena Anda memilih <strong>2 sekolah berbeda dengan jurusan yang sama</strong>,
+                        maka Tes Bakat dan Minat dilaksanakan <strong>hanya di <?= htmlspecialchars($sekolah1['nama_sekolah']) ?></strong> (Pilihan 1).
+                        Hasil tes ini akan berlaku untuk kedua pilihan sekolah Anda.
+                    </p>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
+
     <!-- Pilihan 1 -->
     <div class="col-md-6">
         <div class="card h-100">

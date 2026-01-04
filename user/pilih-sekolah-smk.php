@@ -45,14 +45,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!$sekolah1) $errors[] = 'Pilih sekolah pilihan 1';
         if (!$kejuruan1) $errors[] = 'Pilih jurusan pilihan 1';
 
-        // Validasi berdasarkan mode dan pilihan yang dipilih
-        if ($sekolah2 && $sekolah1 === $sekolah2) {
-            // Satu sekolah, dua jurusan - pastikan jurusan berbeda
-            if ($kejuruan1 === $kejuruan2) $errors[] = 'Jurusan pilihan 1 dan 2 tidak boleh sama';
-            $pilihanMode = 'satu_sekolah_dua_jurusan';
-        } elseif ($sekolah2 && $sekolah1 !== $sekolah2) {
-            // Dua sekolah berbeda
-            $pilihanMode = 'dua_sekolah';
+        // Variabel untuk jenis pilihan dan lokasi tes
+        $jenisPilihan = 'single';
+        $lokasiTesSMK = $sekolah1;
+
+        // Validasi berdasarkan Juknis SPMB Sumbar 2025
+        if ($sekolah2 && $kejuruan2) {
+            if ($sekolah1 === $sekolah2) {
+                // Satu sekolah, dua jurusan - pastikan jurusan berbeda
+                if ($kejuruan1 === $kejuruan2) {
+                    $errors[] = 'Jurusan pilihan 1 dan 2 tidak boleh sama jika memilih sekolah yang sama';
+                }
+                $pilihanMode = 'satu_sekolah_dua_jurusan';
+                $jenisPilihan = 'same_school';
+                $lokasiTesSMK = $sekolah1; // Tes di sekolah tersebut (2x tes berbeda)
+            } else {
+                // Dua sekolah berbeda - cek apakah jurusan sama (by nama)
+                $jurusan1Data = db()->fetch("SELECT nama_kejuruan FROM tb_kejuruan WHERE id_program = ?", [$kejuruan1]);
+                $jurusan2Data = db()->fetch("SELECT nama_kejuruan FROM tb_kejuruan WHERE id_program = ?", [$kejuruan2]);
+
+                if ($jurusan1Data && $jurusan2Data && $jurusan1Data['nama_kejuruan'] !== $jurusan2Data['nama_kejuruan']) {
+                    $errors[] = 'Sesuai Juknis SPMB 2025: Jika memilih 2 sekolah berbeda, jurusan harus SAMA';
+                }
+
+                $pilihanMode = 'dua_sekolah_satu_jurusan';
+                $jenisPilihan = 'diff_school';
+                $lokasiTesSMK = $sekolah1; // Tes di pilihan 1 saja
+            }
         }
 
         // Cek syarat buta warna
@@ -69,7 +88,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'id_smk_pilihan2' => $sekolah2 ?: null,
                     'id_kejuruan_pilihan1' => $kejuruan1,
                     'id_kejuruan_pilihan2' => $kejuruan2 ?: null,
-                    'pilihan_mode' => $pilihanMode
+                    'pilihan_mode' => $pilihanMode,
+                    'jenis_pilihan' => $jenisPilihan,
+                    'lokasi_tes_smk' => $lokasiTesSMK
                 ];
                 db()->update('tb_pendaftaran', $data, 'id_pendaftaran = :id', ['id' => $pendaftaran['id_pendaftaran']]);
             } else {
@@ -85,6 +106,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'id_kejuruan_pilihan2' => $kejuruan2 ?: null,
                     'id_jalur' => 1, // Default jalur
                     'pilihan_mode' => $pilihanMode,
+                    'jenis_pilihan' => $jenisPilihan,
+                    'lokasi_tes_smk' => $lokasiTesSMK,
                     'tahun_ajaran' => getPengaturan('tahun_ajaran'),
                     'tahap_pendaftaran' => $tahap,
                     'status' => 'draft'
