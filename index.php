@@ -43,7 +43,8 @@ $smkJson = json_encode(array_map(function ($smk) {
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -202,7 +203,9 @@ $smkJson = json_encode(array_map(function ($smk) {
     <!-- Wave Separator -->
     <div class="section-wave">
         <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-            <path d="M0 120L48 105C96 90 192 60 288 45C384 30 480 30 576 37.5C672 45 768 60 864 67.5C960 75 1056 75 1152 67.5C1248 60 1344 45 1392 37.5L1440 30V0H1392C1344 0 1248 0 1152 0C1056 0 960 0 864 0C768 0 672 0 576 0C480 0 384 0 288 0C192 0 96 0 48 0H0V120Z" fill="url(#waveGradient)" />
+            <path
+                d="M0 120L48 105C96 90 192 60 288 45C384 30 480 30 576 37.5C672 45 768 60 864 67.5C960 75 1056 75 1152 67.5C1248 60 1344 45 1392 37.5L1440 30V0H1392C1344 0 1248 0 1152 0C1056 0 960 0 864 0C768 0 672 0 576 0C480 0 384 0 288 0C192 0 96 0 48 0H0V120Z"
+                fill="url(#waveGradient)" />
             <defs>
                 <linearGradient id="waveGradient" x1="0" y1="0" x2="1440" y2="0">
                     <stop offset="0%" stop-color="#E0E7FF" />
@@ -231,13 +234,16 @@ $smkJson = json_encode(array_map(function ($smk) {
                 <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="0">
                     <div class="card h-100 text-center border-0 shadow-sm hover-lift">
                         <div class="card-body p-4">
-                            <div class="info-icon bg-primary-soft text-primary mx-auto mb-3" style="width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <div class="info-icon bg-primary-soft text-primary mx-auto mb-3"
+                                style="width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                                 <i class="bi bi-file-earmark-text fs-2"></i>
                             </div>
                             <h5 class="fw-bold mb-2">Juknis SPMB</h5>
-                            <p class="text-muted small mb-3">Petunjuk teknis lengkap pelaksanaan SPMB SMK tahun ajaran <?= $tahunAjaran ?></p>
-                            <a href="uploads/docs/juknis-spmb-2025.pdf" class="btn btn-outline-primary btn-sm" target="_blank">
-                                <i class="bi bi-download me-1"></i> Unduh PDF
+                            <p class="text-muted small mb-3">Petunjuk teknis lengkap pelaksanaan SPMB SMK tahun ajaran
+                                <?= $tahunAjaran ?>
+                            </p>
+                            <a href="juknis.php" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-eye me-1"></i> Lihat Juknis
                             </a>
                         </div>
                     </div>
@@ -247,13 +253,15 @@ $smkJson = json_encode(array_map(function ($smk) {
                 <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
                     <div class="card h-100 text-center border-0 shadow-sm hover-lift">
                         <div class="card-body p-4">
-                            <div class="info-icon bg-success-soft text-success mx-auto mb-3" style="width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <div class="info-icon bg-success-soft text-success mx-auto mb-3"
+                                style="width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                                 <i class="bi bi-book fs-2"></i>
                             </div>
                             <h5 class="fw-bold mb-2">Manual Book</h5>
-                            <p class="text-muted small mb-3">Panduan lengkap cara mendaftar dan menggunakan sistem SPMB online</p>
-                            <a href="uploads/docs/manual-book-spmb.pdf" class="btn btn-outline-success btn-sm" target="_blank">
-                                <i class="bi bi-download me-1"></i> Unduh PDF
+                            <p class="text-muted small mb-3">Panduan lengkap cara mendaftar dan menggunakan sistem SPMB
+                                online</p>
+                            <a href="manual-book.php" class="btn btn-outline-success btn-sm">
+                                <i class="bi bi-eye me-1"></i> Lihat Manual
                             </a>
                         </div>
                     </div>
@@ -263,13 +271,15 @@ $smkJson = json_encode(array_map(function ($smk) {
                 <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
                     <div class="card h-100 text-center border-0 shadow-sm hover-lift">
                         <div class="card-body p-4">
-                            <div class="info-icon bg-warning-soft text-warning mx-auto mb-3" style="width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <div class="info-icon bg-warning-soft text-warning mx-auto mb-3"
+                                style="width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                                 <i class="bi bi-folder-check fs-2"></i>
                             </div>
                             <h5 class="fw-bold mb-2">Persyaratan</h5>
-                            <p class="text-muted small mb-3">Daftar dokumen yang harus disiapkan untuk proses pendaftaran</p>
-                            <a href="uploads/docs/persyaratan-dokumen.pdf" class="btn btn-outline-warning btn-sm" target="_blank">
-                                <i class="bi bi-download me-1"></i> Unduh PDF
+                            <p class="text-muted small mb-3">Daftar dokumen yang harus disiapkan untuk proses
+                                pendaftaran</p>
+                            <a href="persyaratan.php" class="btn btn-outline-warning btn-sm">
+                                <i class="bi bi-eye me-1"></i> Lihat Syarat
                             </a>
                         </div>
                     </div>
@@ -279,7 +289,8 @@ $smkJson = json_encode(array_map(function ($smk) {
                 <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
                     <div class="card h-100 text-center border-0 shadow-sm hover-lift">
                         <div class="card-body p-4">
-                            <div class="info-icon bg-info-soft text-info mx-auto mb-3" style="width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <div class="info-icon bg-info-soft text-info mx-auto mb-3"
+                                style="width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                                 <i class="bi bi-question-circle fs-2"></i>
                             </div>
                             <h5 class="fw-bold mb-2">FAQ & Bantuan</h5>
@@ -336,10 +347,12 @@ $smkJson = json_encode(array_map(function ($smk) {
                     $isAktif = ($nowTime >= $jadwal['mulai'] && $nowTime <= $jadwal['selesai']);
                     $isBelum = ($nowTime < $jadwal['mulai']);
                     $isSelesai = ($nowTime > $jadwal['selesai']);
-                ?>
+                    ?>
                     <div class="col-md-6 col-lg-5" data-aos="fade-up" data-aos-delay="<?= ($tahap - 1) * 150 ?>">
-                        <div class="card h-100 <?= $isAktif ? 'border-' . $jadwal['color'] . ' shadow-lg' : '' ?>" style="border-width: 2px;">
-                            <div class="card-header bg-<?= $isAktif ? $jadwal['color'] : 'secondary' ?> <?= $jadwal['color'] === 'warning' && $isAktif ? 'text-dark' : 'text-white' ?>">
+                        <div class="card h-100 <?= $isAktif ? 'border-' . $jadwal['color'] . ' shadow-lg' : '' ?>"
+                            style="border-width: 2px;">
+                            <div
+                                class="card-header bg-<?= $isAktif ? $jadwal['color'] : 'secondary' ?> <?= $jadwal['color'] === 'warning' && $isAktif ? 'text-dark' : 'text-white' ?>">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h5 class="mb-0">
                                         <i class="bi <?= $jadwal['icon'] ?> me-2"></i><?= $jadwal['nama'] ?>
@@ -362,7 +375,8 @@ $smkJson = json_encode(array_map(function ($smk) {
                                             </div>
                                             <div>
                                                 <small class="text-muted d-block">Periode Pendaftaran</small>
-                                                <strong><?= date('d M', strtotime($jadwal['mulai'])) ?> - <?= date('d M Y', strtotime($jadwal['selesai'])) ?></strong>
+                                                <strong><?= date('d M', strtotime($jadwal['mulai'])) ?> -
+                                                    <?= date('d M Y', strtotime($jadwal['selesai'])) ?></strong>
                                             </div>
                                         </div>
                                     </div>
@@ -373,7 +387,8 @@ $smkJson = json_encode(array_map(function ($smk) {
                                             </div>
                                             <div>
                                                 <small class="text-muted d-block">Tes Minat & Bakat</small>
-                                                <strong class="text-<?= $jadwal['color'] ?>"><?= date('d M Y', strtotime($jadwal['tes'])) ?></strong>
+                                                <strong
+                                                    class="text-<?= $jadwal['color'] ?>"><?= date('d M Y', strtotime($jadwal['tes'])) ?></strong>
                                             </div>
                                         </div>
                                     </div>
@@ -436,7 +451,8 @@ $smkJson = json_encode(array_map(function ($smk) {
                                 <i class="bi bi-map me-2 text-primary"></i>Peta Lokasi SMK
                             </h5>
                             <div class="map-legend d-flex gap-2">
-                                <span class="badge bg-primary-soft text-primary"><i class="bi bi-geo-alt-fill me-1"></i>SMK</span>
+                                <span class="badge bg-primary-soft text-primary"><i
+                                        class="bi bi-geo-alt-fill me-1"></i>SMK</span>
                             </div>
                         </div>
                         <div class="card-body p-0">
@@ -559,7 +575,8 @@ $smkJson = json_encode(array_map(function ($smk) {
                                     </div>
                                     <div>
                                         <h6 class="mb-0"><?= htmlspecialchars($smk['nama_sekolah']) ?></h6>
-                                        <small class="text-muted"><?= htmlspecialchars($smk['kecamatan'] ?? 'Padang') ?></small>
+                                        <small
+                                            class="text-muted"><?= htmlspecialchars($smk['kecamatan'] ?? 'Padang') ?></small>
                                     </div>
                                 </div>
                                 <p class="small text-muted mb-3">
@@ -569,7 +586,8 @@ $smkJson = json_encode(array_map(function ($smk) {
                                     <span class="badge bg-success-soft">
                                         <i class="bi bi-people me-1"></i><?= $smk['jumlah_siswa'] ?> siswa
                                     </span>
-                                    <a href="info-sekolah.php?id=<?= $smk['id_smk'] ?>" class="btn btn-sm btn-outline-primary">
+                                    <a href="info-sekolah.php?id=<?= $smk['id_smk'] ?>"
+                                        class="btn btn-sm btn-outline-primary">
                                         Detail
                                     </a>
                                 </div>
@@ -618,7 +636,8 @@ $smkJson = json_encode(array_map(function ($smk) {
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Pesan</label>
-                                    <textarea class="form-control" rows="4" placeholder="Tulis pesan Anda..."></textarea>
+                                    <textarea class="form-control" rows="4"
+                                        placeholder="Tulis pesan Anda..."></textarea>
                                 </div>
                                 <button type="submit" class="btn btn-primary w-100">
                                     <i class="bi bi-send-fill me-2"></i>Kirim Pesan
@@ -726,7 +745,7 @@ $smkJson = json_encode(array_map(function ($smk) {
         let routeLines = [];
         let highlightCircles = [];
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             initMap();
 
             // Detect location button
@@ -734,7 +753,7 @@ $smkJson = json_encode(array_map(function ($smk) {
             const locationStatus = document.getElementById('locationStatus');
             const nearbySchools = document.getElementById('nearbySchools');
 
-            btnDetect.addEventListener('click', function() {
+            btnDetect.addEventListener('click', function () {
                 if (navigator.geolocation) {
                     this.disabled = true;
                     this.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Mendeteksi...';
@@ -787,8 +806,8 @@ $smkJson = json_encode(array_map(function ($smk) {
                 const lng = parseFloat(smk.longitude);
                 if (lat && lng) {
                     const marker = L.marker([lat, lng], {
-                            icon: schoolIcon
-                        })
+                        icon: schoolIcon
+                    })
                         .addTo(map)
                         .bindPopup('<strong>' + smk.nama_sekolah + '</strong><br><small>' + (smk.alamat || '') + '</small>');
                     marker.smkData = smk;
@@ -809,8 +828,8 @@ $smkJson = json_encode(array_map(function ($smk) {
             });
 
             userMarker = L.marker([lat, lng], {
-                    icon: userIcon
-                })
+                icon: userIcon
+            })
                 .addTo(map)
                 .bindPopup('<strong>Lokasi Anda</strong>')
                 .openPopup();
@@ -934,7 +953,7 @@ $smkJson = json_encode(array_map(function ($smk) {
             nearbySchools.innerHTML = distances.slice(0, 5).map((smk, i) => `
                 <div class="d-flex align-items-center justify-content-between py-2 ${i < 4 ? 'border-bottom border-light' : ''}">
                     <div>
-                        <div class="fw-semibold small">${i < 2 ? '<span class="badge bg-' + (i===0 ? 'danger' : 'warning') + ' me-1">#' + (i+1) + '</span>' : ''}${smk.nama_sekolah}</div>
+                        <div class="fw-semibold small">${i < 2 ? '<span class="badge bg-' + (i === 0 ? 'danger' : 'warning') + ' me-1">#' + (i + 1) + '</span>' : ''}${smk.nama_sekolah}</div>
                         <small class="text-muted">
                             <i class="bi bi-signpost-2 me-1"></i>${formatDistance(smk.distance)}
                             ${smk.duration ? ' <i class="bi bi-clock ms-1 me-1"></i>' + formatDuration(smk.duration) : ''}
@@ -958,13 +977,13 @@ $smkJson = json_encode(array_map(function ($smk) {
         // Highlight dan gambar garis ke SMK terdekat - SAMA dengan pendaftaran.php
         async function highlightNearestOnMap(userLat, userLng, nearestSchools) {
             const colors = [{
-                    bg: '#EF4444',
-                    glow: 'rgba(239, 68, 68, 0.3)'
-                },
-                {
-                    bg: '#F97316',
-                    glow: 'rgba(249, 115, 22, 0.3)'
-                }
+                bg: '#EF4444',
+                glow: 'rgba(239, 68, 68, 0.3)'
+            },
+            {
+                bg: '#F97316',
+                glow: 'rgba(249, 115, 22, 0.3)'
+            }
             ];
 
             for (const [index, smk] of nearestSchools.entries()) {

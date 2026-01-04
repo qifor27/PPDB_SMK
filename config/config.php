@@ -17,7 +17,7 @@ ini_set('display_errors', 1);
 date_default_timezone_set('Asia/Jakarta');
 
 // Database Configuration
-define('DB_HOST', 'localhost');
+define('DB_HOST', 'localhost:3307');
 define('DB_NAME', 'dbesemka');
 define('DB_USER', 'root');
 define('DB_PASS', '');
