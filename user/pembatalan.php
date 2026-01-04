@@ -15,8 +15,8 @@ if (!$pendaftaran) {
     redirect(SITE_URL . '/user/');
 }
 
-// Cek apakah bisa dibatalkan
-$bisaBatal = $pendaftaran['status'] === 'draft' || $pendaftaran['status'] === 'submitted';
+// Cek apakah bisa dibatalkan (HANYA DRAFT yang bisa dibatalkan)
+$bisaBatal = $pendaftaran['status'] === 'draft';
 
 // Get riwayat pembatalan
 $riwayatPembatalan = db()->fetchAll("
@@ -46,8 +46,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             <hr>
             <p class="mb-2">Pembatalan pendaftaran dapat dilakukan dengan ketentuan:</p>
             <ul class="mb-0">
-                <li>Pembatalan hanya bisa dilakukan selama pilihan sekolah <strong>belum diverifikasi</strong> oleh operator</li>
-                <li>Pembatalan dilakukan dengan <strong>datang langsung</strong> ke sekolah yang dipilih dan/atau melapor ke operator SMK</li>
+                <li>Pembatalan hanya bisa dilakukan untuk pendaftaran dengan status <strong>DRAFT</strong> (belum disubmit)</li>
+                <li>Pendaftaran yang sudah <strong>disubmit/diverifikasi/diterima</strong> tidak dapat dibatalkan secara mandiri</li>
+                <li>Jika perlu membatalkan pendaftaran yang sudah disubmit, hubungi admin sekolah</li>
                 <li>Setelah pembatalan, Anda dapat <strong>mendaftar kembali</strong> selama jadwal pendaftaran masih dibuka</li>
             </ul>
         </div>
@@ -87,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                                 <span class="badge bg-success"><i class="bi bi-check me-1"></i>Ya</span>
                             <?php else: ?>
                                 <span class="badge bg-danger"><i class="bi bi-x me-1"></i>Tidak</span>
-                                <small class="text-muted d-block mt-1">Pendaftaran sudah diverifikasi</small>
+                                <small class="text-muted d-block mt-1">Pendaftaran yang sudah disubmit tidak dapat dibatalkan</small>
                             <?php endif; ?>
                         </td>
                     </tr>

@@ -60,11 +60,11 @@ $smkJson = json_encode(array_map(function ($smk) {
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
-<link rel="stylesheet" href="assets/css/landing.css">
+    <link rel="stylesheet" href="assets/css/landing.css">
 </head>
 
 <body>
-    
+
     <?php include 'includes/landing_navbar.php'; ?>
 
     <!-- Hero Section -->
@@ -95,15 +95,15 @@ $smkJson = json_encode(array_map(function ($smk) {
 
                     <div class="d-flex gap-3 flex-wrap mb-4">
                         <?php if ($isOpen): ?>
-                                <a href="register.php" class="btn btn-primary btn-lg">
-                                    <i class="bi bi-person-plus-fill me-2"></i>
-                                    Daftar Sekarang
-                                </a>
+                            <a href="register.php" class="btn btn-primary btn-lg">
+                                <i class="bi bi-person-plus-fill me-2"></i>
+                                Daftar Sekarang
+                            </a>
                         <?php else: ?>
-                                <button class="btn btn-secondary btn-lg" disabled>
-                                    <i class="bi bi-lock-fill me-2"></i>
-                                    Pendaftaran Ditutup
-                                </button>
+                            <button class="btn btn-secondary btn-lg" disabled>
+                                <i class="bi bi-lock-fill me-2"></i>
+                                Pendaftaran Ditutup
+                            </button>
                         <?php endif; ?>
                         <a href="#seleksi" class="btn btn-outline-primary btn-lg">
                             <i class="bi bi-calendar-check me-2"></i>
@@ -120,10 +120,6 @@ $smkJson = json_encode(array_map(function ($smk) {
                         <div class="hero-stat" data-aos="fade-up" data-aos-delay="200">
                             <div class="hero-stat-number counter" data-target="<?= $totalPendaftar ?>">0</div>
                             <div class="hero-stat-label">Pendaftar</div>
-                        </div>
-                        <div class="hero-stat" data-aos="fade-up" data-aos-delay="300">
-                            <div class="hero-stat-number counter" data-target="4">0</div>
-                            <div class="hero-stat-label">Jalur Seleksi</div>
                         </div>
                     </div>
                 </div>
@@ -287,69 +283,69 @@ $smkJson = json_encode(array_map(function ($smk) {
                     $isAktif = ($nowTime >= $jadwal['mulai'] && $nowTime <= $jadwal['selesai']);
                     $isBelum = ($nowTime < $jadwal['mulai']);
                     $isSelesai = ($nowTime > $jadwal['selesai']);
-                    ?>
-                        <div class="col-md-6 col-lg-5" data-aos="fade-up" data-aos-delay="<?= ($tahap - 1) * 150 ?>">
-                            <div class="card h-100 <?= $isAktif ? 'border-' . $jadwal['color'] . ' shadow-lg' : '' ?>"
-                                style="border-width: 2px;">
-                                <div
-                                    class="card-header bg-<?= $isAktif ? $jadwal['color'] : 'secondary' ?> <?= $jadwal['color'] === 'warning' && $isAktif ? 'text-dark' : 'text-white' ?>">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <h5 class="mb-0">
-                                            <i class="bi <?= $jadwal['icon'] ?> me-2"></i><?= $jadwal['nama'] ?>
-                                        </h5>
-                                        <?php if ($isAktif): ?>
-                                                <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>BUKA</span>
-                                        <?php elseif ($isBelum): ?>
-                                                <span class="badge bg-info">Akan Datang</span>
-                                        <?php else: ?>
-                                                <span class="badge bg-secondary">Selesai</span>
-                                        <?php endif; ?>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row g-3 mb-3">
-                                        <div class="col-12">
-                                            <div class="d-flex align-items-center">
-                                                <div class="stat-icon primary me-3" style="width:45px;height:45px;">
-                                                    <i class="bi bi-calendar-range"></i>
-                                                </div>
-                                                <div>
-                                                    <small class="text-muted d-block">Periode Pendaftaran</small>
-                                                    <strong><?= date('d M', strtotime($jadwal['mulai'])) ?> -
-                                                        <?= date('d M Y', strtotime($jadwal['selesai'])) ?></strong>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="d-flex align-items-center">
-                                                <div class="stat-icon success me-3" style="width:45px;height:45px;">
-                                                    <i class="bi bi-pencil-square"></i>
-                                                </div>
-                                                <div>
-                                                    <small class="text-muted d-block">Tes Minat & Bakat</small>
-                                                    <strong
-                                                        class="text-<?= $jadwal['color'] ?>"><?= date('d M Y', strtotime($jadwal['tes'])) ?></strong>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <p class="text-muted small mb-3"><?= $jadwal['keterangan'] ?></p>
+                ?>
+                    <div class="col-md-6 col-lg-5" data-aos="fade-up" data-aos-delay="<?= ($tahap - 1) * 150 ?>">
+                        <div class="card h-100 <?= $isAktif ? 'border-' . $jadwal['color'] . ' shadow-lg' : '' ?>"
+                            style="border-width: 2px;">
+                            <div
+                                class="card-header bg-<?= $isAktif ? $jadwal['color'] : 'secondary' ?> <?= $jadwal['color'] === 'warning' && $isAktif ? 'text-dark' : 'text-white' ?>">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">
+                                        <i class="bi <?= $jadwal['icon'] ?> me-2"></i><?= $jadwal['nama'] ?>
+                                    </h5>
                                     <?php if ($isAktif): ?>
-                                            <a href="user/pilih-tahap.php" class="btn btn-<?= $jadwal['color'] ?> w-100">
-                                                <i class="bi bi-arrow-right-circle me-2"></i>Daftar Sekarang
-                                            </a>
+                                        <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>BUKA</span>
                                     <?php elseif ($isBelum): ?>
-                                            <button class="btn btn-outline-secondary w-100" disabled>
-                                                <i class="bi bi-clock me-2"></i>Dibuka <?= date('d M Y', strtotime($jadwal['mulai'])) ?>
-                                            </button>
+                                        <span class="badge bg-info">Akan Datang</span>
                                     <?php else: ?>
-                                            <button class="btn btn-secondary w-100" disabled>
-                                                <i class="bi bi-x-circle me-2"></i>Pendaftaran Ditutup
-                                            </button>
+                                        <span class="badge bg-secondary">Selesai</span>
                                     <?php endif; ?>
                                 </div>
                             </div>
+                            <div class="card-body">
+                                <div class="row g-3 mb-3">
+                                    <div class="col-12">
+                                        <div class="d-flex align-items-center">
+                                            <div class="stat-icon primary me-3" style="width:45px;height:45px;">
+                                                <i class="bi bi-calendar-range"></i>
+                                            </div>
+                                            <div>
+                                                <small class="text-muted d-block">Periode Pendaftaran</small>
+                                                <strong><?= date('d M', strtotime($jadwal['mulai'])) ?> -
+                                                    <?= date('d M Y', strtotime($jadwal['selesai'])) ?></strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="d-flex align-items-center">
+                                            <div class="stat-icon success me-3" style="width:45px;height:45px;">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </div>
+                                            <div>
+                                                <small class="text-muted d-block">Tes Minat & Bakat</small>
+                                                <strong
+                                                    class="text-<?= $jadwal['color'] ?>"><?= date('d M Y', strtotime($jadwal['tes'])) ?></strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="text-muted small mb-3"><?= $jadwal['keterangan'] ?></p>
+                                <?php if ($isAktif): ?>
+                                    <a href="user/pilih-tahap.php" class="btn btn-<?= $jadwal['color'] ?> w-100">
+                                        <i class="bi bi-arrow-right-circle me-2"></i>Daftar Sekarang
+                                    </a>
+                                <?php elseif ($isBelum): ?>
+                                    <button class="btn btn-outline-secondary w-100" disabled>
+                                        <i class="bi bi-clock me-2"></i>Dibuka <?= date('d M Y', strtotime($jadwal['mulai'])) ?>
+                                    </button>
+                                <?php else: ?>
+                                    <button class="btn btn-secondary w-100" disabled>
+                                        <i class="bi bi-x-circle me-2"></i>Pendaftaran Ditutup
+                                    </button>
+                                <?php endif; ?>
+                            </div>
                         </div>
+                    </div>
                 <?php endforeach; ?>
             </div>
 
@@ -505,35 +501,35 @@ $smkJson = json_encode(array_map(function ($smk) {
             </div>
 
             <div class="row g-4">
-                <?php foreach (array_slice($smkList, 0, 8) as $index => $smk): ?>
-                        <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="<?= $index * 50 ?>">
-                            <div class="card h-100">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center mb-3">
-                                        <div class="stat-icon primary me-3" style="width:50px;height:50px;font-size:1.25rem;">
-                                            <i class="bi bi-building"></i>
-                                        </div>
-                                        <div>
-                                            <h6 class="mb-0"><?= htmlspecialchars($smk['nama_sekolah']) ?></h6>
-                                            <small
-                                                class="text-muted"><?= htmlspecialchars($smk['kecamatan'] ?? 'Padang') ?></small>
-                                        </div>
+                <?php foreach ($smkList as $index => $smk): ?>
+                    <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="<?= $index * 50 ?>">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    <div class="stat-icon primary me-3" style="width:50px;height:50px;font-size:1.25rem;">
+                                        <i class="bi bi-building"></i>
                                     </div>
-                                    <p class="small text-muted mb-3">
-                                        <?= htmlspecialchars(truncate($smk['alamat'] ?? '-', 80)) ?>
-                                    </p>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span class="badge bg-success-soft">
-                                            <i class="bi bi-people me-1"></i><?= $smk['jumlah_siswa'] ?> siswa
-                                        </span>
-                                        <a href="info-sekolah.php?id=<?= $smk['id_smk'] ?>"
-                                            class="btn btn-sm btn-outline-primary">
-                                            Detail
-                                        </a>
+                                    <div>
+                                        <h6 class="mb-0"><?= htmlspecialchars($smk['nama_sekolah']) ?></h6>
+                                        <small
+                                            class="text-muted"><?= htmlspecialchars($smk['kecamatan'] ?? 'Padang') ?></small>
                                     </div>
+                                </div>
+                                <p class="small text-muted mb-3">
+                                    <?= htmlspecialchars(truncate($smk['alamat'] ?? '-', 80)) ?>
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-success-soft">
+                                        <i class="bi bi-people me-1"></i><?= $smk['jumlah_siswa'] ?> siswa
+                                    </span>
+                                    <a href="info-sekolah.php?id=<?= $smk['id_smk'] ?>"
+                                        class="btn btn-sm btn-outline-primary">
+                                        Detail
+                                    </a>
                                 </div>
                             </div>
                         </div>
+                    </div>
                 <?php endforeach; ?>
             </div>
         </div>
