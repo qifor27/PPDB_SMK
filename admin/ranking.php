@@ -163,6 +163,7 @@ $rankingData = db()->fetchAll(
                                 <th class="text-center">Akumulasi</th>
                                 <th class="text-center">TMB</th>
                                 <th class="text-center">Rapor</th>
+                                <th class="text-center">Jarak</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
@@ -187,12 +188,13 @@ $rankingData = db()->fetchAll(
                                     </td>
                                     <td class="text-center"><?= $r['nilai_tes'] ? number_format($r['nilai_tes'], 1) : '-' ?></td>
                                     <td class="text-center"><?= $r['bobot_rapor'] ? number_format($r['bobot_rapor'], 1) : '-' ?></td>
+                                    <td class="text-center"><small class="text-muted"><?= $r['jarak_ke_sekolah'] ? number_format($r['jarak_ke_sekolah'], 2) . ' km' : '-' ?></small></td>
                                     <td><?= getStatusBadge($r['status']) ?></td>
                                 </tr>
                             <?php endforeach; ?>
                             <?php if (empty($rankingData)): ?>
                                 <tr>
-                                    <td colspan="9" class="text-center text-muted py-4">Belum ada data ranking</td>
+                                    <td colspan="10" class="text-center text-muted py-4">Belum ada data ranking</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
