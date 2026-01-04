@@ -60,7 +60,7 @@ if (isset($_POST['recalculate'])) {
                 "SELECT id_pendaftaran FROM tb_pendaftaran 
                  WHERE id_smk_pilihan1 = ? AND id_kejuruan_pilihan1 = ? AND tahap_pendaftaran = ?
                  AND status IN ('submitted', 'verified')
-                 ORDER BY nilai_akumulasi DESC, umur_bulan DESC, tanggal_daftar ASC",
+                 ORDER BY nilai_akumulasi DESC, umur_bulan DESC, tanggal_daftar ASC, jarak_ke_sekolah ASC",
                 [$smkId, $jId, $tahap]
             );
 

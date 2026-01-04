@@ -53,7 +53,7 @@ if ($filterSekolah) {
          JOIN tb_siswa s ON p.id_siswa = s.id_siswa
          LEFT JOIN tb_kejuruan k ON p.id_kejuruan_pilihan1 = k.id_program
          WHERE $where
-         ORDER BY p.nilai_akumulasi DESC, umur_bulan DESC, p.tanggal_daftar ASC",
+         ORDER BY p.nilai_akumulasi DESC, umur_bulan DESC, p.tanggal_daftar ASC, p.jarak_ke_sekolah ASC",
         $params
     );
 }
