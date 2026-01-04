@@ -216,30 +216,41 @@ $fotoUrl = !empty($siswa['foto']) && file_exists(UPLOADS_PATH . 'foto/' . $siswa
                         <!-- Lokasi Rumah dengan Peta -->
                         <div class="col-12">
                             <hr>
-                            <h6><i class="bi bi-geo-alt me-2"></i>Lokasi Rumah</h6>
-                            <p class="text-muted small">Tentukan lokasi rumah Anda untuk menghitung jarak ke sekolah pilihan</p>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <h6 class="mb-0"><i class="bi bi-geo-alt me-2" style="color: #667eea;"></i>Lokasi Rumah</h6>
+                                    <small class="text-muted">Tentukan lokasi untuk menghitung jarak ke sekolah</small>
+                                </div>
+                                <button type="button" class="btn btn-sm" id="btnGetLocation"
+                                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                                    <i class="bi bi-crosshair me-1"></i>Deteksi Lokasi Saya
+                                </button>
+                            </div>
                         </div>
 
-                        <div class="col-md-4">
-                            <label class="form-label">Latitude</label>
-                            <input type="text" name="latitude" id="inputLat" class="form-control"
+                        <div class="col-12 mb-3">
+                            <div id="mapLokasi" style="height: 350px; width: 100%; border-radius: 12px; overflow: hidden; border: 2px solid rgba(102, 126, 234, 0.3);"></div>
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <small class="text-muted"><i class="bi bi-hand-index me-1"></i>Klik pada peta untuk menentukan lokasi</small>
+                                <small id="koordinatDisplay" class="badge" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                    <?php if ($siswa['latitude'] && $siswa['longitude']): ?>
+                                        📍 <?= number_format($siswa['latitude'], 6) ?>, <?= number_format($siswa['longitude'], 6) ?>
+                                    <?php else: ?>
+                                        Belum ada koordinat
+                                    <?php endif; ?>
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label small text-muted">Latitude (Manual)</label>
+                            <input type="text" name="latitude" id="inputLat" class="form-control form-control-sm"
                                 value="<?= htmlspecialchars($siswa['latitude'] ?? '') ?>" placeholder="-0.9471">
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Longitude</label>
-                            <input type="text" name="longitude" id="inputLng" class="form-control"
+                        <div class="col-md-6">
+                            <label class="form-label small text-muted">Longitude (Manual)</label>
+                            <input type="text" name="longitude" id="inputLng" class="form-control form-control-sm"
                                 value="<?= htmlspecialchars($siswa['longitude'] ?? '') ?>" placeholder="100.4172">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">&nbsp;</label>
-                            <button type="button" class="btn btn-outline-primary d-block w-100" id="btnGetLocation">
-                                <i class="bi bi-crosshair me-2"></i>Deteksi Lokasi
-                            </button>
-                        </div>
-
-                        <div class="col-12">
-                            <div id="mapLokasi" style="height: 350px; width: 100%; border-radius: 10px; overflow: hidden;"></div>
-                            <small class="form-text">Klik pada peta untuk menentukan lokasi atau gunakan tombol deteksi</small>
                         </div>
 
                         <?php if ($pendaftaran && $pendaftaran['id_smk_pilihan1']): ?>
@@ -385,6 +396,15 @@ $fotoUrl = !empty($siswa['foto']) && file_exists(UPLOADS_PATH . 'foto/' . $siswa
             });
 
             calculateDistances(lat, lng);
+            updateKoordinatDisplay(lat, lng);
+        }
+
+        // Update koordinat display badge
+        function updateKoordinatDisplay(lat, lng) {
+            const display = document.getElementById('koordinatDisplay');
+            if (display) {
+                display.innerHTML = `📍 ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+            }
         }
 
         // Map click handler
@@ -392,6 +412,7 @@ $fotoUrl = !empty($siswa['foto']) && file_exists(UPLOADS_PATH . 'foto/' . $siswa
             document.getElementById('inputLat').value = e.latlng.lat.toFixed(8);
             document.getElementById('inputLng').value = e.latlng.lng.toFixed(8);
             addUserMarker(e.latlng.lat, e.latlng.lng);
+            updateKoordinatDisplay(e.latlng.lat, e.latlng.lng);
         });
 
         // Get location button
@@ -408,15 +429,16 @@ $fotoUrl = !empty($siswa['foto']) && file_exists(UPLOADS_PATH . 'foto/' . $siswa
 
                         map.setView([lat, lng], 15);
                         addUserMarker(lat, lng);
+                        updateKoordinatDisplay(lat, lng);
 
-                        this.innerHTML = '<i class="bi bi-check-lg me-2"></i>Terdeteksi!';
+                        this.innerHTML = '<i class="bi bi-check-lg me-1"></i>Terdeteksi!';
                         setTimeout(() => {
-                            this.innerHTML = '<i class="bi bi-crosshair me-2"></i>Deteksi Lokasi';
+                            this.innerHTML = '<i class="bi bi-crosshair me-1"></i>Deteksi Lokasi Saya';
                         }, 2000);
                     },
                     err => {
                         alert('Gagal mendeteksi lokasi: ' + err.message);
-                        this.innerHTML = '<i class="bi bi-crosshair me-2"></i>Deteksi Lokasi';
+                        this.innerHTML = '<i class="bi bi-crosshair me-1"></i>Deteksi Lokasi Saya';
                     }
                 );
             }
