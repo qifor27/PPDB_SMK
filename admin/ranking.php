@@ -93,7 +93,8 @@ if ($filterTahap) {
 }
 
 $rankingData = db()->fetchAll(
-    "SELECT p.*, s.nama_lengkap, s.nisn, k.nama_kejuruan
+    "SELECT p.*, s.nama_lengkap, s.nisn, s.tanggal_lahir, k.nama_kejuruan,
+     COALESCE((SELECT SUM(poin) FROM tb_prestasi_siswa WHERE id_pendaftaran = p.id_pendaftaran AND status_verifikasi = 'valid'), 0) AS total_prestasi
      FROM tb_pendaftaran p
      JOIN tb_siswa s ON p.id_siswa = s.id_siswa
      LEFT JOIN tb_kejuruan k ON p.id_kejuruan_pilihan1 = k.id_program
@@ -155,20 +156,30 @@ $rankingData = db()->fetchAll(
                     <table class="table table-hover mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th class="text-center" width="60">Rank</th>
-                                <th>No. Pendaftaran</th>
+                                <th class="text-center" width="50">No</th>
+                                <th>Nomor Pendaftaran</th>
                                 <th>Nama Siswa</th>
-                                <th>Jurusan</th>
-                                <th class="text-center">Tahap</th>
-                                <th class="text-center">Akumulasi</th>
-                                <th class="text-center">TMB</th>
-                                <th class="text-center">Rapor</th>
+                                <th class="text-center">Pilihan Ke</th>
+                                <th class="text-center">Akumulasi Nilai</th>
+                                <th class="text-center">Nilai TMB</th>
+                                <th class="text-center">Nilai Rapor</th>
                                 <th class="text-center">Jarak</th>
-                                <th>Status</th>
+                                <th class="text-center">Umur</th>
+                                <th class="text-center">Prestasi</th>
+                                <th class="text-center">Hasil</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($rankingData as $r): ?>
+                            <?php foreach ($rankingData as $r):
+                                // Hitung umur dalam tahun dan bulan
+                                $umurText = '-';
+                                if ($r['tanggal_lahir']) {
+                                    $birthDate = new DateTime($r['tanggal_lahir']);
+                                    $now = new DateTime();
+                                    $diff = $now->diff($birthDate);
+                                    $umurText = $diff->y . ' thn ' . $diff->m . ' bln';
+                                }
+                            ?>
                                 <tr>
                                     <td class="text-center">
                                         <span class="badge <?= $r['ranking_sekolah'] <= 3 ? 'bg-warning text-dark' : 'bg-secondary' ?> fs-6">
@@ -177,7 +188,6 @@ $rankingData = db()->fetchAll(
                                     </td>
                                     <td><code><?= $r['nomor_pendaftaran'] ?></code></td>
                                     <td><?= htmlspecialchars($r['nama_lengkap']) ?></td>
-                                    <td><small><?= htmlspecialchars($r['nama_kejuruan'] ?? '-') ?></small></td>
                                     <td class="text-center">
                                         <span class="badge <?= ($r['tahap_pendaftaran'] ?? 1) == 1 ? 'bg-primary' : 'bg-info' ?>">
                                             <?= $r['tahap_pendaftaran'] ?? 1 ?>
@@ -189,12 +199,20 @@ $rankingData = db()->fetchAll(
                                     <td class="text-center"><?= $r['nilai_tes'] ? number_format($r['nilai_tes'], 1) : '-' ?></td>
                                     <td class="text-center"><?= $r['bobot_rapor'] ? number_format($r['bobot_rapor'], 1) : '-' ?></td>
                                     <td class="text-center"><small class="text-muted"><?= $r['jarak_ke_sekolah'] ? number_format($r['jarak_ke_sekolah'], 2) . ' km' : '-' ?></small></td>
-                                    <td><?= getStatusBadge($r['status']) ?></td>
+                                    <td class="text-center"><small><?= $umurText ?></small></td>
+                                    <td class="text-center">
+                                        <?php if ($r['total_prestasi'] > 0): ?>
+                                            <span class="badge bg-success"><?= $r['total_prestasi'] ?> poin</span>
+                                        <?php else: ?>
+                                            <span class="text-muted">-</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td class="text-center"><?= getStatusBadge($r['status']) ?></td>
                                 </tr>
                             <?php endforeach; ?>
                             <?php if (empty($rankingData)): ?>
                                 <tr>
-                                    <td colspan="10" class="text-center text-muted py-4">Belum ada data ranking</td>
+                                    <td colspan="11" class="text-center text-muted py-4">Tidak Ada Data</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
@@ -219,6 +237,7 @@ $rankingData = db()->fetchAll(
                     <li>Nilai Akumulasi (tertinggi)</li>
                     <li>Umur (tertua)</li>
                     <li>Tanggal Daftar (terdahulu)</li>
+                    <li>Jarak ke Sekolah (terdekat)</li>
                 </ol>
             </div>
         </div>

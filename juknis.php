@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PPDB SMK - Juknis SPMB
  * Petunjuk Teknis Pelaksanaan SPMB SMK Kota Padang
@@ -90,50 +91,8 @@ $tahunAjaran = getTahunAjaran();
                     </div>
 
                     <div class="card shadow-sm mb-4">
-                        <div class="card-header bg-warning text-dark">
-                            <h5 class="mb-0"><i class="bi bi-3-circle me-2"></i>Jalur Pendaftaran</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <div class="border rounded p-3 h-100">
-                                        <h6 class="text-primary"><i class="bi bi-heart-fill me-2"></i>Jalur Afirmasi
-                                            (15%)</h6>
-                                        <p class="small text-muted mb-0">Untuk siswa dari keluarga ekonomi tidak mampu
-                                            yang memiliki KIP, PKH, atau KIS.</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="border rounded p-3 h-100">
-                                        <h6 class="text-warning"><i class="bi bi-trophy-fill me-2"></i>Jalur Prestasi
-                                            (25%)</h6>
-                                        <p class="small text-muted mb-0">Untuk siswa berprestasi akademik/non-akademik
-                                            minimal tingkat Kota/Kabupaten.</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="border rounded p-3 h-100">
-                                        <h6 class="text-success"><i class="bi bi-geo-alt-fill me-2"></i>Jalur Zonasi
-                                            (50%)</h6>
-                                        <p class="small text-muted mb-0">Berdasarkan jarak domisili ke sekolah tujuan
-                                            dengan prioritas radius terdekat.</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="border rounded p-3 h-100">
-                                        <h6 class="text-info"><i class="bi bi-arrow-left-right me-2"></i>Jalur
-                                            Kepindahan (10%)</h6>
-                                        <p class="small text-muted mb-0">Untuk siswa yang orang tuanya pindah tugas
-                                            karena kedinasan (ASN, TNI, POLRI).</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card shadow-sm mb-4">
                         <div class="card-header bg-info text-white">
-                            <h5 class="mb-0"><i class="bi bi-4-circle me-2"></i>Tahapan Seleksi</h5>
+                            <h5 class="mb-0"><i class="bi bi-3-circle me-2"></i>Tahapan Seleksi</h5>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -179,7 +138,7 @@ $tahunAjaran = getTahunAjaran();
 
                     <div class="card shadow-sm mb-4">
                         <div class="card-header bg-danger text-white">
-                            <h5 class="mb-0"><i class="bi bi-5-circle me-2"></i>Ketentuan Umum</h5>
+                            <h5 class="mb-0"><i class="bi bi-4-circle me-2"></i>Ketentuan Umum</h5>
                         </div>
                         <div class="card-body">
                             <ol>

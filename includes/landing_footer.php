@@ -1,3 +1,12 @@
+<?php
+// Get contact settings from database for footer
+$footerPhone = getPengaturan('contact_phone', '0751-123456');
+$footerEmail = getPengaturan('contact_email', 'spmb@smkpadang.id');
+$footerAddress = getPengaturan('contact_address', 'Jl. Pendidikan No. 1, Padang');
+$footerFacebook = getPengaturan('social_facebook', '');
+$footerInstagram = getPengaturan('social_instagram', '');
+$footerYoutube = getPengaturan('social_youtube', '');
+?>
 <!-- Footer -->
 <footer class="footer">
     <div class="container">
@@ -12,10 +21,15 @@
                     Mendukung pendidikan berkualitas untuk generasi Indonesia.
                 </p>
                 <div class="social-links mt-4">
-                    <a href="#" class="social-link"><i class="bi bi-facebook"></i></a>
-                    <a href="#" class="social-link"><i class="bi bi-instagram"></i></a>
-                    <a href="#" class="social-link"><i class="bi bi-twitter-x"></i></a>
-                    <a href="#" class="social-link"><i class="bi bi-youtube"></i></a>
+                    <?php if ($footerFacebook): ?>
+                        <a href="<?= htmlspecialchars($footerFacebook) ?>" class="social-link" target="_blank"><i class="bi bi-facebook"></i></a>
+                    <?php endif; ?>
+                    <?php if ($footerInstagram): ?>
+                        <a href="<?= htmlspecialchars($footerInstagram) ?>" class="social-link" target="_blank"><i class="bi bi-instagram"></i></a>
+                    <?php endif; ?>
+                    <?php if ($footerYoutube): ?>
+                        <a href="<?= htmlspecialchars($footerYoutube) ?>" class="social-link" target="_blank"><i class="bi bi-youtube"></i></a>
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -42,10 +56,10 @@
             <div class="col-lg-4">
                 <h6 class="footer-title">Kontak</h6>
                 <ul class="footer-links">
-                    <li><i class="bi bi-geo-alt me-2 text-primary"></i>Jl. Pendidikan No. 1, Padang</li>
-                    <li><i class="bi bi-telephone me-2 text-primary"></i>0751-123456</li>
-                    <li><i class="bi bi-envelope me-2 text-primary"></i>spmb@smkpadang.id</li>
-                    <li><i class="bi bi-whatsapp me-2 text-success"></i>0821-1234-5678</li>
+                    <li><i class="bi bi-geo-alt me-2 text-primary"></i><?= htmlspecialchars($footerAddress) ?></li>
+                    <li><i class="bi bi-telephone me-2 text-primary"></i><?= htmlspecialchars($footerPhone) ?></li>
+                    <li><i class="bi bi-envelope me-2 text-primary"></i><?= htmlspecialchars($footerEmail) ?></li>
+                    <li><i class="bi bi-whatsapp me-2 text-success"></i><?= htmlspecialchars($footerPhone) ?></li>
                 </ul>
             </div>
         </div>

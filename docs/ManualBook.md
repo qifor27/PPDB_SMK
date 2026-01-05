@@ -1,299 +1,357 @@
-# Manual Book SPMB SMK Kota Padang
+# Buku Panduan Sistem PPDB SMK Kota Padang
 
-**Panduan Lengkap Pendaftaran Peserta Didik Baru SMK Tahun Ajaran 2025/2026**
+**Versi 1.0 | Januari 2026**
+
+Dokumen ini berisi panduan lengkap untuk menggunakan Sistem Penerimaan Peserta Didik Baru (PPDB) SMK Kota Padang. Panduan disusun berdasarkan tiga jenis pengguna: **Calon Siswa**, **Admin Sekolah**, dan **Super Administrator**.
 
 ---
 
-## 📸 Tampilan Halaman Utama
+## Daftar Isi
 
-Berikut adalah tampilan halaman utama sistem SPMB SMK Kota Padang:
+1. [Pendahuluan](#pendahuluan)
+2. [Panduan Calon Siswa](#panduan-calon-siswa)
+3. [Panduan Admin Sekolah](#panduan-admin-sekolah)
+4. [Panduan Super Administrator](#panduan-super-administrator)
 
-### Hero Section - Beranda
+---
 
-![Homepage Hero](file:///C:/Users/TOSHIBA/.gemini/antigravity/brain/5bf0cb91-3e93-433b-9927-4d635abe9af3/uploaded_image_0_1767536948353.png)
+## Pendahuluan
+
+Sistem PPDB SMK Kota Padang adalah platform daring yang memudahkan calon siswa mendaftar ke sekolah menengah kejuruan di Kota Padang. Sebelum memulai, pastikan perangkat Anda terhubung ke internet dan menggunakan browser modern seperti Chrome, Firefox, atau Edge.
+
+### Akses Sistem
+
+Buka browser dan kunjungi: **http://localhost/PPDB_SMK** (atau alamat sesuai konfigurasi)
+
+![Halaman Beranda Sistem PPDB SMK](../screenshoot/Screenshot%20(397).png)
+
+---
+
+## Panduan Calon Siswa
+
+Bagian ini menjelaskan langkah-langkah lengkap bagi calon siswa untuk mendaftar ke SMK.
+
+### 1. Membuat Akun Baru
+
+Jika belum memiliki akun, klik tombol **Daftar** pada halaman utama.
+
+![Halaman Registrasi Akun Baru](../screenshoot/Screenshot%20(401).png)
+
+Isi formulir pendaftaran dengan data berikut:
+- **NISN** - Nomor Induk Siswa Nasional
+- **Email** - Email aktif untuk konfirmasi
+- **Password** - Minimal 6 karakter
+- **Konfirmasi Password** - Ulangi password yang sama
+
+Setelah mengisi data, klik **Buat Akun**. Anda akan diarahkan ke halaman login.
+
+### 2. Login ke Sistem
+
+Buka halaman login dengan menekan tombol **Masuk** di halaman utama.
+
+![Halaman Login Siswa](../screenshoot/Screenshot%20(398).png)
+
+Masukkan **NISN** dan **Password** yang telah didaftarkan, lalu klik **Masuk**.
+
+### 3. Melengkapi Data Pribadi
+
+Setelah login berhasil, Anda akan masuk ke **Dashboard Siswa**. Langkah pertama adalah melengkapi data pribadi.
+
+![Dashboard Siswa](../screenshoot/Screenshot%20(402).png)
+
+Klik menu **Data Pribadi** di sidebar kiri untuk membuka formulir data diri.
+
+![Formulir Data Pribadi](../screenshoot/Screenshot%20(403).png)
+
+Lengkapi seluruh informasi yang diminta:
+- Nama lengkap sesuai ijazah
+- Tempat dan tanggal lahir
+- Jenis kelamin
+- Agama
+- Alamat lengkap
+- Nama dan pekerjaan orang tua
+- Nomor telepon orang tua
+
+Setelah semua field terisi, klik **Simpan Data**.
+
+### 4. Mengunggah Dokumen
+
+Selanjutnya, unggah dokumen pendukung melalui menu **Dokumen**.
+
+![Halaman Upload Dokumen](../screenshoot/Screenshot%20(404).png)
+
+Dokumen yang perlu diunggah:
+- **Kartu Keluarga** - Format JPG/PNG/PDF, maksimal 2MB
+- **Akta Kelahiran** - Format JPG/PNG/PDF, maksimal 2MB  
+- **Foto diri ukuran 3x4** - Format JPG/PNG, maksimal 1MB
+- **Rapor Semester Terakhir** - Format PDF, maksimal 5MB (jika jalur prestasi)
+
+Klik tombol **Upload** pada setiap jenis dokumen dan pilih file dari perangkat Anda.
+
+### 5. Melakukan Pendaftaran
+
+Setelah data dan dokumen lengkap, lakukan pendaftaran melalui menu **Pendaftaran**.
+
+![Halaman Form Pendaftaran](../screenshoot/Screenshot%20(405).png)
+
+Pada halaman ini, Anda perlu:
+1. **Memilih Jalur Pendaftaran** - Afirmasi, Prestasi, Zonasi, atau Kepindahan
+
+2. **Memilih SMK Pilihan 1** - Sekolah utama yang diinginkan
+3. **Memilih SMK Pilihan 2** - Sekolah cadangan (opsional)
+4. **Memilih Jurusan** - Program keahlian yang diminati
+
+![Memilih Sekolah dan Jurusan](../screenshoot/Screenshot%20(406).png)
+
+Periksa kembali pilihan Anda, lalu klik **Kirim Pendaftaran**.
+
+### 6. Melihat Hasil Pendaftaran
+
+Setelah pendaftaran berhasil, Anda dapat melihat status melalui menu **Hasil Pendaftaran**.
+
+![Halaman Hasil Pendaftaran](../screenshoot/Screenshot%20(407).png)
 
 Halaman ini menampilkan:
-- **Judul Sistem**: Sistem Penerimaan Murid Baru SMK Kota Padang
-- **Tombol Aksi Utama**:
-  - 🟣 **Daftar Sekarang** - Untuk memulai pendaftaran
-  - ⚪ **Jadwal Seleksi** - Melihat timeline PPDB
+- Status pendaftaran (Menunggu Verifikasi / Terverifikasi / Diterima / Ditolak)
+- Informasi sekolah yang dipilih
+- Peringkat sementara (jika sudah diproses)
+- Tombol cetak bukti pendaftaran
+
+### 7. Mengunduh Bukti Pendaftaran
+
+Untuk mencetak bukti pendaftaran sebagai arsip, klik tombol **Cetak Bukti Pendaftaran** di halaman hasil.
+
+![Bukti Pendaftaran](../screenshoot/Screenshot%20(408).png)
+
+Simpan file PDF atau langsung cetak dokumen tersebut.
 
 ---
 
-### Dokumen & Panduan SPMB
+## Panduan Admin Sekolah
 
-![Dokumen & Panduan](file:///C:/Users/TOSHIBA/.gemini/antigravity/brain/5bf0cb91-3e93-433b-9927-4d635abe9af3/uploaded_image_1_1767536948353.png)
+Admin Sekolah bertugas memverifikasi dan mengelola pendaftar di SMK masing-masing.
 
-Terdapat 4 kartu informasi penting:
+### 1. Login Admin Sekolah
 
-| Dokumen | Deskripsi | Link |
-|---------|-----------|------|
-| 📄 **Juknis SPMB** | Petunjuk teknis lengkap pelaksanaan SPMB SMK tahun ajaran 2025/2026 | [Lihat Juknis](#) |
-| 📖 **Manual Book** | Panduan lengkap cara mendaftar dan menggunakan sistem SPMB online | [Lihat Manual](#) |
-| 📂 **Persyaratan** | Daftar dokumen yang harus disiapkan untuk proses pendaftaran | [Lihat Syarat](#) |
-| ❓ **FAQ & Bantuan** | Pertanyaan umum dan panduan troubleshooting pendaftaran | [Lihat FAQ](#) |
+Akses halaman login khusus admin: **http://localhost/PPDB_SMK/login.php?mode=admin**
 
----
+![Halaman Login Admin Sekolah](../screenshoot/Screenshot%20(399).png)
 
-## 📋 Petunjuk Teknis SPMB
+Masukkan **Username** dan **Password** yang diberikan superadmin.
 
-![Juknis SPMB](file:///C:/Users/TOSHIBA/.gemini/antigravity/brain/5bf0cb91-3e93-433b-9927-4d635abe9af3/uploaded_image_2_1767536948353.png)
+### 2. Dashboard Admin
 
-### 1️⃣ Dasar Hukum
+Setelah login, Anda akan melihat dashboard dengan statistik sekolah.
 
-Pelaksanaan SPMB SMK Kota Padang mengacu pada:
+![Dashboard Admin Sekolah](../screenshoot/Screenshot%20(412).png)
 
-1. **UU Nomor 20 Tahun 2003** tentang Sistem Pendidikan Nasional
-2. **Peraturan Pemerintah Nomor 17 Tahun 2010** tentang Pengelolaan dan Penyelenggaraan Pendidikan
-3. **Peraturan Menteri Pendidikan dan Kebudayaan Nomor 1 Tahun 2021** tentang PPDB
-4. **Peraturan Daerah Kota Padang** tentang Penyelenggaraan Pendidikan
-5. **Keputusan Kepala Dinas Pendidikan Kota Padang** tentang SPMB SMK
+Dashboard menampilkan:
+- Jumlah total pendaftar
+- Jumlah pendaftar per jalur
+- Pendaftar menunggu verifikasi
+- Kuota tersisa tiap jurusan
 
-### 2️⃣ Tujuan SPMB
+### 3. Melihat Daftar Pendaftar
 
-*Bagian ini akan menjelaskan tujuan pelaksanaan SPMB...*
+Klik menu **Pendaftar** untuk melihat semua siswa yang mendaftar ke sekolah Anda.
 
----
+![Daftar Pendaftar](../screenshoot/Screenshot%20(413).png)
 
-## 📖 Daftar Isi Manual Book
+Fitur yang tersedia:
+- **Filter** berdasarkan jalur, status, atau jurusan
+- **Pencarian** berdasarkan nama atau NISN
+- **Urutkan** berdasarkan tanggal daftar atau nilai
 
-![Manual Book Steps](file:///C:/Users/TOSHIBA/.gemini/antigravity/brain/5bf0cb91-3e93-433b-9927-4d635abe9af3/uploaded_image_3_1767536948353.png)
+### 4. Verifikasi Dokumen Pendaftar
 
-Berikut adalah langkah-langkah pendaftaran SPMB SMK Online:
+Klik nama pendaftar untuk membuka halaman detail.
 
-### Tahapan Pendaftaran
+![Detail Pendaftar](../screenshoot/Screenshot%20(414).png)
 
-```
-1️⃣ Registrasi Akun
-2️⃣ Login Sistem  
-3️⃣ Melengkapi Biodata
-4️⃣ Upload Dokumen
-5️⃣ Memilih Sekolah
-6️⃣ Submit Pendaftaran
-```
+Periksa kelengkapan data dan dokumen yang diunggah:
+- Pastikan semua dokumen terbaca jelas
+- Periksa kecocokkan data dengan dokumen
+- Validasi NISN melalui sistem Dapodik (jika tersedia)
 
----
+![Verifikasi Dokumen](../screenshoot/Screenshot%20(415).png)
 
-## 📂 Persyaratan Dokumen
+Setelah verifikasi, ubah status pendaftar:
+- **Terverifikasi** - Jika dokumen lengkap dan valid
+- **Revisi** - Jika ada dokumen yang perlu diperbaiki
+- **Ditolak** - Jika tidak memenuhi syarat
 
-![Persyaratan Dokumen](file:///C:/Users/TOSHIBA/.gemini/antigravity/brain/5bf0cb91-3e93-433b-9927-4d635abe9af3/uploaded_image_4_1767536948353.png)
+### 5. Mengelola Kuota Jurusan
 
-### 📋 Dokumen Wajib (Semua Jalur)
+Klik menu **Jurusan** untuk mengatur kuota penerimaan tiap program keahlian.
 
-| No | Dokumen | Format | Ukuran Max |
-|----|---------|--------|------------|
-| 1 | ✅ **Kartu Keluarga (KK)** | PDF/JPG | 2MB |
-| 2 | ✅ **Ijazah/SKL SMP** | PDF/JPG | - |
-| 3 | ✅ **Pas Foto 3x4** | JPG/PNG | 500KB |
-| 4 | ✅ **Akta Kelahiran** | PDF/JPG | 2MB |
-| 5 | ✅ **Raport Semester Terakhir** | PDF/JPG | - |
-| 6 | ✅ **NISN Aktif** | - | - |
+![Pengaturan Kuota Jurusan](../screenshoot/Screenshot%20(416).png)
 
-**Catatan:**
-- Scan KK terbaru dengan format PDF/JPG, maksimal 2MB
-- Ijazah atau Surat Keterangan Lulus, format PDF/JPG
-- Background foto harus **merah**, format JPG/PNG, maksimal 500KB
-- Scan akta kelahiran asli, format PDF/JPG, maksimal 2MB
-- Scan raport semester 5, format PDF/JPG
-- Nomor Induk Siswa Nasional yang terdaftar di Dapodik
+Anda dapat mengubah:
+- Kuota total per jurusan
+- Kuota per jalur pendaftaran
+- Status aktif/nonaktif jurusan
 
----
+### 6. Perangkingan Siswa
 
-### ❤️ Jalur Afirmasi - Dokumen Tambahan
+Setelah periode pendaftaran ditutup, lakukan perangkingan melalui menu **Perangkingan**.
 
-Siswa dari keluarga kurang mampu perlu melampirkan salah satu bukti berikut:
+![Halaman Perangkingan](../screenshoot/Screenshot%20(417).png)
 
-| Dokumen | Keterangan |
-|---------|------------|
-| 📄 Kartu Indonesia Pintar (KIP) | Fotokopi |
-| 📄 Program Keluarga Harapan (PKH) | Fotokopi |
-| 📄 Kartu Indonesia Sehat (KIS) | Fotokopi |
-| 📄 Surat Keterangan Tidak Mampu | Dari kelurahan |
+Sistem akan secara otomatis menyusun peringkat berdasarkan:
+- **Jalur Zonasi**: Jarak rumah ke sekolah
+- **Jalur Afirmasi**: Status ekonomi keluarga
+- **Jalur Prestasi**: Nilai rapor dan prestasi
+- **Jalur Perpindahan**: Prioritas perpindahan orang tua
+
+### 7. Mengumumkan Hasil Seleksi
+
+Setelah perangkingan selesai, klik **Umumkan Hasil** untuk mempublikasikan keputusan.
+
+![Pengumuman Hasil](../screenshoot/Screenshot%20(418).png)
+
+Siswa akan dapat melihat status kelulusan mereka di akun masing-masing.
 
 ---
 
-## 🎯 Langkah 1: Registrasi Akun
+## Panduan Super Administrator
 
-### Cara Mendaftar Akun Baru
+Super Administrator memiliki akses penuh untuk mengelola seluruh sistem PPDB.
 
-1. Buka website SPMB SMK: `http://localhost/PPDB_SMK`
-2. Klik tombol **"Daftar Sekarang"** di halaman utama
-3. Isi form registrasi dengan data:
-   - **NISN**: Nomor Induk Siswa Nasional (10 digit)
-   - **Nama Lengkap**: Sesuai ijazah
-   - **Email**: Email aktif untuk notifikasi
-   - **Password**: Minimal 6 karakter
-   - **Konfirmasi Password**: Ulangi password
-4. Centang persetujuan kebijakan privasi
-5. Klik tombol **"Daftar"**
-6. Sistem akan mengirim email verifikasi (opsional)
+### 1. Login Superadmin
 
-> **💡 Tips**: Gunakan email yang masih aktif karena akan digunakan untuk notifikasi penting!
+Akses halaman: **http://localhost/PPDB_SMK/login.php?mode=superadmin**
 
----
+![Login Superadmin](../screenshoot/Screenshot%20(400).png)
 
-## 🔐 Langkah 2: Login Sistem
+Gunakan kredensial:
+- **Username**: super
+- **Password**: super123
 
-### Cara Masuk ke Dashboard
+### 2. Dashboard Superadmin
 
-1. Setelah berhasil registrasi, klik tombol **"Masuk"**
-2. Masukkan:
-   - **NISN**: Yang didaftarkan sebelumnya
-   - **Password**: Password yang dibuat saat registrasi
-3. Klik tombol **"Login"**
-4. Anda akan diarahkan ke **Dashboard Siswa**
+Setelah login, dashboard menampilkan statistik keseluruhan sistem.
 
-> **⚠️ Peringatan**: Jangan share password ke orang lain!
+![Dashboard Superadmin](../screenshoot/Screenshot%20(470).png)
 
----
+Informasi yang ditampilkan:
+- Total SMK terdaftar
+- Total pendaftar seluruh SMK
+- Statistik per jalur pendaftaran
+- Grafik pendaftaran harian
 
-## 👤 Langkah 3: Melengkapi Biodata
+### 3. Mengelola Data SMK
 
-### Data yang Harus Dilengkapi
+Klik menu **Data SMK** untuk menambah atau mengubah informasi sekolah.
 
-Dashboard siswa akan menampilkan progress kelengkapan data. Berikut data yang harus diisi:
+![Daftar SMK](../screenshoot/Screenshot%20(422).png)
 
-#### A. Data Pribadi
-- Nama Lengkap
-- NIK (Nomor Induk Kependudukan)
-- NISN
-- Tempat & Tanggal Lahir
-- Jenis Kelamin
-- Agama
-- Alamat Lengkap
-- No. HP Aktif
-- Email
+Untuk menambah SMK baru:
+1. Klik tombol **Tambah SMK**
+2. Isi formulir data sekolah (NPSN, Nama, Alamat, dll)
+3. Tentukan lokasi koordinat untuk sistem zonasi
+4. Klik **Simpan**
 
-#### B. Data Alamat (dengan Peta Lokasi)
-- Provinsi: Sumatera Barat
-- Kota/Kabupaten: **Dropdown otomatis**
-- Kecamatan: **Dropdown otomatis**
-- Kelurahan: **Dropdown otomatis**
-- RT/RW
-- Kode Pos
-- **Koordinat GPS** (klik peta atau deteksi otomatis)
+![Form Tambah SMK](../screenshoot/Screenshot%20(423).png)
 
-#### C. Data Orang Tua
-- Nama Ayah & Ibu
-- NIK Ayah & Ibu
-- Pekerjaan Ayah & Ibu
-- Penghasilan Ayah & Ibu
-- No. HP Orang Tua
+### 4. Mengelola Admin Sekolah
 
-#### D. Data Sekolah Asal
-- Nama Sekolah (SMP)
-- NPSN Sekolah Asal
-- Alamat Sekolah
-- Tahun Lulus
+Klik menu **Admin Sekolah** untuk mengatur akun admin tiap SMK.
 
----
+![Daftar Admin Sekolah](../screenshoot/Screenshot%20(424).png)
 
-## 📤 Langkah 4: Upload Dokumen
+Untuk membuat akun admin baru:
+1. Klik **Tambah Admin**
+2. Pilih SMK yang akan dikelola
+3. Isi username dan password
+4. Klik **Simpan**
 
-Setelah biodata lengkap, masuk ke menu **"Dokumen"** untuk upload berkas:
+### 5. Mengelola Tahap Seleksi
 
-### Format Upload
-- **Tipe File**: PDF, JPG, PNG
-- **Ukuran Max**: 2MB per file (kecuali pas foto 500KB)
-- **Nama File**: Jelas dan sesuai jenis dokumen
+Klik menu **Tahap Seleksi** untuk mengatur jadwal dan jalur pendaftaran.
 
-### Daftar Upload
-1. Upload **Kartu Keluarga (KK)**
-2. Upload **Ijazah/SKL**
-3. Upload **Pas Foto 3x4** (background merah)
-4. Upload **Akta Kelahiran**
-5. Upload **Raport Semester 5**
-6. Upload **Dokumen Jalur** (jika jalur afirmasi/prestasi)
+![Pengaturan Tahap Seleksi](../screenshoot/Screenshot%20(471).png)
 
-> **📌 Catatan**: Pastikan scan dokumen jelas dan tidak blur!
+Anda dapat:
+- Mengaktifkan/menonaktifkan jalur tertentu
+- Mengatur tanggal buka-tutup tiap tahap
+- Menentukan bobot penilaian jalur prestasi
 
----
+### 6. Melihat Semua Pendaftar
 
-## 🏫 Langkah 5: Memilih Sekolah
+Menu **Semua Pendaftar** menampilkan data pendaftar dari seluruh SMK.
 
-### Mode Pemilihan Sekolah
+![Semua Pendaftar](../screenshoot/Screenshot%20(472).png)
 
-Sistem SPMB 2025 menyediakan **2 Mode Pilihan**:
+Fitur:
+- Filter berdasarkan sekolah, jalur, atau status
+- Export data ke CSV/Excel
+- Statistik pendaftaran real-time
 
-#### Mode A: 1 Sekolah, 2 Jurusan
-- Pilih **1 SMK**
-- Pilih **2 Jurusan berbeda** di SMK tersebut
-- Tes dilakukan di SMK pilihan
+### 7. Pengaturan Sistem
 
-#### Mode B: 2 Sekolah, 1 Jurusan  
-- Pilih **1 Jurusan** terlebih dahulu
-- Pilih **2 SMK berbeda** yang memiliki jurusan tersebut
-- Tes dilakukan di **SMK Pilihan 1**
+Menu **Pengaturan Sistem** untuk mengkonfigurasi parameter umum PPDB.
 
-### Cara Memilih
+![Pengaturan Sistem](../screenshoot/Screenshot%20(473).png)
 
-1. Masuk menu **"Pilih Sekolah"**
-2. Pilih **Mode** yang diinginkan
-3. Ikuti wizard step-by-step:
-   - **Step 1**: Pilih mode
-   - **Step 2**: Pilih sekolah/jurusan pertama
-   - **Step 3**: Pilih jurusan/sekolah kedua
-4. Review pilihan di **Summary Card**
-5. Klik **"Simpan Pilihan"**
+Pengaturan yang tersedia:
+- **Jadwal PPDB** - Tanggal mulai, akhir, pengumuman
+- **Status Pendaftaran** - Buka/tutup pendaftaran
+- **Informasi Kontak** - Nama situs, email, telepon
+- **Pengaturan Zonasi** - Radius dalam meter
 
-> **⚠️ Penting**: Pilihan tidak bisa diubah setelah di-submit!
+### 8. Kelola Beranda
+
+Menu **Kelola Beranda** untuk mengatur tampilan halaman utama website.
+
+![Kelola Beranda](../screenshoot/Screenshot%20(474).png)
+
+Anda dapat mengubah:
+- Judul dan deskripsi hero section
+- Jadwal SPMB yang ditampilkan
+- Informasi kontak di footer
+
+### 9. Laporan dan Export
+
+Menu **Laporan** menyediakan berbagai laporan dan fitur export data.
+
+![Halaman Laporan](../screenshoot/Screenshot%20(475).png)
+
+Laporan yang tersedia:
+- Statistik pendaftaran per sekolah
+- Rekapitulasi per jalur
+- Data pendaftar lengkap
+- Export ke format CSV
 
 ---
 
-## ✅ Langkah 6: Submit Pendaftaran
+## Tips dan Bantuan
 
-### Sebelum Submit, Pastikan:
-- ✅ Biodata sudah lengkap 100%
-- ✅ Semua dokumen sudah diupload
-- ✅ Pilihan sekolah sudah dipilih
-- ✅ Data sudah dicek ulang
+### Untuk Calon Siswa:
+- Siapkan semua dokumen dalam format digital sebelum mendaftar
+- Pastikan foto yang diunggah terlihat jelas
+- Simpan NISN dan password di tempat aman
+- Pantau status pendaftaran secara berkala
 
-### Cara Submit:
-1. Masuk ke menu **"Hasil Pendaftaran"**
-2. Cek kembali semua data
-3. Klik tombol **"Submit Pendaftaran"**
-4. Konfirmasi di modal popup
-5. Status berubah menjadi **"Submitted"**
+### Untuk Admin Sekolah:
+- Verifikasi dokumen secara teliti
+- Hubungi siswa jika ada dokumen yang kurang jelas
+- Backup data pendaftar secara berkala
 
-### Setelah Submit:
-- ✅ **Cetak Kartu Pendaftaran** sebagai bukti
-- ✅ Tunggu **verifikasi** dari operator sekolah
-- ✅ Pantau status di menu **"Status Pendaftaran"**
-- ✅ Siapkan tes bakat minat sesuai jadwal
+### Untuk Superadmin:
+- Pastikan jadwal PPDB sudah diatur sebelum pendaftaran dibuka
+- Monitor kuota sekolah secara berkala
+- Lakukan backup database mingguan
 
 ---
 
-## 📞 Bantuan & Kontak
+## Kontak Bantuan
 
-Jika ada kendala, hubungi:
+Jika mengalami kendala dalam menggunakan sistem, hubungi:
 
-| Channel | Kontak | Waktu Layanan |
-|---------|--------|---------------|
-| 📧 Email | spmb@smk.padang.go.id | 24/7 |
-| 📞 Telepon | (0751) 123456 | 08:00 - 16:00 WIB |
-| 💬 WhatsApp | 0821-1234-5678 | 08:00 - 20:00 WIB |
-| 🏢 Datang Langsung | Dinas Pendidikan Kota Padang | Senin - Jumat |
+- **Email**: ppdb@diknas-padang.go.id
+- **Telepon**: (0751) 123456
+- **WhatsApp**: 0812-xxxx-xxxx
 
 ---
 
-## ❓ FAQ (Pertanyaan Umum)
-
-### Q: Apakah bisa mendaftar 2 sekolah dengan jurusan berbeda?
-**A:** Tidak. Sistem hanya mengizinkan:
-- 1 Sekolah + 2 Jurusan, ATAU
-- 2 Sekolah + 1 Jurusan
-
-### Q: Bagaimana jika lupa password?
-**A:** Klik "Lupa Password" di halaman login, masukkan NISN dan email. Link reset akan dikirim ke email.
-
-### Q: Apakah bisa membatalkan pendaftaran?
-**A:** Ya, hanya untuk status **DRAFT** (belum submit). Jika sudah submit, hubungi admin sekolah.
-
-### Q: Kapan jadwal tes bakat minat?
-**A:** Akan diinformasikan setelah pendaftaran diverifikasi oleh operator sekolah.
-
----
-
-**© 2025 Dinas Pendidikan Kota Padang - Sistem SPMB SMK**
-
-*Manual Book ini akan terus diperbarui sesuai perkembangan sistem.*
+*Dokumen ini disusun oleh Tim Pengembang PPDB SMK Kota Padang © 2026*

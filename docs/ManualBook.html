@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Buku Panduan Sistem PPDB SMK Kota Padang</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #2980b9;
+            margin-top: 40px;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 8px;
+        }
+        h3 {
+            color: #34495e;
+            margin-top: 25px;
+        }
+        img {
+            max-width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        ul, ol {
+            margin-left: 20px;
+        }
+        li {
+            margin: 8px 0;
+        }
+        strong {
+            color: #2c3e50;
+        }
+        hr {
+            border: none;
+            border-top: 2px solid #ecf0f1;
+            margin: 40px 0;
+        }
+        .page-break {
+            page-break-after: always;
+        }
+        .cover {
+            text-align: center;
+            padding: 100px 0;
+        }
+        .cover h1 {
+            font-size: 32px;
+            border: none;
+        }
+        .cover p {
+            font-size: 18px;
+            color: #7f8c8d;
+        }
+        .toc {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .toc ul {
+            list-style: none;
+        }
+        .toc li {
+            padding: 5px 0;
+        }
+        .toc a {
+            color: #2980b9;
+            text-decoration: none;
+        }
+        .note {
+            background: #e8f6f3;
+            border-left: 4px solid #1abc9c;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        .warning {
+            background: #fef9e7;
+            border-left: 4px solid #f1c40f;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="cover">
+    <h1>📘 Buku Panduan<br>Sistem PPDB SMK Kota Padang</h1>
+    <p><strong>Versi 1.0 | Januari 2026</strong></p>
+    <p>Sistem Penerimaan Peserta Didik Baru</p>
+    <p>Dinas Pendidikan Kota Padang</p>
+</div>
+
+<div class="page-break"></div>
+
+<h2>Daftar Isi</h2>
+<div class="toc">
+<ul>
+    <li><strong>1.</strong> Pendahuluan</li>
+    <li><strong>2.</strong> Panduan Calon Siswa
+        <ul>
+            <li>2.1 Membuat Akun Baru</li>
+            <li>2.2 Login ke Sistem</li>
+            <li>2.3 Melengkapi Data Pribadi</li>
+            <li>2.4 Mengunggah Dokumen</li>
+            <li>2.5 Melakukan Pendaftaran</li>
+            <li>2.6 Melihat Hasil Pendaftaran</li>
+        </ul>
+    </li>
+    <li><strong>3.</strong> Panduan Admin Sekolah
+        <ul>
+            <li>3.1 Login Admin</li>
+            <li>3.2 Dashboard Admin</li>
+            <li>3.3 Verifikasi Pendaftar</li>
+            <li>3.4 Perangkingan Siswa</li>
+        </ul>
+    </li>
+    <li><strong>4.</strong> Panduan Super Administrator
+        <ul>
+            <li>4.1 Login Superadmin</li>
+            <li>4.2 Mengelola Data SMK</li>
+            <li>4.3 Pengaturan Sistem</li>
+            <li>4.4 Laporan dan Export</li>
+        </ul>
+    </li>
+    <li><strong>5.</strong> Tips dan Bantuan</li>
+</ul>
+</div>
+
+<div class="page-break"></div>
+
+<h2>1. Pendahuluan</h2>
+
+<p>Sistem PPDB SMK Kota Padang adalah platform daring yang memudahkan calon siswa mendaftar ke sekolah menengah kejuruan di Kota Padang. Sebelum memulai, pastikan perangkat Anda terhubung ke internet dan menggunakan browser modern seperti Chrome, Firefox, atau Edge.</p>
+
+<h3>Akses Sistem</h3>
+<p>Buka browser dan kunjungi alamat website PPDB sesuai yang diberikan oleh Dinas Pendidikan.</p>
+
+<p><strong>Tampilan Halaman Beranda:</strong></p>
+<img src="../screenshoot/Screenshot (397).png" alt="Halaman Beranda Sistem PPDB SMK">
+
+<div class="page-break"></div>
+
+<h2>2. Panduan Calon Siswa</h2>
+
+<p>Bagian ini menjelaskan langkah-langkah lengkap bagi calon siswa untuk mendaftar ke SMK.</p>
+
+<h3>2.1 Membuat Akun Baru</h3>
+
+<p>Jika belum memiliki akun, klik tombol <strong>Daftar</strong> pada halaman utama.</p>
+
+<img src="../screenshoot/Screenshot (401).png" alt="Halaman Registrasi Akun Baru">
+
+<p>Isi formulir pendaftaran dengan data berikut:</p>
+<ul>
+    <li><strong>NISN</strong> - Nomor Induk Siswa Nasional (10 digit)</li>
+    <li><strong>Email</strong> - Alamat email aktif untuk konfirmasi</li>
+    <li><strong>Password</strong> - Kata sandi minimal 6 karakter</li>
+    <li><strong>Konfirmasi Password</strong> - Ulangi kata sandi yang sama</li>
+</ul>
+
+<p>Setelah mengisi data, klik <strong>Buat Akun</strong>. Anda akan diarahkan ke halaman login.</p>
+
+<h3>2.2 Login ke Sistem</h3>
+
+<p>Buka halaman login dengan menekan tombol <strong>Masuk</strong> di halaman utama.</p>
+
+<img src="../screenshoot/Screenshot (398).png" alt="Halaman Login Siswa">
+
+<p>Masukkan <strong>NISN</strong> dan <strong>Password</strong> yang telah didaftarkan, lalu klik <strong>Masuk</strong>.</p>
+
+<h3>2.3 Melengkapi Data Pribadi</h3>
+
+<p>Setelah login berhasil, Anda akan masuk ke <strong>Dashboard Siswa</strong>. Langkah pertama adalah melengkapi data pribadi.</p>
+
+<img src="../screenshoot/Screenshot (402).png" alt="Dashboard Siswa">
+
+<p>Klik menu <strong>Data Pribadi</strong> di sidebar kiri untuk membuka formulir data diri.</p>
+
+<img src="../screenshoot/Screenshot (403).png" alt="Formulir Data Pribadi">
+
+<p>Lengkapi seluruh informasi yang diminta:</p>
+<ul>
+    <li>Nama lengkap sesuai ijazah</li>
+    <li>Tempat dan tanggal lahir</li>
+    <li>Jenis kelamin</li>
+    <li>Agama</li>
+    <li>Alamat lengkap (RT, RW, Kelurahan, Kecamatan)</li>
+    <li>Nama dan pekerjaan orang tua</li>
+    <li>Nomor telepon orang tua</li>
+</ul>
+
+<p>Setelah semua field terisi, klik <strong>Simpan Data</strong>.</p>
+
+<h3>2.4 Mengunggah Dokumen</h3>
+
+<p>Selanjutnya, unggah dokumen pendukung melalui menu <strong>Dokumen</strong>.</p>
+
+<img src="../screenshoot/Screenshot (404).png" alt="Halaman Upload Dokumen">
+
+<p>Dokumen yang perlu diunggah:</p>
+<ul>
+    <li><strong>Kartu Keluarga</strong> - Format JPG/PNG/PDF, maksimal 2MB</li>
+    <li><strong>Akta Kelahiran</strong> - Format JPG/PNG/PDF, maksimal 2MB</li>
+    <li><strong>Foto diri ukuran 3x4</strong> - Format JPG/PNG, maksimal 1MB</li>
+    <li><strong>Rapor Semester Terakhir</strong> - Format PDF, maksimal 5MB (jika jalur prestasi)</li>
+</ul>
+
+<p>Klik tombol <strong>Upload</strong> pada setiap jenis dokumen dan pilih file dari perangkat Anda.</p>
+
+<h3>2.5 Melakukan Pendaftaran</h3>
+
+<p>Setelah data dan dokumen lengkap, lakukan pendaftaran melalui menu <strong>Pendaftaran</strong>.</p>
+
+<img src="../screenshoot/Screenshot (405).png" alt="Halaman Form Pendaftaran">
+
+<p>Pada halaman ini, Anda perlu:</p>
+<ol>
+    <li><strong>Memilih Jalur Pendaftaran</strong> - Zonasi, Afirmasi, Prestasi, atau Perpindahan</li>
+    <li><strong>Memilih SMK Pilihan 1</strong> - Sekolah utama yang diinginkan</li>
+    <li><strong>Memilih SMK Pilihan 2</strong> - Sekolah cadangan (opsional)</li>
+    <li><strong>Memilih Jurusan</strong> - Program keahlian yang diminati</li>
+</ol>
+
+<img src="../screenshoot/Screenshot (406).png" alt="Memilih Sekolah dan Jurusan">
+
+<p>Periksa kembali pilihan Anda, lalu klik <strong>Kirim Pendaftaran</strong>.</p>
+
+<h3>2.6 Melihat Hasil Pendaftaran</h3>
+
+<p>Setelah pendaftaran berhasil, Anda dapat melihat status melalui menu <strong>Hasil Pendaftaran</strong>.</p>
+
+<img src="../screenshoot/Screenshot (407).png" alt="Halaman Hasil Pendaftaran">
+
+<p>Halaman ini menampilkan:</p>
+<ul>
+    <li>Status pendaftaran (Menunggu Verifikasi / Terverifikasi / Diterima / Ditolak)</li>
+    <li>Informasi sekolah yang dipilih</li>
+    <li>Peringkat sementara (jika sudah diproses)</li>
+    <li>Tombol cetak bukti pendaftaran</li>
+</ul>
+
+<img src="../screenshoot/Screenshot (408).png" alt="Bukti Pendaftaran">
+
+<div class="page-break"></div>
+
+<h2>3. Panduan Admin Sekolah</h2>
+
+<p>Admin Sekolah bertugas memverifikasi dan mengelola pendaftar di SMK masing-masing.</p>
+
+<h3>3.1 Login Admin Sekolah</h3>
+
+<p>Akses halaman login khusus admin dengan menambahkan parameter <code>?mode=admin</code> pada URL.</p>
+
+<img src="../screenshoot/Screenshot (399).png" alt="Halaman Login Admin Sekolah">
+
+<p>Masukkan <strong>Username</strong> dan <strong>Password</strong> yang diberikan oleh superadmin.</p>
+
+<h3>3.2 Dashboard Admin</h3>
+
+<p>Setelah login, Anda akan melihat dashboard dengan statistik sekolah.</p>
+
+<img src="../screenshoot/Screenshot (412).png" alt="Dashboard Admin Sekolah">
+
+<p>Dashboard menampilkan:</p>
+<ul>
+    <li>Jumlah total pendaftar</li>
+    <li>Jumlah pendaftar per jalur</li>
+    <li>Pendaftar menunggu verifikasi</li>
+    <li>Kuota tersisa tiap jurusan</li>
+</ul>
+
+<h3>3.3 Melihat Daftar Pendaftar</h3>
+
+<p>Klik menu <strong>Pendaftar</strong> untuk melihat semua siswa yang mendaftar ke sekolah Anda.</p>
+
+<img src="../screenshoot/Screenshot (413).png" alt="Daftar Pendaftar">
+
+<h3>3.4 Verifikasi Dokumen Pendaftar</h3>
+
+<p>Klik nama pendaftar untuk membuka halaman detail dan melakukan verifikasi.</p>
+
+<img src="../screenshoot/Screenshot (414).png" alt="Detail Pendaftar">
+
+<p>Periksa kelengkapan data dan dokumen, lalu ubah status:</p>
+<ul>
+    <li><strong>Terverifikasi</strong> - Jika dokumen lengkap dan valid</li>
+    <li><strong>Revisi</strong> - Jika ada dokumen yang perlu diperbaiki</li>
+    <li><strong>Ditolak</strong> - Jika tidak memenuhi syarat</li>
+</ul>
+
+<img src="../screenshoot/Screenshot (415).png" alt="Verifikasi Dokumen">
+
+<h3>3.5 Mengelola Kuota Jurusan</h3>
+
+<p>Klik menu <strong>Jurusan</strong> untuk mengatur kuota penerimaan tiap program keahlian.</p>
+
+<img src="../screenshoot/Screenshot (416).png" alt="Pengaturan Kuota Jurusan">
+
+<h3>3.6 Perangkingan dan Pengumuman</h3>
+
+<p>Setelah periode pendaftaran ditutup, lakukan perangkingan dan umumkan hasil seleksi.</p>
+
+<img src="../screenshoot/Screenshot (417).png" alt="Halaman Perangkingan">
+
+<img src="../screenshoot/Screenshot (418).png" alt="Pengumuman Hasil">
+
+<div class="page-break"></div>
+
+<h2>4. Panduan Super Administrator</h2>
+
+<p>Super Administrator memiliki akses penuh untuk mengelola seluruh sistem PPDB.</p>
+
+<h3>4.1 Login Superadmin</h3>
+
+<p>Akses halaman login dengan parameter <code>?mode=superadmin</code>.</p>
+
+<img src="../screenshoot/Screenshot (400).png" alt="Login Superadmin">
+
+<p>Kredensial default:</p>
+<ul>
+    <li><strong>Username:</strong> super</li>
+    <li><strong>Password:</strong> super123</li>
+</ul>
+
+<h3>4.2 Dashboard Superadmin</h3>
+
+<p>Setelah login, dashboard menampilkan statistik keseluruhan sistem.</p>
+
+<img src="../screenshoot/Screenshot (470).png" alt="Dashboard Superadmin">
+
+<h3>4.3 Mengelola Data SMK</h3>
+
+<p>Klik menu <strong>Data SMK</strong> untuk menambah atau mengubah informasi sekolah.</p>
+
+<img src="../screenshoot/Screenshot (422).png" alt="Daftar SMK">
+
+<img src="../screenshoot/Screenshot (423).png" alt="Form Tambah SMK">
+
+<h3>4.4 Mengelola Admin Sekolah</h3>
+
+<p>Klik menu <strong>Admin Sekolah</strong> untuk mengatur akun admin tiap SMK.</p>
+
+<img src="../screenshoot/Screenshot (424).png" alt="Daftar Admin Sekolah">
+
+<h3>4.5 Mengelola Tahap Seleksi</h3>
+
+<p>Klik menu <strong>Tahap Seleksi</strong> untuk mengatur jadwal dan jalur pendaftaran.</p>
+
+<img src="../screenshoot/Screenshot (471).png" alt="Pengaturan Tahap Seleksi">
+
+<h3>4.6 Melihat Semua Pendaftar</h3>
+
+<p>Menu <strong>Semua Pendaftar</strong> menampilkan data pendaftar dari seluruh SMK.</p>
+
+<img src="../screenshoot/Screenshot (472).png" alt="Semua Pendaftar">
+
+<h3>4.7 Pengaturan Sistem</h3>
+
+<p>Menu <strong>Pengaturan Sistem</strong> untuk mengkonfigurasi parameter umum PPDB.</p>
+
+<img src="../screenshoot/Screenshot (473).png" alt="Pengaturan Sistem">
+
+<p>Pengaturan yang tersedia:</p>
+<ul>
+    <li><strong>Jadwal PPDB</strong> - Tanggal mulai, akhir, dan pengumuman</li>
+    <li><strong>Status Pendaftaran</strong> - Buka/tutup pendaftaran</li>
+    <li><strong>Informasi Kontak</strong> - Nama situs, email, telepon</li>
+    <li><strong>Pengaturan Zonasi</strong> - Radius dalam meter</li>
+</ul>
+
+<h3>4.8 Kelola Beranda</h3>
+
+<p>Menu <strong>Kelola Beranda</strong> untuk mengatur tampilan halaman utama website.</p>
+
+<img src="../screenshoot/Screenshot (474).png" alt="Kelola Beranda">
+
+<h3>4.9 Laporan dan Export</h3>
+
+<p>Menu <strong>Laporan</strong> menyediakan berbagai laporan dan fitur export data.</p>
+
+<img src="../screenshoot/Screenshot (475).png" alt="Halaman Laporan">
+
+<div class="page-break"></div>
+
+<h2>5. Tips dan Bantuan</h2>
+
+<h3>Untuk Calon Siswa:</h3>
+<ul>
+    <li>Siapkan semua dokumen dalam format digital sebelum mendaftar</li>
+    <li>Pastikan foto yang diunggah terlihat jelas dan tidak blur</li>
+    <li>Simpan NISN dan password di tempat yang aman</li>
+    <li>Pantau status pendaftaran secara berkala melalui dashboard</li>
+    <li>Hubungi panitia jika ada kendala teknis</li>
+</ul>
+
+<h3>Untuk Admin Sekolah:</h3>
+<ul>
+    <li>Verifikasi dokumen secara teliti dan hati-hati</li>
+    <li>Hubungi siswa jika ada dokumen yang kurang jelas</li>
+    <li>Backup data pendaftar secara berkala</li>
+    <li>Pastikan kuota jurusan sudah diatur dengan benar</li>
+</ul>
+
+<h3>Untuk Superadmin:</h3>
+<ul>
+    <li>Pastikan jadwal PPDB sudah diatur sebelum pendaftaran dibuka</li>
+    <li>Monitor kuota sekolah secara berkala</li>
+    <li>Lakukan backup database mingguan</li>
+    <li>Update kredensial admin sekolah secara berkala</li>
+</ul>
+
+<hr>
+
+<h2>Kontak Bantuan</h2>
+
+<p>Jika mengalami kendala dalam menggunakan sistem, silakan hubungi:</p>
+
+<ul>
+    <li><strong>Email:</strong> ppdb@diknas-padang.go.id</li>
+    <li><strong>Telepon:</strong> (0751) 123456</li>
+    <li><strong>WhatsApp:</strong> 0812-xxxx-xxxx</li>
+</ul>
+
+<hr>
+
+<p style="text-align: center; color: #7f8c8d;">
+    <em>Dokumen ini disusun oleh Tim Pengembang PPDB SMK Kota Padang © 2026</em>
+</p>
+
+</body>
+</html>

@@ -102,17 +102,12 @@ $currentDir = basename(dirname($_SERVER['PHP_SELF']));
                 <span>Laporan</span>
             </a>
 
-            <div class="sidebar-menu-label">Akun</div>
-
-            <a href="<?= SITE_URL ?>/superadmin/profil.php" class="sidebar-link <?= $currentPage === 'profil' ? 'active' : '' ?>">
-                <i class="bi bi-person-fill"></i>
-                <span>Profil Saya</span>
-            </a>
 
             <a href="<?= SITE_URL ?>" class="sidebar-link">
                 <i class="bi bi-house"></i>
                 <span>Lihat Website</span>
             </a>
+
 
             <a href="<?= SITE_URL ?>/logout.php" class="sidebar-link text-danger">
                 <i class="bi bi-box-arrow-left"></i>

@@ -16,6 +16,19 @@ $totalPendaftar = countPendaftarByStatus();
 $tahunAjaran = getTahunAjaran();
 $isOpen = isPPDBOpen();
 
+// Get hero settings from database
+$heroTitle = getPengaturan('hero_title', 'Sistem Penerimaan Murid Baru SMK Kota Padang');
+$heroSubtitle = getPengaturan('hero_subtitle', 'Selamat datang di SPMB SMK Kota Padang. Daftarkan diri Anda sekarang dan raih masa depan cerah bersama SMK terbaik di Kota Padang.');
+$heroImage = getPengaturan('hero_image', 'assets/img/hero-students.png');
+
+// Get contact settings from database
+$contactPhone = getPengaturan('contact_phone', '6282112345678');
+$contactEmail = getPengaturan('contact_email', 'info@smk.sch.id');
+$contactAddress = getPengaturan('contact_address', 'Kota Padang, Sumatera Barat');
+$socialFacebook = getPengaturan('social_facebook', '');
+$socialInstagram = getPengaturan('social_instagram', '');
+$socialYoutube = getPengaturan('social_youtube', '');
+
 // Prepare SMK data for map
 $smkJson = json_encode(array_map(function ($smk) {
     return [
@@ -84,13 +97,11 @@ $smkJson = json_encode(array_map(function ($smk) {
                     </span>
 
                     <h1 class="hero-title">
-                        Sistem Penerimaan Murid Baru
-                        <span class="text-gradient">SMK Kota Padang</span>
+                        <?= htmlspecialchars($heroTitle) ?>
                     </h1>
 
                     <p class="hero-subtitle">
-                        Selamat datang di SPMB SMK Kota Padang. Daftarkan diri Anda sekarang
-                        dan raih masa depan cerah bersama SMK terbaik di Kota Padang.
+                        <?= htmlspecialchars($heroSubtitle) ?>
                     </p>
 
                     <div class="d-flex gap-3 flex-wrap mb-4">
@@ -125,7 +136,7 @@ $smkJson = json_encode(array_map(function ($smk) {
                 </div>
 
                 <div class="col-lg-6 text-center" data-aos="fade-left">
-                    <img src="assets/img/hero-students.png" alt="Siswa SMK" class="img-fluid hero-image"
+                    <img src="<?= htmlspecialchars($heroImage) ?>" alt="Siswa SMK" class="img-fluid hero-image"
                         style="max-height: 600px; width: 100%; object-fit: contain; filter: drop-shadow(0 20px 40px rgba(139, 92, 246, 0.25)); border-radius: 24px; image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
                 </div>
             </div>
@@ -243,27 +254,49 @@ $smkJson = json_encode(array_map(function ($smk) {
 
     <!-- Penjadwalan Tahap Seleksi Section -->
     <?php
-    // Jadwal tahap seleksi
-    $jadwalSeleksi = [
-        1 => [
-            'nama' => 'Tahap 1',
-            'mulai' => '2026-01-01 00:00:00',
-            'selesai' => '2026-01-06 23:59:59',
-            'tes' => '2026-01-08',
-            'keterangan' => 'Gelombang pertama pendaftaran dan tes minat bakat',
-            'icon' => 'bi-1-circle-fill',
-            'color' => 'primary'
-        ],
-        2 => [
-            'nama' => 'Tahap 2',
-            'mulai' => '2026-01-07 08:00:00',
-            'selesai' => '2026-01-15 23:59:59',
-            'tes' => '2026-01-17',
-            'keterangan' => 'Gelombang kedua untuk kuota yang tersisa',
-            'icon' => 'bi-2-circle-fill',
-            'color' => 'warning'
-        ]
-    ];
+    // Get jadwal from database
+    $jadwalDb = db()->fetchAll("SELECT * FROM tb_jadwal_spmb ORDER BY urutan, tanggal_mulai LIMIT 4");
+
+    // Build jadwal seleksi array
+    $jadwalSeleksi = [];
+    $colors = ['primary', 'warning', 'success', 'info'];
+    $icons = ['bi-1-circle-fill', 'bi-2-circle-fill', 'bi-3-circle-fill', 'bi-4-circle-fill'];
+
+    foreach ($jadwalDb as $index => $j) {
+        $jadwalSeleksi[$index + 1] = [
+            'nama' => $j['nama_kegiatan'],
+            'mulai' => $j['tanggal_mulai'] . ' 00:00:00',
+            'selesai' => ($j['tanggal_selesai'] ?? $j['tanggal_mulai']) . ' 23:59:59',
+            'tes' => $j['tanggal_selesai'] ?? $j['tanggal_mulai'],
+            'keterangan' => $j['keterangan'] ?? '',
+            'icon' => $icons[$index] ?? 'bi-circle-fill',
+            'color' => $colors[$index] ?? 'primary'
+        ];
+    }
+
+    // Fallback if no data in database
+    if (empty($jadwalSeleksi)) {
+        $jadwalSeleksi = [
+            1 => [
+                'nama' => 'Tahap 1',
+                'mulai' => '2026-01-01 00:00:00',
+                'selesai' => '2026-01-06 23:59:59',
+                'tes' => '2026-01-08',
+                'keterangan' => 'Gelombang pertama pendaftaran dan tes minat bakat',
+                'icon' => 'bi-1-circle-fill',
+                'color' => 'primary'
+            ],
+            2 => [
+                'nama' => 'Tahap 2',
+                'mulai' => '2026-01-07 08:00:00',
+                'selesai' => '2026-01-15 23:59:59',
+                'tes' => '2026-01-17',
+                'keterangan' => 'Gelombang kedua untuk kuota yang tersisa',
+                'icon' => 'bi-2-circle-fill',
+                'color' => 'warning'
+            ]
+        ];
+    }
     $nowTime = date('Y-m-d H:i:s');
     ?>
     <section id="seleksi" class="py-5 bg-dark-alt">
@@ -583,7 +616,7 @@ $smkJson = json_encode(array_map(function ($smk) {
                             </div>
                             <h5 class="text-center mb-3">Hubungi via WhatsApp</h5>
                             <p class="text-center opacity-75 mb-4">Respon cepat untuk pertanyaan mendesak</p>
-                            <a href="https://wa.me/6282112345678" target="_blank" class="btn btn-light btn-lg w-100">
+                            <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', $contactPhone) ?>" target="_blank" class="btn btn-light btn-lg w-100">
                                 <i class="bi bi-whatsapp me-2"></i>Chat Sekarang
                             </a>
                         </div>

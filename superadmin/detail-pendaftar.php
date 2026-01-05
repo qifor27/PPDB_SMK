@@ -36,7 +36,7 @@ if (!$pendaftar) {
 $dokumen = db()->fetchAll("SELECT * FROM tb_dokumen WHERE id_pendaftaran = ?", [$idPendaftaran]);
 
 // Get prestasi
-$prestasi = db()->fetchAll("SELECT * FROM tb_prestasi WHERE id_pendaftaran = ?", [$idPendaftaran]);
+$prestasi = db()->fetchAll("SELECT * FROM tb_prestasi_siswa WHERE id_pendaftaran = ?", [$idPendaftaran]);
 ?>
 
 <div class="row g-4">
@@ -227,7 +227,7 @@ $prestasi = db()->fetchAll("SELECT * FROM tb_prestasi WHERE id_pendaftaran = ?",
                             <thead>
                                 <tr>
                                     <th>Jenis</th>
-                                    <th>Nama Lomba</th>
+                                    <th>Nama Prestasi</th>
                                     <th>Tingkat</th>
                                     <th>Peringkat</th>
                                     <th>Tahun</th>
@@ -238,7 +238,7 @@ $prestasi = db()->fetchAll("SELECT * FROM tb_prestasi WHERE id_pendaftaran = ?",
                                 <?php foreach ($prestasi as $p): ?>
                                     <tr>
                                         <td><?= htmlspecialchars($p['jenis_prestasi']) ?></td>
-                                        <td><?= htmlspecialchars($p['nama_lomba']) ?></td>
+                                        <td><?= htmlspecialchars($p['nama_prestasi']) ?></td>
                                         <td><?= htmlspecialchars($p['tingkat']) ?></td>
                                         <td><?= htmlspecialchars($p['peringkat']) ?></td>
                                         <td><?= $p['tahun'] ?></td>

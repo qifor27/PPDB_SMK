@@ -18,15 +18,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Update Pengaturan Umum
         if ($action === 'update_general') {
             $settings = [
-                'hero_title' => sanitize($_POST['hero_title']),
-                'hero_subtitle' => sanitize($_POST['hero_subtitle']),
-                'hero_image' => sanitize($_POST['hero_image']),
-                'contact_phone' => sanitize($_POST['contact_phone']),
-                'contact_email' => sanitize($_POST['contact_email']),
-                'contact_address' => sanitize($_POST['contact_address']),
-                'social_facebook' => sanitize($_POST['social_facebook']),
-                'social_instagram' => sanitize($_POST['social_instagram']),
-                'social_youtube' => sanitize($_POST['social_youtube']),
+                'hero_title' => sanitize($_POST['hero_title'] ?? ''),
+                'hero_subtitle' => sanitize($_POST['hero_subtitle'] ?? ''),
+                'hero_image' => sanitize($_POST['hero_image'] ?? ''),
+                'contact_phone' => sanitize($_POST['contact_phone'] ?? ''),
+                'contact_email' => sanitize($_POST['contact_email'] ?? ''),
+                'contact_address' => sanitize($_POST['contact_address'] ?? ''),
+                'social_facebook' => sanitize($_POST['social_facebook'] ?? ''),
+                'social_instagram' => sanitize($_POST['social_instagram'] ?? ''),
+                'social_youtube' => sanitize($_POST['social_youtube'] ?? ''),
             ];
 
             foreach ($settings as $key => $value) {
@@ -211,7 +211,7 @@ $jadwalList = db()->fetchAll("SELECT * FROM tb_jadwal_spmb ORDER BY urutan, tang
                             ];
                             foreach ($docTypes as $type => $info):
                                 $doc = $docsMap[$type] ?? null;
-                                ?>
+                            ?>
                                 <div class="col-md-6">
                                     <div class="card h-100 border">
                                         <div class="card-body">
@@ -327,7 +327,7 @@ $jadwalList = db()->fetchAll("SELECT * FROM tb_jadwal_spmb ORDER BY urutan, tang
                                                     </button>
                                                 </td>
                                             </tr>
-                                            <?php $no++;
+                                        <?php $no++;
                                         endforeach; ?>
                                     </tbody>
                                 </table>
@@ -418,11 +418,11 @@ $jadwalList = db()->fetchAll("SELECT * FROM tb_jadwal_spmb ORDER BY urutan, tang
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         let rowCount = <?= count($jadwalList) ?>;
 
         // Add new jadwal row
-        document.getElementById('btnAddJadwal').addEventListener('click', function () {
+        document.getElementById('btnAddJadwal').addEventListener('click', function() {
             rowCount++;
             const tbody = document.querySelector('#tableJadwal tbody');
             const newRow = `
@@ -442,7 +442,7 @@ $jadwalList = db()->fetchAll("SELECT * FROM tb_jadwal_spmb ORDER BY urutan, tang
         });
 
         // Remove row
-        document.getElementById('tableJadwal').addEventListener('click', function (e) {
+        document.getElementById('tableJadwal').addEventListener('click', function(e) {
             if (e.target.closest('.btn-remove-row')) {
                 e.target.closest('tr').remove();
             }
